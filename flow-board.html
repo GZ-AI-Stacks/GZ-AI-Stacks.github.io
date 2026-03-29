@@ -22,42 +22,13 @@
       50% { box-shadow: 0 0 40px rgba(6,182,212,0.25), inset 0 0 30px rgba(6,182,212,0.08); }
     }
     .neon-border { animation: neon-pulse 3s ease-in-out infinite; }
-    /* Canvas Background */
-    .canvas-bg { position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden; }
-    .canvas-bg svg { position:absolute;opacity:0;animation:sketch-in linear forwards; }
-    @keyframes sketch-in {
-      0%   { opacity:0; stroke-dashoffset:200; }
-      15%  { opacity:1; }
-      85%  { opacity:1; }
-      100% { opacity:0; stroke-dashoffset:0; }
-    }
-    @keyframes drift {
-      0%   { transform:translate(0,0) rotate(0deg); }
-      100% { transform:translate(var(--dx),var(--dy)) rotate(var(--dr)); }
-    }
-    .canvas-bg .shape {
-      animation: drift linear infinite, sketch-in linear infinite;
-      stroke-dasharray:200;
-      stroke-dashoffset:200;
-    }
-    /* Grid dots */
-    .grid-dots {
-      position:fixed;inset:0;z-index:0;pointer-events:none;
-      background-image:radial-gradient(circle, rgba(6,182,212,0.06) 1px, transparent 1px);
-      background-size:40px 40px;
-      mask-image:radial-gradient(ellipse 60% 50% at 50% 30%, rgba(0,0,0,0.5) 0%, transparent 70%);
-      -webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 30%, rgba(0,0,0,0.5) 0%, transparent 70%);
-    }
   </style>
 </head>
 <body class="antialiased">
 <div class="min-h-screen relative" style="background:#06080a">
 
-  <!-- Grid Dots (Whiteboard-Raster) -->
-  <div class="grid-dots"></div>
-
-  <!-- Canvas Background (schwebende Zeichenelemente) -->
-  <div class="canvas-bg" id="canvas-bg"></div>
+  <!-- Animated Background Canvas -->
+  <canvas id="bgCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
 
   <!-- Overlay -->
   <div class="fixed inset-0 pointer-events-none" style="background:radial-gradient(ellipse 72% 58% at 50% 50%, transparent 0%, rgba(6,8,10,0.32) 58%, rgba(6,8,10,0.88) 100%), linear-gradient(to bottom, rgba(6,8,10,0.80) 0%, transparent 16%, transparent 78%, rgba(6,8,10,0.82) 100%)"></div>
@@ -437,66 +408,200 @@
 
 <script>
 (function(){
-  var c=document.getElementById('canvas-bg');
-  var colors=['#06b6d4','#3b82f6','#22d3ee','#8b5cf6','#06b6d4'];
-  // SVG shapes: freehand strokes, circles, rectangles, arrows, zigzags
-  var paths=[
-    // Freehand curve
-    'M0,20 Q15,0 30,18 T60,15 T90,22',
-    // Circle
-    'M40,20 a18,18 0 1,0 0.01,0',
-    // Rectangle
-    'M5,5 L55,5 L55,35 L5,35 Z',
-    // Arrow
-    'M0,20 L50,20 M38,10 L50,20 L38,30',
-    // Zigzag
-    'M0,30 L15,5 L30,30 L45,5 L60,30',
-    // Star
-    'M30,0 L36,20 L56,20 L40,32 L46,52 L30,40 L14,52 L20,32 L4,20 L24,20 Z',
-    // Wavy line
-    'M0,15 C10,0 20,30 30,15 C40,0 50,30 60,15 C70,0 80,30 90,15',
-    // Triangle
-    'M30,2 L58,38 L2,38 Z',
-    // Spiral
-    'M30,30 C30,20 40,20 40,30 C40,42 18,42 18,28 C18,14 44,14 44,32',
-    // Cross/Plus
-    'M20,0 L20,40 M0,20 L40,20'
-  ];
-  var count=22;
-  for(var i=0;i<count;i++){
-    var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-    var path=document.createElementNS('http://www.w3.org/2000/svg','path');
-    var p=paths[Math.floor(Math.random()*paths.length)];
-    var col=colors[Math.floor(Math.random()*colors.length)];
-    var size=40+Math.random()*60;
-    var dur=25+Math.random()*35;
-    var delay=Math.random()*dur;
-    var x=Math.random()*100;
-    var y=Math.random()*100;
-    var dx=(Math.random()-0.5)*200;
-    var dy=(Math.random()-0.5)*150;
-    var dr=(Math.random()-0.5)*40;
-    svg.setAttribute('viewBox','0 0 60 52');
-    svg.setAttribute('width',size);
-    svg.setAttribute('height',size);
-    svg.style.left=x+'%';
-    svg.style.top=y+'%';
-    svg.style.setProperty('--dx',dx+'px');
-    svg.style.setProperty('--dy',dy+'px');
-    svg.style.setProperty('--dr',dr+'deg');
-    path.setAttribute('d',p);
-    path.setAttribute('fill','none');
-    path.setAttribute('stroke',col);
-    path.setAttribute('stroke-width','1.2');
-    path.setAttribute('stroke-linecap','round');
-    path.setAttribute('stroke-linejoin','round');
-    path.setAttribute('opacity','0.12');
-    path.classList.add('shape');
-    path.style.animationDuration=dur+'s,'+dur+'s';
-    path.style.animationDelay=delay+'s,'+delay+'s';
-    svg.appendChild(path);
-    c.appendChild(svg);
+  var c=document.getElementById('bgCanvas'),g=c.getContext('2d');
+  var W,H,particles=[],strokes=[],tools=[],dots=[];
+  var mouse={x:-1000,y:-1000};
+  var colors=['#06b6d4','#22d3ee','#3b82f6','#8b5cf6','#06b6d4'];
+
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  window.addEventListener('resize',resize);resize();
+  document.addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY;});
+
+  // Floating particles (ink drops)
+  for(var i=0;i<50;i++){
+    particles.push({
+      x:Math.random()*2000,y:Math.random()*2000,
+      vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,
+      r:Math.random()*2+.5,
+      color:colors[Math.floor(Math.random()*5)],
+      alpha:Math.random()*.35+.08
+    });
   }
+
+  // Freehand brush strokes
+  for(var i=0;i<6;i++){
+    var pts=[];
+    var sx=Math.random()*W,sy=Math.random()*H;
+    for(var j=0;j<12;j++){
+      pts.push({x:sx+j*18+(Math.random()-0.5)*30,y:sy+(Math.random()-0.5)*40});
+    }
+    strokes.push({
+      points:pts,
+      vx:(Math.random()-.5)*.12,vy:(Math.random()-.5)*.1,
+      color:colors[Math.floor(Math.random()*5)],
+      alpha:Math.random()*.06+.02,
+      width:Math.random()*3+1
+    });
+  }
+
+  // Floating tool icons (pen, eraser, circle, rect, text)
+  var toolShapes=['pen','circle','rect','text','arrow','layer'];
+  for(var i=0;i<10;i++){
+    tools.push({
+      x:Math.random()*W,y:Math.random()*H,
+      vy:-.15-Math.random()*.2,vx:(Math.random()-.5)*.08,
+      type:toolShapes[i%toolShapes.length],
+      color:colors[Math.floor(Math.random()*5)],
+      alpha:0,maxAlpha:Math.random()*.1+.03,
+      phase:Math.random()*Math.PI*2,sz:16+Math.random()*12,
+      rot:Math.random()*Math.PI*2
+    });
+  }
+
+  // Grid dots
+  var dotSpacing=50;
+
+  function drawDots(){
+    g.save();
+    for(var x=0;x<W;x+=dotSpacing){
+      for(var y=0;y<H;y+=dotSpacing){
+        var dx=x-W/2,dy=y-H*.3;
+        var dist=Math.sqrt(dx*dx+dy*dy);
+        var maxDist=Math.max(W,H)*.6;
+        var a=Math.max(0,1-dist/maxDist)*.08;
+        if(a>0.005){
+          // Mouse proximity glow
+          var mdx=x-mouse.x,mdy=y-mouse.y;
+          var mDist=Math.sqrt(mdx*mdx+mdy*mdy);
+          if(mDist<150)a+=(.2-a)*(1-mDist/150);
+          g.fillStyle='rgba(6,182,212,'+a+')';
+          g.beginPath();
+          g.arc(x,y,1,0,Math.PI*2);
+          g.fill();
+        }
+      }
+    }
+    g.restore();
+  }
+
+  function drawConnections(){
+    for(var i=0;i<particles.length;i++){
+      for(var j=i+1;j<particles.length;j++){
+        var dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+        var d=Math.sqrt(dx*dx+dy*dy);
+        if(d<120){
+          g.strokeStyle='rgba(6,182,212,'+(0.04*(1-d/120))+')';
+          g.lineWidth=.5;
+          g.beginPath();
+          g.moveTo(particles[i].x,particles[i].y);
+          g.lineTo(particles[j].x,particles[j].y);
+          g.stroke();
+        }
+      }
+    }
+  }
+
+  function drawTool(t){
+    g.save();
+    g.translate(t.x,t.y);
+    g.rotate(t.rot);
+    g.globalAlpha=t.alpha;
+    g.strokeStyle=t.color;
+    g.lineWidth=1.2;
+    g.lineCap='round';
+    g.lineJoin='round';
+    var s=t.sz;
+    switch(t.type){
+      case 'pen':
+        g.beginPath();g.moveTo(-s/2,s/2);g.lineTo(s/3,-s/2);g.lineTo(s/2,-s/3);g.lineTo(-s/4,s/2);g.closePath();g.stroke();
+        break;
+      case 'circle':
+        g.beginPath();g.arc(0,0,s/2,0,Math.PI*2);g.stroke();
+        break;
+      case 'rect':
+        g.strokeRect(-s/2,-s/3,s,s*.66);
+        break;
+      case 'text':
+        g.font=(s*.7)+'px Outfit';g.fillStyle=t.color;g.fillText('T',-s/4,s/4);
+        break;
+      case 'arrow':
+        g.beginPath();g.moveTo(-s/2,0);g.lineTo(s/3,0);g.moveTo(s/5,-s/4);g.lineTo(s/3,0);g.lineTo(s/5,s/4);g.stroke();
+        break;
+      case 'layer':
+        for(var l=0;l<3;l++){
+          g.globalAlpha=t.alpha*(1-l*.25);
+          g.strokeRect(-s/2+l*3,-s/3+l*3,s-l*4,s*.5-l*3);
+        }
+        break;
+    }
+    g.restore();
+  }
+
+  function drawStrokes(){
+    strokes.forEach(function(s){
+      if(s.points.length<2)return;
+      g.save();
+      g.globalAlpha=s.alpha;
+      g.strokeStyle=s.color;
+      g.lineWidth=s.width;
+      g.lineCap='round';
+      g.lineJoin='round';
+      g.beginPath();
+      g.moveTo(s.points[0].x,s.points[0].y);
+      for(var i=1;i<s.points.length-1;i++){
+        var xc=(s.points[i].x+s.points[i+1].x)/2;
+        var yc=(s.points[i].y+s.points[i+1].y)/2;
+        g.quadraticCurveTo(s.points[i].x,s.points[i].y,xc,yc);
+      }
+      g.stroke();
+      g.restore();
+    });
+  }
+
+  var t=0;
+  function frame(){
+    t+=.016;
+    g.clearRect(0,0,W,H);
+
+    drawDots();
+
+    // Update & draw particles
+    particles.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      // Mouse repel
+      var dx=p.x-mouse.x,dy=p.y-mouse.y;
+      var md=Math.sqrt(dx*dx+dy*dy);
+      if(md<120&&md>0){p.x+=dx/md*1.5;p.y+=dy/md*1.5;}
+      g.fillStyle=p.color;
+      g.globalAlpha=p.alpha;
+      g.beginPath();g.arc(p.x,p.y,p.r,0,Math.PI*2);g.fill();
+    });
+    g.globalAlpha=1;
+
+    drawConnections();
+    drawStrokes();
+
+    // Update strokes position
+    strokes.forEach(function(s){
+      s.points.forEach(function(p){p.x+=s.vx;p.y+=s.vy;});
+      if(s.points[0].x<-300||s.points[0].x>W+300)s.vx*=-1;
+      if(s.points[0].y<-300||s.points[0].y>H+300)s.vy*=-1;
+    });
+
+    // Update & draw tools
+    tools.forEach(function(tt){
+      tt.y+=tt.vy;tt.x+=tt.vx+Math.sin(t+tt.phase)*.15;
+      tt.rot+=.003;
+      if(tt.alpha<tt.maxAlpha)tt.alpha+=.0008;
+      if(tt.y<-50){tt.y=H+50;tt.x=Math.random()*W;tt.alpha=0;}
+      drawTool(tt);
+    });
+
+    requestAnimationFrame(frame);
+  }
+  frame();
 })();
 </script>
 
