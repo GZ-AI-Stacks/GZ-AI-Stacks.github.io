@@ -34,8 +34,234 @@
 <body class="antialiased">
 <div class="min-h-screen relative" style="background:#06080a">
 
+  <!-- Animated Background Canvas -->
+  <canvas id="bgCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
+  <script>
+  (function(){
+    var c=document.getElementById('bgCanvas'),g=c.getContext('2d');
+    var W,H,particles=[],clouds=[],files=[],connections=[];
+    var mouse={x:-1000,y:-1000};
+
+    function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+    window.addEventListener('resize',resize);resize();
+    document.addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY;});
+
+    // Floating particles (data nodes)
+    for(var i=0;i<60;i++){
+      particles.push({
+        x:Math.random()*2000,y:Math.random()*2000,
+        vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
+        r:Math.random()*2+.5,
+        color:['#00b4ff','#00ffaa','#b44aff','#00d4ff'][Math.floor(Math.random()*4)],
+        alpha:Math.random()*.4+.1
+      });
+    }
+
+    // Cloud shapes
+    for(var i=0;i<5;i++){
+      clouds.push({
+        x:Math.random()*2000,y:100+Math.random()*300,
+        w:120+Math.random()*180,h:40+Math.random()*30,
+        vx:(Math.random()-.5)*.15,
+        alpha:Math.random()*.04+.02
+      });
+    }
+
+    // Floating file icons
+    var fileTypes=['pdf','zip','img','doc','vid','code'];
+    var fileColors={'pdf':'#ff5566','zip':'#00d4ff','img':'#00ff88','doc':'#b44aff','vid':'#ff8c00','code':'#00b4ff'};
+    for(var i=0;i<8;i++){
+      var t=fileTypes[i%fileTypes.length];
+      files.push({
+        x:100+Math.random()*(W-200),y:Math.random()*H,
+        vy:-.2-Math.random()*.3,vx:(Math.random()-.5)*.1,
+        type:t,color:fileColors[t],
+        alpha:0,maxAlpha:Math.random()*.12+.04,
+        phase:Math.random()*Math.PI*2,sz:18+Math.random()*14
+      });
+    }
+
+    function drawCloud(x,y,w,h,alpha){
+      g.save();
+      g.globalAlpha=alpha;
+      g.fillStyle='#00b4ff';
+      g.beginPath();
+      g.ellipse(x,y,w*.3,h*.6,0,Math.PI,0);
+      g.ellipse(x+w*.2,y-h*.15,w*.35,h*.75,0,Math.PI,0);
+      g.ellipse(x+w*.5,y+h*.05,w*.25,h*.5,0,Math.PI,0);
+      g.rect(x-w*.3,y,w*.8,h*.4);
+      g.fill();
+      g.restore();
+    }
+
+    function drawFileIcon(x,y,sz,type,color,alpha){
+      g.save();
+      g.globalAlpha=alpha;
+      // File shape
+      g.strokeStyle=color;
+      g.lineWidth=1;
+      g.beginPath();
+      g.moveTo(x-sz*.4,y-sz*.5);
+      g.lineTo(x+sz*.2,y-sz*.5);
+      g.lineTo(x+sz*.4,y-sz*.3);
+      g.lineTo(x+sz*.4,y+sz*.5);
+      g.lineTo(x-sz*.4,y+sz*.5);
+      g.closePath();
+      g.stroke();
+      // Fold
+      g.beginPath();
+      g.moveTo(x+sz*.2,y-sz*.5);
+      g.lineTo(x+sz*.2,y-sz*.3);
+      g.lineTo(x+sz*.4,y-sz*.3);
+      g.stroke();
+      // Label
+      g.fillStyle=color;
+      g.font='bold '+(sz*.28)+'px JetBrains Mono,monospace';
+      g.textAlign='center';
+      g.fillText(type.toUpperCase(),x,y+sz*.15);
+      g.restore();
+    }
+
+    function drawUploadArrow(x,y,sz,alpha,time){
+      g.save();
+      g.globalAlpha=alpha*.6;
+      var bounce=Math.sin(time*.002)*sz*.1;
+      g.strokeStyle='#00ffaa';
+      g.lineWidth=1.5;
+      g.beginPath();
+      g.moveTo(x,y+sz*.3+bounce);
+      g.lineTo(x,y-sz*.3+bounce);
+      g.stroke();
+      g.beginPath();
+      g.moveTo(x-sz*.2,y-sz*.1+bounce);
+      g.lineTo(x,y-sz*.3+bounce);
+      g.lineTo(x+sz*.2,y-sz*.1+bounce);
+      g.stroke();
+      g.restore();
+    }
+
+    var time=0;
+    function draw(){
+      time++;
+      g.clearRect(0,0,W,H);
+
+      // Radial glow spots
+      var grd1=g.createRadialGradient(W*.3,H*.25,0,W*.3,H*.25,H*.5);
+      grd1.addColorStop(0,'rgba(0,180,255,.04)');grd1.addColorStop(1,'transparent');
+      g.fillStyle=grd1;g.fillRect(0,0,W,H);
+
+      var grd2=g.createRadialGradient(W*.7,H*.6,0,W*.7,H*.6,H*.4);
+      grd2.addColorStop(0,'rgba(0,255,170,.03)');grd2.addColorStop(1,'transparent');
+      g.fillStyle=grd2;g.fillRect(0,0,W,H);
+
+      var grd3=g.createRadialGradient(W*.5,H*.8,0,W*.5,H*.8,H*.35);
+      grd3.addColorStop(0,'rgba(180,74,255,.025)');grd3.addColorStop(1,'transparent');
+      g.fillStyle=grd3;g.fillRect(0,0,W,H);
+
+      // Draw clouds
+      for(var i=0;i<clouds.length;i++){
+        var cl=clouds[i];
+        cl.x+=cl.vx;
+        if(cl.x>W+200)cl.x=-200;
+        if(cl.x<-200)cl.x=W+200;
+        drawCloud(cl.x,cl.y,cl.w,cl.h,cl.alpha);
+      }
+
+      // Particles + connections
+      for(var i=0;i<particles.length;i++){
+        var p=particles[i];
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+        if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+
+        // Mouse interaction
+        var dx=p.x-mouse.x,dy=p.y-mouse.y;
+        var dist=Math.sqrt(dx*dx+dy*dy);
+        var glowAlpha=p.alpha;
+        if(dist<150){
+          glowAlpha=p.alpha+.3*(1-dist/150);
+          p.x+=dx/dist*.5;
+          p.y+=dy/dist*.5;
+        }
+
+        g.beginPath();
+        g.arc(p.x,p.y,p.r,0,Math.PI*2);
+        g.fillStyle=p.color;
+        g.globalAlpha=glowAlpha;
+        g.fill();
+
+        // Glow
+        if(p.r>1.5){
+          g.beginPath();
+          g.arc(p.x,p.y,p.r*3,0,Math.PI*2);
+          g.fillStyle=p.color;
+          g.globalAlpha=glowAlpha*.15;
+          g.fill();
+        }
+
+        // Connect nearby particles
+        for(var j=i+1;j<particles.length;j++){
+          var p2=particles[j];
+          var dx2=p.x-p2.x,dy2=p.y-p2.y;
+          var d=Math.sqrt(dx2*dx2+dy2*dy2);
+          if(d<120){
+            g.beginPath();
+            g.moveTo(p.x,p.y);
+            g.lineTo(p2.x,p2.y);
+            g.strokeStyle=p.color;
+            g.globalAlpha=(1-d/120)*.08;
+            g.lineWidth=.5;
+            g.stroke();
+          }
+        }
+      }
+      g.globalAlpha=1;
+
+      // Floating file icons
+      for(var i=0;i<files.length;i++){
+        var f=files[i];
+        f.y+=f.vy;
+        f.x+=f.vx+Math.sin(time*.01+f.phase)*.15;
+        f.alpha+=(f.maxAlpha-f.alpha)*.01;
+
+        if(f.y<-50){f.y=H+50;f.x=100+Math.random()*(W-200);f.alpha=0;}
+
+        drawFileIcon(f.x,f.y,f.sz,f.type,f.color,f.alpha);
+      }
+
+      // Upload arrows (scattered)
+      for(var i=0;i<3;i++){
+        var ax=W*.2+i*W*.3;
+        var ay=H*.4+Math.sin(time*.003+i*2)*H*.15;
+        drawUploadArrow(ax,ay,30,.06+Math.sin(time*.004+i)*.03,time+i*500);
+      }
+
+      // Grid lines (subtle)
+      g.globalAlpha=.015;
+      g.strokeStyle='#00b4ff';
+      g.lineWidth=.5;
+      for(var x=0;x<W;x+=80){
+        g.beginPath();g.moveTo(x,0);g.lineTo(x,H);g.stroke();
+      }
+      for(var y=0;y<H;y+=80){
+        g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke();
+      }
+      g.globalAlpha=1;
+
+      // Scanlines
+      g.fillStyle='rgba(0,180,255,.008)';
+      for(var y=0;y<H;y+=3){
+        g.fillRect(0,y,W,1);
+      }
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+  </script>
+
   <!-- Overlay -->
-  <div class="fixed inset-0 pointer-events-none" style="background:radial-gradient(ellipse 72% 58% at 50% 50%, transparent 0%, rgba(6,8,10,0.32) 58%, rgba(6,8,10,0.88) 100%), linear-gradient(to bottom, rgba(6,8,10,0.80) 0%, transparent 16%, transparent 78%, rgba(6,8,10,0.82) 100%)"></div>
+  <div class="fixed inset-0 pointer-events-none" style="z-index:1;background:radial-gradient(ellipse 72% 58% at 50% 50%, transparent 0%, rgba(6,8,10,0.32) 58%, rgba(6,8,10,0.88) 100%), linear-gradient(to bottom, rgba(6,8,10,0.80) 0%, transparent 16%, transparent 78%, rgba(6,8,10,0.82) 100%)"></div>
 
   <!-- Navigation -->
   <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#06080a]/50 border-b border-white/[0.04]">
@@ -88,7 +314,7 @@
   </nav>
 
   <!-- Main Content -->
-  <div class="relative z-10 max-w-5xl mx-auto px-8 pt-40 pb-32">
+  <div class="relative max-w-5xl mx-auto px-8 pt-40 pb-32" style="z-index:10">
 
     <!-- Hero Section -->
     <div class="mb-20 text-center">
