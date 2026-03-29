@@ -22,10 +22,42 @@
       50% { box-shadow: 0 0 40px rgba(6,182,212,0.25), inset 0 0 30px rgba(6,182,212,0.08); }
     }
     .neon-border { animation: neon-pulse 3s ease-in-out infinite; }
+    /* Canvas Background */
+    .canvas-bg { position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden; }
+    .canvas-bg svg { position:absolute;opacity:0;animation:sketch-in linear forwards; }
+    @keyframes sketch-in {
+      0%   { opacity:0; stroke-dashoffset:200; }
+      15%  { opacity:1; }
+      85%  { opacity:1; }
+      100% { opacity:0; stroke-dashoffset:0; }
+    }
+    @keyframes drift {
+      0%   { transform:translate(0,0) rotate(0deg); }
+      100% { transform:translate(var(--dx),var(--dy)) rotate(var(--dr)); }
+    }
+    .canvas-bg .shape {
+      animation: drift linear infinite, sketch-in linear infinite;
+      stroke-dasharray:200;
+      stroke-dashoffset:200;
+    }
+    /* Grid dots */
+    .grid-dots {
+      position:fixed;inset:0;z-index:0;pointer-events:none;
+      background-image:radial-gradient(circle, rgba(6,182,212,0.06) 1px, transparent 1px);
+      background-size:40px 40px;
+      mask-image:radial-gradient(ellipse 60% 50% at 50% 30%, rgba(0,0,0,0.5) 0%, transparent 70%);
+      -webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 30%, rgba(0,0,0,0.5) 0%, transparent 70%);
+    }
   </style>
 </head>
 <body class="antialiased">
 <div class="min-h-screen relative" style="background:#06080a">
+
+  <!-- Grid Dots (Whiteboard-Raster) -->
+  <div class="grid-dots"></div>
+
+  <!-- Canvas Background (schwebende Zeichenelemente) -->
+  <div class="canvas-bg" id="canvas-bg"></div>
 
   <!-- Overlay -->
   <div class="fixed inset-0 pointer-events-none" style="background:radial-gradient(ellipse 72% 58% at 50% 50%, transparent 0%, rgba(6,8,10,0.32) 58%, rgba(6,8,10,0.88) 100%), linear-gradient(to bottom, rgba(6,8,10,0.80) 0%, transparent 16%, transparent 78%, rgba(6,8,10,0.82) 100%)"></div>
@@ -402,5 +434,71 @@
   </footer>
 
 </div>
+
+<script>
+(function(){
+  var c=document.getElementById('canvas-bg');
+  var colors=['#06b6d4','#3b82f6','#22d3ee','#8b5cf6','#06b6d4'];
+  // SVG shapes: freehand strokes, circles, rectangles, arrows, zigzags
+  var paths=[
+    // Freehand curve
+    'M0,20 Q15,0 30,18 T60,15 T90,22',
+    // Circle
+    'M40,20 a18,18 0 1,0 0.01,0',
+    // Rectangle
+    'M5,5 L55,5 L55,35 L5,35 Z',
+    // Arrow
+    'M0,20 L50,20 M38,10 L50,20 L38,30',
+    // Zigzag
+    'M0,30 L15,5 L30,30 L45,5 L60,30',
+    // Star
+    'M30,0 L36,20 L56,20 L40,32 L46,52 L30,40 L14,52 L20,32 L4,20 L24,20 Z',
+    // Wavy line
+    'M0,15 C10,0 20,30 30,15 C40,0 50,30 60,15 C70,0 80,30 90,15',
+    // Triangle
+    'M30,2 L58,38 L2,38 Z',
+    // Spiral
+    'M30,30 C30,20 40,20 40,30 C40,42 18,42 18,28 C18,14 44,14 44,32',
+    // Cross/Plus
+    'M20,0 L20,40 M0,20 L40,20'
+  ];
+  var count=22;
+  for(var i=0;i<count;i++){
+    var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    var path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    var p=paths[Math.floor(Math.random()*paths.length)];
+    var col=colors[Math.floor(Math.random()*colors.length)];
+    var size=40+Math.random()*60;
+    var dur=25+Math.random()*35;
+    var delay=Math.random()*dur;
+    var x=Math.random()*100;
+    var y=Math.random()*100;
+    var dx=(Math.random()-0.5)*200;
+    var dy=(Math.random()-0.5)*150;
+    var dr=(Math.random()-0.5)*40;
+    svg.setAttribute('viewBox','0 0 60 52');
+    svg.setAttribute('width',size);
+    svg.setAttribute('height',size);
+    svg.style.left=x+'%';
+    svg.style.top=y+'%';
+    svg.style.setProperty('--dx',dx+'px');
+    svg.style.setProperty('--dy',dy+'px');
+    svg.style.setProperty('--dr',dr+'deg');
+    path.setAttribute('d',p);
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke',col);
+    path.setAttribute('stroke-width','1.2');
+    path.setAttribute('stroke-linecap','round');
+    path.setAttribute('stroke-linejoin','round');
+    path.setAttribute('opacity','0.12');
+    path.classList.add('shape');
+    path.style.animationDuration=dur+'s,'+dur+'s';
+    path.style.animationDelay=delay+'s,'+delay+'s';
+    svg.appendChild(path);
+    c.appendChild(svg);
+  }
+})();
+</script>
+
 </body>
 </html>
