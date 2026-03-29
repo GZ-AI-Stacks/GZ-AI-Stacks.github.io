@@ -173,7 +173,7 @@ function makeCard(href,badge,num,iconSvg,iconBg,title,tags,desc,accent){
   return a;
 }
 function inject(){
-  if(document.querySelector('a[href="/flow-board-injected"]'))return;
+  if(document.querySelector('[data-injected="flow-board"]'))return;
   var grids=document.querySelectorAll('[data-gz] .grid, [data-gz] [class*="grid-cols"]');
   if(grids.length<4)grids=document.querySelectorAll('[class*="grid-cols"]');
   // Find Bildung grid (contains abc-fuchs)
@@ -184,7 +184,7 @@ function inject(){
     var fb=makeCard('/flow-board','WHITEBOARD','04','<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#06b6d490" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"/></svg>','#06b6d412','FLOW Board','Offline · DSGVO · Video+Audio · Live-Sharing','Digitales Whiteboard für Bildung & Präsentation','#06b6d4');
     fb.querySelector('a')||true;
     var marker=document.createElement('span');marker.style.display='none';marker.className='flow-board-injected';
-    fb.setAttribute('data-injected','flow-board-injected');
+    fb.setAttribute('data-injected','flow-board');
     bilGrid.appendChild(fb);
   }
   if(allGrid&&!document.querySelector('[data-injected="windows-tools-injected"]')){
