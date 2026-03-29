@@ -197,5 +197,27 @@ if(document.readyState==='complete')setTimeout(inject,800);
 else window.addEventListener('load',function(){setTimeout(inject,800);});
 setTimeout(inject,2000);
 setTimeout(inject,4000);
+
+// Software-Anfrage Box
+function addCTA(){
+  if(document.getElementById('sw-anfrage'))return;
+  // Find the last data-gz section
+  var sections=document.querySelectorAll('[data-gz]');
+  var lastSection=sections[sections.length-1];
+  if(!lastSection)return;
+  var parent=lastSection.parentElement;
+  if(!parent)return;
+  var box=document.createElement('div');
+  box.id='sw-anfrage';
+  box.style.cssText='margin:4rem auto 0;max-width:1200px;padding:0 2rem;';
+  box.innerHTML='<div style="background:linear-gradient(145deg,rgba(20,32,44,0.98),rgba(12,20,28,0.95));border:1px solid rgba(6,182,212,0.2);border-radius:1rem;padding:clamp(2rem,4vw,3.5rem);text-align:center;position:relative;overflow:hidden"><div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(6,182,212,0.04) 0%,transparent 70%);pointer-events:none"></div><h2 style="font-family:Outfit;font-weight:800;font-size:clamp(1.5rem,3vw,2rem);margin-bottom:1rem;background:linear-gradient(135deg,#06b6d4,#22d3ee,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative">Individuelle Software gesucht?</h2><p style="font-family:Sora;font-size:clamp(0.85rem,2vw,1rem);color:rgba(255,255,255,0.4);max-width:500px;margin:0 auto 2rem;position:relative">Sie brauchen eine massgeschneiderte Loesung? Wir entwickeln Offline-Apps, Bildungssoftware und Desktop-Tools — individuell fuer Ihr Unternehmen oder Ihre Schule.</p><div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;margin-bottom:2rem;position:relative"><div style="display:flex;align-items:center;gap:0.5rem;font-family:JetBrains Mono;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.3)"><span style="color:#00ff88">&#10003;</span> Web-Apps &amp; PWAs</div><div style="display:flex;align-items:center;gap:0.5rem;font-family:JetBrains Mono;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.3)"><span style="color:#00ff88">&#10003;</span> Desktop-Software</div><div style="display:flex;align-items:center;gap:0.5rem;font-family:JetBrains Mono;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.3)"><span style="color:#00ff88">&#10003;</span> KI-Integration</div><div style="display:flex;align-items:center;gap:0.5rem;font-family:JetBrains Mono;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.3)"><span style="color:#00ff88">&#10003;</span> Bildungssoftware</div><div style="display:flex;align-items:center;gap:0.5rem;font-family:JetBrains Mono;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.3)"><span style="color:#00ff88">&#10003;</span> DSGVO-konform</div></div><a href="mailto:gz.ai.stacks@gmail.com?subject=Software-Anfrage" style="display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2.5rem;background:transparent;border:1px solid rgba(6,182,212,0.4);color:#06b6d4;font-family:Sora;font-weight:700;font-size:1rem;border-radius:12px;text-decoration:none;position:relative;transition:all 0.3s"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"20\" height=\"16\" x=\"2\" y=\"4\" rx=\"2\"/><path d=\"m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7\"/></svg>Projekt anfragen</a></div>';
+  // Insert after the last section's parent (the grid wrapper)
+  var target=lastSection.closest('section')||lastSection.parentElement.parentElement;
+  if(target&&target.parentElement){
+    target.parentElement.insertBefore(box,target.nextSibling);
+  }
+}
+setTimeout(addCTA,1200);
+setTimeout(addCTA,3000);
 })();
 </script></body></html>
