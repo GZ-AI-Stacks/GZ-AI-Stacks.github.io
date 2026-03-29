@@ -34,6 +34,9 @@
 <body class="antialiased">
 <div class="min-h-screen relative" style="background:#06080a">
 
+  <!-- Theme Glow -->
+  <div id="theme-glow" style="position:fixed;inset:0;z-index:0;pointer-events:none;transition:background 1.5s ease;opacity:0.7"></div>
+
   <!-- Animated Background Canvas -->
   <canvas id="bgCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
   <script>
@@ -696,5 +699,44 @@
   </footer>
 
 </div>
+<script>
+(function(){
+  var glow=document.getElementById('theme-glow');
+  if(!glow)return;
+  var sectionGlows={
+    'hero':'radial-gradient(ellipse 80% 60% at 50% 20%, rgba(0,212,255,0.09) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 70% 50%, rgba(180,74,255,0.04) 0%, transparent 50%)',
+    'tools':'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,212,255,0.07) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 20% 60%, rgba(0,255,136,0.05) 0%, transparent 50%)',
+    'features':'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,255,65,0.06) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 80% 60%, rgba(0,212,255,0.04) 0%, transparent 50%)',
+    'screenshots':'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(180,74,255,0.06) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 30% 70%, rgba(0,212,255,0.04) 0%, transparent 50%)',
+    'tech':'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,180,255,0.06) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 70% 60%, rgba(180,74,255,0.04) 0%, transparent 50%)',
+    'download':'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,255,136,0.07) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 20% 60%, rgba(0,212,255,0.04) 0%, transparent 50%)'
+  };
+  glow.style.background=sectionGlows['hero'];
+  var allSections=document.querySelectorAll('.mb-24, .mb-20');
+  var current='hero';
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting&&e.intersectionRatio>0.1){
+        var id=e.target.id;
+        var key='tools';
+        if(id==='tools')key='tools';
+        else if(id==='features')key='features';
+        else{
+          var text=e.target.textContent||'';
+          if(text.indexOf('Screenshot')>-1)key='screenshots';
+          else if(text.indexOf('Technisch')>-1||text.indexOf('Systemanforderung')>-1)key='tech';
+          else if(text.indexOf('Download')>-1||text.indexOf('Kostenlos')>-1||text.indexOf('29,99')>-1)key='download';
+          else if(text.indexOf('Funktionen')>-1||text.indexOf('Portabel')>-1)key='features';
+        }
+        if(key!==current){
+          current=key;
+          glow.style.background=sectionGlows[key]||sectionGlows['tools'];
+        }
+      }
+    });
+  },{threshold:[0.1,0.3],rootMargin:'-5% 0px -5% 0px'});
+  allSections.forEach(function(s){obs.observe(s);});
+})();
+</script>
 </body>
 </html>
