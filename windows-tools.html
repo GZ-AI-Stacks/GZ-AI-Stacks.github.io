@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="/_next/static/chunks/fa708782843241c6.css" data-precedence="next"/>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&amp;family=Sora:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600;700&amp;display=swap" as="style"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&amp;family=Sora:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+  <meta name="google-site-verification" content="6JxjImXuJBE0bFadGqMcBTpBeU7a6voPY9mG1cbOAc0"/>
+  <title>AI.-Ready Windows Suite — GZ-AI.-Stacks</title>
+  <meta name="description" content="Professionelle Desktop-Tools im Cyberpunk-Design: ZIP-Packer, USB-Datenrettung und Dateimanager. Portabel, barrierefrei, kostenlos."/>
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-title" content="AI.-Stacks"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"/>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml"/>
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+  <style>
+    @keyframes neon-pulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(0,212,255,0.15), inset 0 0 20px rgba(0,212,255,0.05); }
+      50% { box-shadow: 0 0 40px rgba(0,212,255,0.25), inset 0 0 30px rgba(0,212,255,0.08); }
+    }
+    .neon-border {
+      animation: neon-pulse 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+  </style>
+</head>
+<body class="antialiased">
+<div class="min-h-screen relative" style="background:#06080a">
+
+  <!-- Overlay -->
+  <div class="fixed inset-0 pointer-events-none" style="background:radial-gradient(ellipse 72% 58% at 50% 50%, transparent 0%, rgba(6,8,10,0.32) 58%, rgba(6,8,10,0.88) 100%), linear-gradient(to bottom, rgba(6,8,10,0.80) 0%, transparent 16%, transparent 78%, rgba(6,8,10,0.82) 100%)"></div>
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#06080a]/50 border-b border-white/[0.04]">
+    <div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
+      <a href="/">
+        <div class="flex items-center gap-3">
+          <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+            <defs>
+              <linearGradient id="gz-fus1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b44aff"></stop><stop offset="50%" stop-color="#00d4ff"></stop><stop offset="100%" stop-color="#00ff41"></stop></linearGradient>
+              <linearGradient id="gz-fus2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b44aff"></stop><stop offset="100%" stop-color="#00d4ff"></stop></linearGradient>
+              <filter id="gz-fusglow"><feGaussianBlur stdDeviation="3.5" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+            </defs>
+            <g transform="translate(50,50)">
+              <text x="-40" y="-36" font-family="JetBrains Mono" font-size="7" fill="#b44aff" opacity=".18">01</text>
+              <text x="32" y="-32" font-family="JetBrains Mono" font-size="6" fill="#00d4ff" opacity=".15">10</text>
+              <text x="-42" y="12" font-family="JetBrains Mono" font-size="5" fill="#00ff41" opacity=".12">11</text>
+              <text x="36" y="18" font-family="JetBrains Mono" font-size="6" fill="#b44aff" opacity=".12">00</text>
+              <line x1="-32" y1="-28" x2="-14" y2="-12" stroke="#b44aff" stroke-width=".9" opacity=".4"></line>
+              <line x1="32" y1="-28" x2="14" y2="-12" stroke="#00d4ff" stroke-width=".9" opacity=".4"></line>
+              <line x1="-32" y1="28" x2="-14" y2="12" stroke="#00ff41" stroke-width=".7" opacity=".3"></line>
+              <line x1="32" y1="28" x2="14" y2="12" stroke="#b44aff" stroke-width=".7" opacity=".3"></line>
+              <line x1="-40" y1="0" x2="-18" y2="0" stroke="#9933ff" stroke-width=".6" opacity=".22"></line>
+              <line x1="40" y1="0" x2="18" y2="0" stroke="#00cc33" stroke-width=".6" opacity=".22"></line>
+              <line x1="0" y1="-38" x2="0" y2="-16" stroke="#00d4ff" stroke-width=".6" opacity=".22"></line>
+              <line x1="0" y1="38" x2="0" y2="16" stroke="#9933ff" stroke-width=".6" opacity=".22"></line>
+              <circle cx="-32" cy="-28" r="3" fill="#b44aff" opacity=".65"></circle>
+              <circle cx="32" cy="-28" r="3" fill="#00d4ff" opacity=".65"></circle>
+              <circle cx="-32" cy="28" r="2.5" fill="#00ff41" opacity=".4"></circle>
+              <circle cx="32" cy="28" r="2.5" fill="#b44aff" opacity=".4"></circle>
+              <circle cx="-40" cy="0" r="1.8" fill="#9933ff" opacity=".3"></circle>
+              <circle cx="40" cy="0" r="1.8" fill="#00cc33" opacity=".3"></circle>
+              <circle cx="0" cy="-38" r="1.8" fill="#00d4ff" opacity=".3"></circle>
+              <circle cx="0" cy="38" r="1.8" fill="#9933ff" opacity=".3"></circle>
+              <rect x="-22" y="-17" width="44" height="34" rx="7" fill="rgba(180,74,255,.06)" stroke="url(#gz-fus1)" stroke-width="1.6" filter="url(#gz-fusglow)"></rect>
+              <rect x="-16" y="11" width="32" height="1.5" rx=".75" fill="url(#gz-fus2)" opacity=".2"></rect>
+              <text x="0" y="-2" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="19" font-weight="700" fill="url(#gz-fus1)" letter-spacing="3" filter="url(#gz-fusglow)">AI</text>
+            </g>
+          </svg>
+          <div class="flex flex-col">
+            <span class="font-[900] text-[10px] tracking-[2px] leading-tight bg-clip-text text-transparent block" style="font-family:Outfit;background-image:linear-gradient(90deg, #b44aff, #00d4ff, #00ff41)">AI.-Systems</span>
+            <div class="w-full h-[2px] rounded-full mt-1" style="background:linear-gradient(90deg, #b44aff, #00d4ff, #00ff41)"></div>
+          </div>
+        </div>
+      </a>
+      <a class="flex items-center gap-2 text-[10px] tracking-[2px] text-white/30 hover:text-white/70 transition-colors" style="font-family:JetBrains Mono" href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+        ZUR&Uuml;CK
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="relative z-10 max-w-5xl mx-auto px-8 pt-40 pb-32">
+
+    <!-- Hero Section -->
+    <div class="mb-20 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border mb-6 text-[9px] tracking-[2.5px] uppercase" style="font-family:JetBrains Mono;border-color:#00d4ff30;color:#00d4ff80;background:#00d4ff08">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+        Desktop
+      </div>
+      <h1 class="text-5xl md:text-6xl font-[900] mb-4 bg-clip-text text-transparent" style="font-family:Outfit;background-image:linear-gradient(135deg, #00d4ff 0%, #00ff88 50%, #b44aff 100%)">AI.-Ready Windows Suite</h1>
+      <p class="text-lg text-white/30 max-w-lg mx-auto mb-3" style="font-family:Sora">Professionelle Desktop-Tools im Cyberpunk-Design</p>
+      <p class="text-sm text-white/20 max-w-md mx-auto mb-10" style="font-family:JetBrains Mono">ZIP-Packer &middot; Datenrettung &middot; Dateimanager &middot; Portabel &middot; Open Source</p>
+
+      <div class="flex items-center justify-center gap-4 flex-wrap">
+        <a href="#tools" class="flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300" style="font-family:Sora;background:#00d4ff;color:#06080a;box-shadow:0 0 30px #00d4ff40">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download (kostenlos)
+        </a>
+        <a href="#features" class="flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-sm border border-white/10 text-white/50 hover:text-white/80 hover:border-white/20 transition-all duration-300" style="font-family:Sora">
+          Funktionen ansehen
+        </a>
+      </div>
+
+      <!-- Key Selling Points -->
+      <div class="flex items-center justify-center gap-6 flex-wrap mt-10">
+        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
+          <span style="color:#00ff88">&#10003;</span> Portabel (USB-Stick)
+        </div>
+        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
+          <span style="color:#00ff88">&#10003;</span> Keine Installation
+        </div>
+        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
+          <span style="color:#00ff88">&#10003;</span> WCAG AA+ Barrierefrei
+        </div>
+        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
+          <span style="color:#00ff88">&#10003;</span> Windows 7&ndash;11
+        </div>
+      </div>
+    </div>
+
+    <!-- Tools Section -->
+    <div id="tools" class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#00d4ff40">01</span>
+        <div class="w-8 h-px" style="background:#00d4ff20"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Die Suite</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- AI.-Ready Zip -->
+        <div class="p-7 rounded-2xl border border-white/[0.06] backdrop-blur-sm relative overflow-hidden" style="background:rgba(255,255,255,0.02)">
+          <div class="absolute top-0 left-0 right-0 h-[2px]" style="background:linear-gradient(90deg, #00d4ff, #00ff88)"></div>
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background:#00d4ff12">
+            <span class="text-2xl">&#128230;</span>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-lg" style="font-family:Outfit">AI.-Ready Zip</h3>
+          <p class="text-[10px] tracking-[1.5px] uppercase mb-3" style="font-family:JetBrains Mono;color:#00d4ff80">Packer &amp; Entpacker</p>
+          <ul class="space-y-2 mb-4">
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#00d4ff" class="mt-0.5 shrink-0">&#10003;</span>ZIP, 7z, RAR, TAR, GZ</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#00d4ff" class="mt-0.5 shrink-0">&#10003;</span>Drag &amp; Drop Bedienung</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#00d4ff" class="mt-0.5 shrink-0">&#10003;</span>AES-256 Verschl&uuml;sselung</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#00d4ff" class="mt-0.5 shrink-0">&#10003;</span>Multi-Thread Kompression</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#00d4ff" class="mt-0.5 shrink-0">&#10003;</span>Cyberpunk-UI mit Neon-Elementen</li>
+          </ul>
+        </div>
+
+        <!-- AI.-Ready Rescue -->
+        <div class="p-7 rounded-2xl border border-white/[0.06] backdrop-blur-sm relative overflow-hidden" style="background:rgba(255,255,255,0.02)">
+          <div class="absolute top-0 left-0 right-0 h-[2px]" style="background:linear-gradient(90deg, #00ff88, #b44aff)"></div>
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background:#00ff8812">
+            <span class="text-2xl">&#128190;</span>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-lg" style="font-family:Outfit">AI.-Ready Rescue</h3>
+          <p class="text-[10px] tracking-[1.5px] uppercase mb-3" style="font-family:JetBrains Mono;color:#00ff8880">USB Datenrettung</p>
+          <ul class="space-y-2 mb-4">
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#00ff88" class="mt-0.5 shrink-0">&#10003;</span>USB-Stick Wiederherstellung</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#00ff88" class="mt-0.5 shrink-0">&#10003;</span>Gel&ouml;schte Dateien retten</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#00ff88" class="mt-0.5 shrink-0">&#10003;</span>FAT32 / NTFS / exFAT</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#00ff88" class="mt-0.5 shrink-0">&#10003;</span>Vorschau vor Rettung</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#00ff88" class="mt-0.5 shrink-0">&#10003;</span>Tiefenscan-Modus</li>
+          </ul>
+        </div>
+
+        <!-- AI.-Ready Explorer -->
+        <div class="p-7 rounded-2xl border border-white/[0.06] backdrop-blur-sm relative overflow-hidden" style="background:rgba(255,255,255,0.02)">
+          <div class="absolute top-0 left-0 right-0 h-[2px]" style="background:linear-gradient(90deg, #b44aff, #00d4ff)"></div>
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background:#b44aff12">
+            <span class="text-2xl">&#128193;</span>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-lg" style="font-family:Outfit">AI.-Ready Explorer</h3>
+          <p class="text-[10px] tracking-[1.5px] uppercase mb-3" style="font-family:JetBrains Mono;color:#b44aff80">Dateimanager</p>
+          <ul class="space-y-2 mb-4">
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#b44aff" class="mt-0.5 shrink-0">&#10003;</span>Dual-Panel Navigation</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#b44aff" class="mt-0.5 shrink-0">&#10003;</span>Tabs &amp; Lesezeichen</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#b44aff" class="mt-0.5 shrink-0">&#10003;</span>Integrierte Vorschau</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#b44aff" class="mt-0.5 shrink-0">&#10003;</span>Batch-Umbenennung</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#b44aff" class="mt-0.5 shrink-0">&#10003;</span>Neon-Cyberpunk Theme</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div id="features" class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#00d4ff40">02</span>
+        <div class="w-8 h-px" style="background:#00d4ff20"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Funktionen</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#00d4ff12">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#00d4ff90"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Portabel</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Direkt vom USB-Stick starten. Keine Installation n&ouml;tig, kein Admin-Recht erforderlich. Ideal f&uuml;r unterwegs.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#00d4ff12">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#00d4ff90"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Barrierefrei (WCAG AA+)</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Hohe Kontraste, Tastatur-Navigation, Screenreader-kompatibel. Barrierefreiheit von Anfang an integriert.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#00d4ff12">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#00d4ff90"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Cyberpunk-Design</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Neon-Akzente, dunkles Theme, futuristisches UI. Professionell und einzigartig im Look.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#00d4ff12">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#00d4ff90"><path d="M12 20h.01"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/><path d="M5 12.859a10 10 0 0 1 5.17-2.69"/><path d="M19 12.859a10 10 0 0 0-2.007-1.523"/><path d="M2 8.82a15 15 0 0 1 4.177-2.643"/><path d="M22 8.82a15 15 0 0 0-11.288-3.764"/><path d="m2 2 20 20"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">100% Offline</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Keine Internetverbindung n&ouml;tig. Alle Tools laufen vollst&auml;ndig lokal auf deinem Rechner.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#00d4ff12">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#00d4ff90"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Open Source</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Quellcode offen verf&uuml;gbar. Keine versteckten Kosten, keine Telemetrie, kein Tracking.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#00d4ff12">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#00d4ff90"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Performant</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Schlanke Architektur, schneller Start, minimaler RAM-Verbrauch. Optimiert f&uuml;r &auml;ltere und neue Systeme.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screenshots Section -->
+    <div class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#00d4ff40">03</span>
+        <div class="w-8 h-px" style="background:#00d4ff20"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Screenshots</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="rounded-2xl border neon-border overflow-hidden" style="border-color:#00d4ff30;background:rgba(0,212,255,0.03)">
+          <div class="aspect-video flex items-center justify-center">
+            <div class="text-center p-6">
+              <span class="text-4xl mb-3 block">&#128230;</span>
+              <p class="text-[10px] tracking-[2px] uppercase" style="font-family:JetBrains Mono;color:#00d4ff60">AI.-Ready Zip</p>
+              <p class="text-xs text-white/20 mt-1" style="font-family:Sora">Screenshot folgt</p>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-2xl border neon-border overflow-hidden" style="border-color:#00ff8830;background:rgba(0,255,136,0.03)">
+          <div class="aspect-video flex items-center justify-center">
+            <div class="text-center p-6">
+              <span class="text-4xl mb-3 block">&#128190;</span>
+              <p class="text-[10px] tracking-[2px] uppercase" style="font-family:JetBrains Mono;color:#00ff8860">AI.-Ready Rescue</p>
+              <p class="text-xs text-white/20 mt-1" style="font-family:Sora">Screenshot folgt</p>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-2xl border neon-border overflow-hidden" style="border-color:#b44aff30;background:rgba(180,74,255,0.03)">
+          <div class="aspect-video flex items-center justify-center">
+            <div class="text-center p-6">
+              <span class="text-4xl mb-3 block">&#128193;</span>
+              <p class="text-[10px] tracking-[2px] uppercase" style="font-family:JetBrains Mono;color:#b44aff60">AI.-Ready Explorer</p>
+              <p class="text-xs text-white/20 mt-1" style="font-family:Sora">Screenshot folgt</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technical Specs -->
+    <div class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#00d4ff40">04</span>
+        <div class="w-8 h-px" style="background:#00d4ff20"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Technische Details</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div class="p-6 rounded-2xl border border-white/[0.06]" style="background:rgba(255,255,255,0.02)">
+          <h4 class="text-xs text-white/50 mb-4 tracking-[2px] uppercase" style="font-family:JetBrains Mono">Systemanforderungen</h4>
+          <ul class="space-y-2.5">
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#00d4ff60">OS</span>
+              Windows 7, 8, 8.1, 10, 11
+            </li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#00d4ff60">RAM</span>
+              ab 512 MB
+            </li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#00d4ff60">CPU</span>
+              x86 / x64
+            </li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#00d4ff60">HDD</span>
+              &lt; 50 MB pro Tool
+            </li>
+          </ul>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06]" style="background:rgba(255,255,255,0.02)">
+          <h4 class="text-xs text-white/50 mb-4 tracking-[2px] uppercase" style="font-family:JetBrains Mono">Technologie</h4>
+          <ul class="space-y-2.5">
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#00d4ff60">UI</span>
+              WinForms / WPF, Cyberpunk Theme
+            </li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#00d4ff60">Lang</span>
+              C# / .NET
+            </li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#00d4ff60">A11Y</span>
+              WCAG 2.1 AA+ konform
+            </li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#00d4ff60">Dist</span>
+              Portable EXE, kein Installer
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing / CTA Section -->
+    <div class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#00d4ff40">05</span>
+        <div class="w-8 h-px" style="background:#00d4ff20"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Download</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="max-w-lg mx-auto">
+        <div class="p-8 rounded-2xl border relative text-center" style="background:linear-gradient(145deg, rgba(0,212,255,0.08), rgba(0,255,136,0.04));border-color:#00d4ff40;box-shadow:0 0 40px #00d4ff10">
+          <div class="mb-6">
+            <div class="text-xs text-white/40 mb-1" style="font-family:JetBrains Mono">Kostenlos &middot; Open Source</div>
+            <div class="flex items-baseline justify-center gap-1">
+              <span class="text-5xl font-[900]" style="font-family:Outfit;color:#00d4ff">0</span>
+              <span class="text-lg text-white/30" style="font-family:JetBrains Mono">&euro;</span>
+            </div>
+            <p class="text-xs text-white/25 mt-2" style="font-family:Sora">Alle drei Tools &mdash; f&uuml;r immer kostenlos</p>
+          </div>
+          <ul class="space-y-2.5 mb-8 text-left max-w-xs mx-auto">
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00d4ff" class="mt-0.5 shrink-0">&#10003;</span>AI.-Ready Zip (Packer &amp; Entpacker)</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00d4ff" class="mt-0.5 shrink-0">&#10003;</span>AI.-Ready Rescue (USB Datenrettung)</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00d4ff" class="mt-0.5 shrink-0">&#10003;</span>AI.-Ready Explorer (Dateimanager)</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00d4ff" class="mt-0.5 shrink-0">&#10003;</span>Portable &mdash; keine Installation</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00d4ff" class="mt-0.5 shrink-0">&#10003;</span>Quellcode auf GitHub</li>
+          </ul>
+          <a href="https://github.com/GZ-AI-Stacks" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300" style="font-family:Sora;background:#00d4ff;color:#06080a;box-shadow:0 0 30px #00d4ff40">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Jetzt herunterladen
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="text-center">
+      <div class="flex items-center gap-4 mb-10">
+        <div class="flex-1 h-px bg-white/5"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Kontakt</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+      <p class="text-sm text-white/25 mb-6" style="font-family:Sora">Fragen oder Feedback?</p>
+      <a href="mailto:gz.ai.stacks@gmail.com" class="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-sm border border-white/10 text-white/40 hover:text-white/70 hover:border-white/20 transition-all duration-300" style="font-family:Sora">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        gz.ai.stacks@gmail.com
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="relative z-10 border-t border-white/[0.04] px-8 py-10">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <svg width="18" height="18" viewBox="0 0 100 100" fill="none">
+          <defs>
+            <linearGradient id="gz-fus1f" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b44aff"></stop><stop offset="50%" stop-color="#00d4ff"></stop><stop offset="100%" stop-color="#00ff41"></stop></linearGradient>
+            <filter id="gz-fusglowf"><feGaussianBlur stdDeviation="3.5" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+          </defs>
+          <g transform="translate(50,50)">
+            <rect x="-22" y="-17" width="44" height="34" rx="7" fill="rgba(180,74,255,.06)" stroke="url(#gz-fus1f)" stroke-width="1.6" filter="url(#gz-fusglowf)"></rect>
+            <text x="0" y="-2" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="19" font-weight="700" fill="url(#gz-fus1f)" letter-spacing="3" filter="url(#gz-fusglowf)">AI</text>
+          </g>
+        </svg>
+        <span class="text-[10px] tracking-[2px] text-white/30" style="font-family:JetBrains Mono">ZIMMERMANN AI SYSTEMS &middot; 2026</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a class="text-[10px] tracking-[1.5px] uppercase text-white/25 hover:text-white/55 transition-colors" style="font-family:JetBrains Mono" href="/impressum">Impressum</a>
+        <a class="text-[10px] tracking-[1.5px] uppercase text-white/25 hover:text-white/55 transition-colors" style="font-family:JetBrains Mono" href="/datenschutz">Datenschutz</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

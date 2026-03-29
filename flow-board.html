@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="/_next/static/chunks/fa708782843241c6.css" data-precedence="next"/>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&amp;family=Sora:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600;700&amp;display=swap" as="style"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&amp;family=Sora:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+  <meta name="google-site-verification" content="6JxjImXuJBE0bFadGqMcBTpBeU7a6voPY9mG1cbOAc0"/>
+  <title>FLOW Board — Digitales Whiteboard | GZ-AI.-Stacks</title>
+  <meta name="description" content="FLOW Board – Das digitale Whiteboard für Bildung, Präsentation und Kreativität. Offline, DSGVO-konform, Einmalkauf. 14 Werkzeuge, Ebenen, Video+Audio, Live-Sharing."/>
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-title" content="AI.-Stacks"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"/>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml"/>
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+  <style>
+    @keyframes neon-pulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(6,182,212,0.15), inset 0 0 20px rgba(6,182,212,0.05); }
+      50% { box-shadow: 0 0 40px rgba(6,182,212,0.25), inset 0 0 30px rgba(6,182,212,0.08); }
+    }
+    .neon-border { animation: neon-pulse 3s ease-in-out infinite; }
+  </style>
+</head>
+<body class="antialiased">
+<div class="min-h-screen relative" style="background:#06080a">
+
+  <!-- Overlay -->
+  <div class="fixed inset-0 pointer-events-none" style="background:radial-gradient(ellipse 72% 58% at 50% 50%, transparent 0%, rgba(6,8,10,0.32) 58%, rgba(6,8,10,0.88) 100%), linear-gradient(to bottom, rgba(6,8,10,0.80) 0%, transparent 16%, transparent 78%, rgba(6,8,10,0.82) 100%)"></div>
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#06080a]/50 border-b border-white/[0.04]">
+    <div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
+      <a href="/">
+        <div class="flex items-center gap-3">
+          <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+            <defs>
+              <linearGradient id="gz-fus1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b44aff"></stop><stop offset="50%" stop-color="#00d4ff"></stop><stop offset="100%" stop-color="#00ff41"></stop></linearGradient>
+              <linearGradient id="gz-fus2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b44aff"></stop><stop offset="100%" stop-color="#00d4ff"></stop></linearGradient>
+              <filter id="gz-fusglow"><feGaussianBlur stdDeviation="3.5" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+            </defs>
+            <g transform="translate(50,50)">
+              <text x="-40" y="-36" font-family="JetBrains Mono" font-size="7" fill="#b44aff" opacity=".18">01</text>
+              <text x="32" y="-32" font-family="JetBrains Mono" font-size="6" fill="#00d4ff" opacity=".15">10</text>
+              <text x="-42" y="12" font-family="JetBrains Mono" font-size="5" fill="#00ff41" opacity=".12">11</text>
+              <text x="36" y="18" font-family="JetBrains Mono" font-size="6" fill="#b44aff" opacity=".12">00</text>
+              <line x1="-32" y1="-28" x2="-14" y2="-12" stroke="#b44aff" stroke-width=".9" opacity=".4"></line>
+              <line x1="32" y1="-28" x2="14" y2="-12" stroke="#00d4ff" stroke-width=".9" opacity=".4"></line>
+              <line x1="-32" y1="28" x2="-14" y2="12" stroke="#00ff41" stroke-width=".7" opacity=".3"></line>
+              <line x1="32" y1="28" x2="14" y2="12" stroke="#b44aff" stroke-width=".7" opacity=".3"></line>
+              <line x1="-40" y1="0" x2="-18" y2="0" stroke="#9933ff" stroke-width=".6" opacity=".22"></line>
+              <line x1="40" y1="0" x2="18" y2="0" stroke="#00cc33" stroke-width=".6" opacity=".22"></line>
+              <line x1="0" y1="-38" x2="0" y2="-16" stroke="#00d4ff" stroke-width=".6" opacity=".22"></line>
+              <line x1="0" y1="38" x2="0" y2="16" stroke="#9933ff" stroke-width=".6" opacity=".22"></line>
+              <circle cx="-32" cy="-28" r="3" fill="#b44aff" opacity=".65"></circle>
+              <circle cx="32" cy="-28" r="3" fill="#00d4ff" opacity=".65"></circle>
+              <circle cx="-32" cy="28" r="2.5" fill="#00ff41" opacity=".4"></circle>
+              <circle cx="32" cy="28" r="2.5" fill="#b44aff" opacity=".4"></circle>
+              <circle cx="-40" cy="0" r="1.8" fill="#9933ff" opacity=".3"></circle>
+              <circle cx="40" cy="0" r="1.8" fill="#00cc33" opacity=".3"></circle>
+              <circle cx="0" cy="-38" r="1.8" fill="#00d4ff" opacity=".3"></circle>
+              <circle cx="0" cy="38" r="1.8" fill="#9933ff" opacity=".3"></circle>
+              <rect x="-22" y="-17" width="44" height="34" rx="7" fill="rgba(180,74,255,.06)" stroke="url(#gz-fus1)" stroke-width="1.6" filter="url(#gz-fusglow)"></rect>
+              <rect x="-16" y="11" width="32" height="1.5" rx=".75" fill="url(#gz-fus2)" opacity=".2"></rect>
+              <text x="0" y="-2" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="19" font-weight="700" fill="url(#gz-fus1)" letter-spacing="3" filter="url(#gz-fusglow)">AI</text>
+            </g>
+          </svg>
+          <div class="flex flex-col">
+            <span class="font-[900] text-[10px] tracking-[2px] leading-tight bg-clip-text text-transparent block" style="font-family:Outfit;background-image:linear-gradient(90deg, #b44aff, #00d4ff, #00ff41)">AI.-Systems</span>
+            <div class="w-full h-[2px] rounded-full mt-1" style="background:linear-gradient(90deg, #b44aff, #00d4ff, #00ff41)"></div>
+          </div>
+        </div>
+      </a>
+      <a class="flex items-center gap-2 text-[10px] tracking-[2px] text-white/30 hover:text-white/70 transition-colors" style="font-family:JetBrains Mono" href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+        ZUR&Uuml;CK
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="relative z-10 max-w-5xl mx-auto px-8 pt-40 pb-32">
+
+    <!-- Hero -->
+    <div class="mb-20 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border mb-6 text-[9px] tracking-[2.5px] uppercase" style="font-family:JetBrains Mono;border-color:#06b6d430;color:#06b6d480;background:#06b6d408">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3" aria-hidden="true"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"/></svg>
+        Whiteboard
+      </div>
+      <h1 class="text-5xl md:text-6xl font-[900] mb-4 bg-clip-text text-transparent" style="font-family:Outfit;background-image:linear-gradient(135deg, #06b6d4 0%, #22d3ee 50%, #3b82f6 100%)">FLOW Board</h1>
+      <p class="text-lg text-white/30 max-w-lg mx-auto mb-3" style="font-family:Sora">Digitales Whiteboard f&uuml;r Bildung, Pr&auml;sentation &amp; Kreativit&auml;t</p>
+      <p class="text-sm text-white/20 max-w-md mx-auto mb-10" style="font-family:JetBrains Mono">Offline &middot; DSGVO &middot; Video+Audio &middot; Live-Sharing &middot; Einmalkauf</p>
+
+      <div class="flex items-center justify-center gap-4 flex-wrap">
+        <a href="#preise" class="flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300" style="font-family:Sora;background:#06b6d4;color:#06080a;box-shadow:0 0 30px #06b6d440">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+          Jetzt kaufen
+        </a>
+        <a href="#features" class="flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-sm border border-white/10 text-white/50 hover:text-white/80 hover:border-white/20 transition-all duration-300" style="font-family:Sora">
+          Funktionen ansehen
+        </a>
+      </div>
+
+      <div class="flex items-center justify-center gap-6 flex-wrap mt-10">
+        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono"><span style="color:#00ff88">&#10003;</span> 100% Offline</div>
+        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono"><span style="color:#00ff88">&#10003;</span> DSGVO by Design</div>
+        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono"><span style="color:#00ff88">&#10003;</span> Kein Account n&ouml;tig</div>
+        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono"><span style="color:#00ff88">&#10003;</span> Einmalkauf</div>
+      </div>
+    </div>
+
+    <!-- 01 Features -->
+    <div id="features" class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#06b6d440">01</span>
+        <div class="w-8 h-px" style="background:#06b6d420"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Funktionen</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#06b6d412">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#06b6d490"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">14 Zeichenwerkzeuge</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Stift, Pinsel, Spr&uuml;hdose, Radierer, Formen, Text, Pfeile, Lasso, F&uuml;lleimer, Pipette, Laser und mehr.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#06b6d412">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#06b6d490"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Ebenen &amp; Multi-Page</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Unbegrenzte Ebenen mit Sichtbarkeit, Sperren und Deckkraft. Beliebig viele Seiten wie Folien.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#06b6d412">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#06b6d490"><path d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Video + Audio Aufnahme</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Bildschirm + Mikrofon aufnehmen. Export als MP4, WebM oder GIF. Ideal f&uuml;r Erkl&auml;rvideos.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#06b6d412">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#06b6d490"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Live-Sharing (QR-Code)</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Board per QR-Code im lokalen Netzwerk teilen. Kein Internet, kein Login &mdash; sofort sichtbar auf allen Ger&auml;ten.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#06b6d412">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#06b6d490"><path d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Pr&auml;sentationsmodus</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Vollbild mit Spotlight, Laser-Pointer und Cursor-Highlight. Seite f&uuml;r Seite wie eine Folie.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#06b6d412">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#06b6d490"><path d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">PDF Import &amp; Export</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">PDFs als Hintergrund importieren. Board als PDF, PNG oder SVG exportieren.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#06b6d412">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#06b6d490"><path d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Archiv-System</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Boards ordnerbasiert lokal speichern. Bilder und Videos archivieren &mdash; alles offline.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#06b6d412">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#06b6d490"><path d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">DSGVO by Design</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Keine Cloud, kein Tracking, keine Accounts. Alle Daten bleiben auf dem Ger&auml;t. F&uuml;r Schulen entwickelt.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#06b6d412">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#06b6d490"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Widgets</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Sticky Notes, Uhr, Timer, QR-Code-Generator. Symmetrie (2x&ndash;8x), Formerkennung, Neon-Modus.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 Vergleich -->
+    <div class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#06b6d440">02</span>
+        <div class="w-8 h-px" style="background:#06b6d420"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Vergleich</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="p-6 rounded-2xl border border-white/[0.06] overflow-x-auto" style="background:rgba(255,255,255,0.02)">
+        <table class="w-full text-xs min-w-[560px]" style="border-collapse:separate;border-spacing:0">
+          <thead>
+            <tr>
+              <th class="text-left py-3 px-4 text-white/40 font-[700] text-[10px] tracking-[1.5px] uppercase" style="font-family:JetBrains Mono">Feature</th>
+              <th class="py-3 px-4 font-[700] text-[10px] tracking-[1.5px] uppercase" style="font-family:JetBrains Mono;color:#06b6d4">FLOW Board</th>
+              <th class="py-3 px-4 text-white/30 font-[700] text-[10px] tracking-[1.5px] uppercase" style="font-family:JetBrains Mono">Cloud-Boards</th>
+              <th class="py-3 px-4 text-white/30 font-[700] text-[10px] tracking-[1.5px] uppercase" style="font-family:JetBrains Mono">Abo-Tools</th>
+            </tr>
+          </thead>
+          <tbody style="font-family:Sora">
+            <tr class="border-t border-white/[0.04]"><td class="py-2.5 px-4 text-white/50">Offline-Nutzung</td><td class="py-2.5 px-4 text-center" style="color:#00ff88">&#10003;</td><td class="py-2.5 px-4 text-center text-white/15">&#10005;</td><td class="py-2.5 px-4 text-center text-white/15">&#10005;</td></tr>
+            <tr class="border-t border-white/[0.04]"><td class="py-2.5 px-4 text-white/50">Kein Account</td><td class="py-2.5 px-4 text-center" style="color:#00ff88">&#10003;</td><td class="py-2.5 px-4 text-center text-white/15">&#10005;</td><td class="py-2.5 px-4 text-center text-white/15">&#10005;</td></tr>
+            <tr class="border-t border-white/[0.04]"><td class="py-2.5 px-4 text-white/50">Video + Audio</td><td class="py-2.5 px-4 text-center" style="color:#00ff88">&#10003;</td><td class="py-2.5 px-4 text-center text-white/15">&#10005;</td><td class="py-2.5 px-4 text-center text-white/15">&#10005;</td></tr>
+            <tr class="border-t border-white/[0.04]"><td class="py-2.5 px-4 text-white/50">Live-Sharing LAN</td><td class="py-2.5 px-4 text-center" style="color:#00ff88">&#10003;</td><td class="py-2.5 px-4 text-center text-white/15">&#10005;</td><td class="py-2.5 px-4 text-center text-white/15">&#10005;</td></tr>
+            <tr class="border-t border-white/[0.04]"><td class="py-2.5 px-4 text-white/50">Einmalkauf</td><td class="py-2.5 px-4 text-center" style="color:#00ff88">&#10003;</td><td class="py-2.5 px-4 text-center text-white/15">&#10005;</td><td class="py-2.5 px-4 text-center text-white/15">&#10005;</td></tr>
+            <tr class="border-t border-white/[0.04]"><td class="py-2.5 px-4 text-white/50">DSGVO ohne Cloud</td><td class="py-2.5 px-4 text-center" style="color:#00ff88">&#10003;</td><td class="py-2.5 px-4 text-center text-white/15">&#10005;</td><td class="py-2.5 px-4 text-center text-white/15">&#10005;</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 03 Technische Details -->
+    <div class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#06b6d440">03</span>
+        <div class="w-8 h-px" style="background:#06b6d420"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Technische Details</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div class="p-6 rounded-2xl border border-white/[0.06]" style="background:rgba(255,255,255,0.02)">
+          <h4 class="text-xs text-white/50 mb-4 tracking-[2px] uppercase" style="font-family:JetBrains Mono">Systemanforderungen</h4>
+          <ul class="space-y-2.5">
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora"><span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#06b6d460">OS</span>Windows 10/11, macOS, Linux, ChromeOS, iPadOS</li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora"><span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#06b6d460">Browser</span>Chrome 90+, Edge 90+, Firefox 95+, Safari 15+</li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora"><span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#06b6d460">RAM</span>ab 2 GB (empfohlen: 4 GB+)</li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora"><span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#06b6d460">HDD</span>&lt; 1 MB (eine HTML-Datei)</li>
+          </ul>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06]" style="background:rgba(255,255,255,0.02)">
+          <h4 class="text-xs text-white/50 mb-4 tracking-[2px] uppercase" style="font-family:JetBrains Mono">Technologie</h4>
+          <ul class="space-y-2.5">
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora"><span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#06b6d460">Typ</span>Standalone HTML (Single File)</li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora"><span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#06b6d460">Net</span>Keine Internetverbindung n&ouml;tig</li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora"><span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#06b6d460">Input</span>Maus, Touch, Stift (Wacom, XP-Pen, Surface Pen)</li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora"><span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#06b6d460">Dist</span>Netzlaufwerk, USB-Stick, E-Mail</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Preise -->
+    <div id="preise" class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#06b6d440">04</span>
+        <div class="w-8 h-px" style="background:#06b6d420"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Lizenzmodelle</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <!-- Einzel / Pro / Schule -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="p-7 rounded-2xl border border-white/[0.06] text-center" style="background:rgba(255,255,255,0.02)">
+          <div class="text-[10px] tracking-[2px] uppercase mb-3" style="font-family:JetBrains Mono;color:#06b6d480">Einzel</div>
+          <div class="flex items-baseline justify-center gap-1 mb-1"><span class="text-4xl font-[900]" style="font-family:Outfit;color:#fff">79&euro;</span><span class="text-sm text-white/30" style="font-family:JetBrains Mono">einmalig</span></div>
+          <p class="text-xs text-white/25 mb-5" style="font-family:Sora">1 Ger&auml;t / 1 Nutzer</p>
+          <ul class="space-y-2 mb-6 text-left">
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Alle 14 Werkzeuge</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Ebenen &amp; Multi-Page</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>PDF Import &amp; Export</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>1 Jahr Updates</li>
+          </ul>
+          <a href="#" class="block text-center py-3 rounded-xl text-sm font-[600] border transition-all duration-300" style="font-family:Sora;border-color:#06b6d430;color:#06b6d4;background:#06b6d408">Jetzt kaufen</a>
+        </div>
+
+        <div class="p-7 rounded-2xl border text-center relative" style="background:rgba(6,182,212,0.04);border-color:#06b6d440;box-shadow:0 0 40px #06b6d410">
+          <div class="absolute top-3 right-3 text-[8px] tracking-[1.5px] uppercase px-2 py-0.5 rounded-full" style="font-family:JetBrains Mono;background:#06b6d4;color:#06080a;font-weight:700">Beliebt</div>
+          <div class="text-[10px] tracking-[2px] uppercase mb-3" style="font-family:JetBrains Mono;color:#06b6d480">Pro</div>
+          <div class="flex items-baseline justify-center gap-1 mb-1"><span class="text-4xl font-[900]" style="font-family:Outfit;color:#fff">149&euro;</span><span class="text-sm text-white/30" style="font-family:JetBrains Mono">einmalig</span></div>
+          <p class="text-xs text-white/25 mb-5" style="font-family:Sora">Bis 3 Ger&auml;te / privat + beruflich</p>
+          <ul class="space-y-2 mb-6 text-left">
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Alles aus Einzel</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Video + Audio Aufnahme</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Live-Sharing (QR-Code)</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>2 Jahre Updates</li>
+          </ul>
+          <a href="#" class="block text-center py-3 rounded-xl text-sm font-[700] transition-all duration-300" style="font-family:Sora;background:#06b6d4;color:#06080a;box-shadow:0 0 20px #06b6d430">Jetzt kaufen</a>
+        </div>
+
+        <div class="p-7 rounded-2xl border border-white/[0.06] text-center" style="background:rgba(255,255,255,0.02)">
+          <div class="text-[10px] tracking-[2px] uppercase mb-3" style="font-family:JetBrains Mono;color:#06b6d480">Schule</div>
+          <div class="flex items-baseline justify-center gap-1 mb-1"><span class="text-4xl font-[900]" style="font-family:Outfit;color:#fff">499&euro;</span><span class="text-sm text-white/30" style="font-family:JetBrains Mono">einmalig</span></div>
+          <p class="text-xs text-white/25 mb-5" style="font-family:Sora">Unbegrenzte Nutzer / 1 Schule</p>
+          <ul class="space-y-2 mb-6 text-left">
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Alles aus Pro</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>DSGVO-Dokumentation</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Technisches Datenblatt</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>3 Jahre Updates</li>
+          </ul>
+          <a href="mailto:gz.ai.stacks@gmail.com" class="block text-center py-3 rounded-xl text-sm font-[600] border transition-all duration-300" style="font-family:Sora;border-color:#06b6d430;color:#06b6d4;background:#06b6d408">Anfrage senden</a>
+        </div>
+      </div>
+
+      <!-- Tr&auml;ger S / M / L -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="p-7 rounded-2xl border border-white/[0.06] text-center" style="background:rgba(255,255,255,0.02)">
+          <div class="text-[10px] tracking-[2px] uppercase mb-3" style="font-family:JetBrains Mono;color:#06b6d480">Tr&auml;ger S</div>
+          <div class="flex items-baseline justify-center gap-1 mb-1"><span class="text-3xl font-[900]" style="font-family:Outfit;color:#fff">1.499&euro;</span></div>
+          <p class="text-xs text-white/25 mb-5" style="font-family:Sora">Bis 10 Schulen &middot; ab 150&euro;/Schule</p>
+          <ul class="space-y-2 mb-6 text-left">
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Unbegrenzte Nutzer</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Zentrale IT-Verteilung</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>3 Jahre Updates</li>
+          </ul>
+          <a href="mailto:gz.ai.stacks@gmail.com" class="block text-center py-3 rounded-xl text-sm font-[600] border transition-all duration-300" style="font-family:Sora;border-color:#06b6d430;color:#06b6d4;background:#06b6d408">Anfrage senden</a>
+        </div>
+
+        <div class="p-7 rounded-2xl border text-center relative" style="background:rgba(6,182,212,0.04);border-color:#06b6d440;box-shadow:0 0 40px #06b6d410">
+          <div class="absolute top-3 right-3 text-[8px] tracking-[1.5px] uppercase px-2 py-0.5 rounded-full" style="font-family:JetBrains Mono;background:#06b6d4;color:#06080a;font-weight:700">Empfohlen</div>
+          <div class="text-[10px] tracking-[2px] uppercase mb-3" style="font-family:JetBrains Mono;color:#06b6d480">Tr&auml;ger M</div>
+          <div class="flex items-baseline justify-center gap-1 mb-1"><span class="text-3xl font-[900]" style="font-family:Outfit;color:#fff">2.999&euro;</span></div>
+          <p class="text-xs text-white/25 mb-5" style="font-family:Sora">Bis 30 Schulen &middot; ab 100&euro;/Schule</p>
+          <ul class="space-y-2 mb-6 text-left">
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Unbegrenzte Nutzer</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>5 Jahre Updates</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Schulungswebinar inklusive</li>
+          </ul>
+          <a href="mailto:gz.ai.stacks@gmail.com" class="block text-center py-3 rounded-xl text-sm font-[700] transition-all duration-300" style="font-family:Sora;background:#06b6d4;color:#06080a;box-shadow:0 0 20px #06b6d430">Anfrage senden</a>
+        </div>
+
+        <div class="p-7 rounded-2xl border border-white/[0.06] text-center" style="background:rgba(255,255,255,0.02)">
+          <div class="text-[10px] tracking-[2px] uppercase mb-3" style="font-family:JetBrains Mono;color:#06b6d480">Tr&auml;ger L</div>
+          <div class="flex items-baseline justify-center gap-1 mb-1"><span class="text-3xl font-[900]" style="font-family:Outfit;color:#fff">4.999&euro;</span></div>
+          <p class="text-xs text-white/25 mb-5" style="font-family:Sora">Bis 60 Schulen &middot; ab 83&euro;/Schule</p>
+          <ul class="space-y-2 mb-6 text-left">
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>5 Jahre Updates</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Schulungswebinar inklusive</li>
+            <li class="flex items-start gap-2 text-xs text-white/40" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Individuelle Anpassungen</li>
+          </ul>
+          <a href="mailto:gz.ai.stacks@gmail.com" class="block text-center py-3 rounded-xl text-sm font-[600] border transition-all duration-300" style="font-family:Sora;border-color:#06b6d430;color:#06b6d4;background:#06b6d408">Anfrage senden</a>
+        </div>
+      </div>
+
+      <!-- Landkreis -->
+      <div class="max-w-lg mx-auto">
+        <div class="p-8 rounded-2xl border relative text-center neon-border" style="background:linear-gradient(145deg, rgba(6,182,212,0.08), rgba(59,130,246,0.04));border-color:#06b6d440;box-shadow:0 0 40px #06b6d410">
+          <div class="text-[10px] tracking-[2px] uppercase mb-2" style="font-family:JetBrains Mono;color:#06b6d480">Landkreis-Lizenz</div>
+          <div class="flex items-baseline justify-center gap-1 mb-1"><span class="text-5xl font-[900]" style="font-family:Outfit;color:#06b6d4">7.999&euro;</span></div>
+          <p class="text-xs text-white/25 mb-6" style="font-family:Sora">Unbegrenzte Schulen eines Landkreises &middot; einmalig</p>
+          <ul class="space-y-2 mb-8 text-left max-w-xs mx-auto">
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Unbegrenzte Nutzer &amp; Schulen</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>5 Jahre Updates + Onboarding</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Branding &amp; Logo-Integration</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>DSGVO-Doku + Schulungswebinar</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#06b6d4" class="mt-0.5 shrink-0">&#10003;</span>Rechnungskauf (30 Tage Ziel)</li>
+          </ul>
+          <a href="mailto:gz.ai.stacks@gmail.com" class="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300" style="font-family:Sora;background:#06b6d4;color:#06080a;box-shadow:0 0 30px #06b6d440">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            Angebot anfordern
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kontakt -->
+    <div class="text-center">
+      <div class="flex items-center gap-4 mb-10">
+        <div class="flex-1 h-px bg-white/5"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Kontakt</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+      <p class="text-sm text-white/25 mb-6" style="font-family:Sora">Fragen, Feedback oder individuelle Angebote?</p>
+      <a href="mailto:gz.ai.stacks@gmail.com" class="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-sm border border-white/10 text-white/40 hover:text-white/70 hover:border-white/20 transition-all duration-300" style="font-family:Sora">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        gz.ai.stacks@gmail.com
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="relative z-10 border-t border-white/[0.04] px-8 py-10">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <svg width="18" height="18" viewBox="0 0 100 100" fill="none">
+          <defs>
+            <linearGradient id="gz-fus1f" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b44aff"></stop><stop offset="50%" stop-color="#00d4ff"></stop><stop offset="100%" stop-color="#00ff41"></stop></linearGradient>
+            <filter id="gz-fusglowf"><feGaussianBlur stdDeviation="3.5" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+          </defs>
+          <g transform="translate(50,50)">
+            <rect x="-22" y="-17" width="44" height="34" rx="7" fill="rgba(180,74,255,.06)" stroke="url(#gz-fus1f)" stroke-width="1.6" filter="url(#gz-fusglowf)"></rect>
+            <text x="0" y="-2" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="19" font-weight="700" fill="url(#gz-fus1f)" letter-spacing="3" filter="url(#gz-fusglowf)">AI</text>
+          </g>
+        </svg>
+        <span class="text-[10px] tracking-[2px] text-white/30" style="font-family:JetBrains Mono">ZIMMERMANN AI SYSTEMS &middot; 2026</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a class="text-[10px] tracking-[1.5px] uppercase text-white/25 hover:text-white/55 transition-colors" style="font-family:JetBrains Mono" href="/impressum">Impressum</a>
+        <a class="text-[10px] tracking-[1.5px] uppercase text-white/25 hover:text-white/55 transition-colors" style="font-family:JetBrains Mono" href="/datenschutz">Datenschutz</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
