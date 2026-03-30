@@ -173,7 +173,9 @@ function makeCard(href,badge,num,iconSvg,iconBg,title,tags,desc,accent){
   return a;
 }
 function inject(){
-  if(document.querySelector('[data-injected="flow-board"]'))return;
+  var fbDone=document.querySelector('[data-injected="flow-board"]');
+  var wtDone=document.querySelector('[data-injected="windows-tools-injected"]');
+  if(fbDone&&wtDone)return;
   var grids=document.querySelectorAll('[data-gz] .grid, [data-gz] [class*="grid-cols"]');
   if(grids.length<4)grids=document.querySelectorAll('[class*="grid-cols"]');
   // Find Bildung grid (contains abc-fuchs)
@@ -188,9 +190,20 @@ function inject(){
     bilGrid.appendChild(fb);
   }
   if(allGrid&&!document.querySelector('[data-injected="windows-tools-injected"]')){
-    var wt=makeCard('/windows-tools','DESKTOP','04','<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d4ff90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>','#00d4ff12','AI.-Ready Windows Suite','ZIP-Packer · Datenrettung · Dateimanager','Desktop-Tools: Cyberpunk-Design, barrierefrei, kostenlos','#00d4ff');
-    wt.setAttribute('data-injected','windows-tools-injected');
-    allGrid.appendChild(wt);
+    var svgPC='<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>';
+    var apps=[
+      ['/windows-tools','KOSTENLOS','W1',svgPC.replace('currentColor','#00d4ff90'),'#00d4ff12','AI.-Ready Zip','Archiv Packer & Entpacker','ZIP, 7z, RAR, TAR — Drag & Drop','#00d4ff'],
+      ['/windows-tools','29,99\u20AC','W2',svgPC.replace('currentColor','#00ffaa90'),'#00ffaa12','AI.-Ready Cleaner','System-Bereinigung','10 Tabs, Health-Score, Bloatware-Erkenner','#00ffaa'],
+      ['/windows-tools','39,99\u20AC','W3',svgPC.replace('currentColor','#ff8c0090'),'#ff8c0012','AI.-Ready Rescue','USB Datenrettung','Quick-Scan, Deep-Scan, File Carving','#ff8c00'],
+      ['/windows-tools','24,99\u20AC','W4',svgPC.replace('currentColor','#b44aff90'),'#b44aff12','AI.-Ready Explorer','Dateimanager','1/2/4 Panel-Layout, Total Commander Alternative','#b44aff'],
+      ['/windows-tools','19,99\u20AC','W5',svgPC.replace('currentColor','#ff660090'),'#ff660012','AI.-Ready Converter','Bild-Konverter','Batch, Drag & Drop, Social Media Gr\u00f6\u00dfen','#ff6600'],
+      ['/windows-tools','19,99\u20AC','W6',svgPC.replace('currentColor','#00b4ff90'),'#00b4ff12','AI.-Ready Cloud Drive','Cloud Drive & Dateimanager','Cloud Vault, Papierkorb, VS Code Extension','#00b4ff']
+    ];
+    for(var i=0;i<apps.length;i++){
+      var c=makeCard(apps[i][0],apps[i][1],apps[i][2],apps[i][3],apps[i][4],apps[i][5],apps[i][6],apps[i][7],apps[i][8]);
+      c.setAttribute('data-injected','windows-tools-injected');
+      allGrid.appendChild(c);
+    }
   }
 }
 if(document.readyState==='complete')setTimeout(inject,800);

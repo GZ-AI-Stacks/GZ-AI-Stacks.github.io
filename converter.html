@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="/_next/static/chunks/fa708782843241c6.css" data-precedence="next"/>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&amp;family=Sora:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600;700&amp;display=swap" as="style"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&amp;family=Sora:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+  <meta name="google-site-verification" content="6JxjImXuJBE0bFadGqMcBTpBeU7a6voPY9mG1cbOAc0"/>
+  <title>AI.-Ready Converter &mdash; Bild-Konverter &middot; GZ-AI.-Stacks</title>
+  <meta name="description" content="AI.-Ready Converter: Bilder konvertieren, skalieren, komprimieren. PNG, JPG, BMP, GIF, TIFF, ICO. Batch-Konvertierung, Social Media Gr&ouml;&szlig;en, Drag &amp; Drop. Portabel, 19,99&euro; Einmalkauf."/>
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-title" content="AI.-Stacks"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"/>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml"/>
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+  <style>
+    @keyframes neon-pulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,102,0,0.15), inset 0 0 20px rgba(255,102,0,0.05); }
+      50% { box-shadow: 0 0 40px rgba(255,102,0,0.25), inset 0 0 30px rgba(255,102,0,0.08); }
+    }
+    .neon-border {
+      animation: neon-pulse 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+  </style>
+</head>
+<body class="antialiased">
+<div class="min-h-screen relative" style="background:#06080a">
+
+  <!-- Theme Glow -->
+  <div id="theme-glow" style="position:fixed;inset:0;z-index:0;pointer-events:none;transition:background 1.5s ease;opacity:0.7"></div>
+
+  <!-- Animated Background Canvas -->
+  <canvas id="bgCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
+  <script>
+  (function(){
+    var c=document.getElementById('bgCanvas'),g=c.getContext('2d');
+    var W,H,particles=[],shapes=[];
+    var mouse={x:-1000,y:-1000};
+
+    function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+    window.addEventListener('resize',resize);resize();
+    document.addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY;});
+
+    // Floating particles
+    for(var i=0;i<50;i++){
+      particles.push({
+        x:Math.random()*2000,y:Math.random()*2000,
+        vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
+        r:Math.random()*2+.5,
+        color:['#ff6600','#ff0080','#ff8833','#ff3399'][Math.floor(Math.random()*4)],
+        alpha:Math.random()*.4+.1
+      });
+    }
+
+    // Floating image shapes (squares that rotate and morph)
+    for(var i=0;i<10;i++){
+      shapes.push({
+        x:100+Math.random()*(W>0?W-200:1600),y:Math.random()*(H>0?H:900),
+        vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,
+        sz:16+Math.random()*20,
+        rotation:Math.random()*Math.PI*2,
+        rotSpeed:(Math.random()-.5)*.008,
+        morph:Math.random()*Math.PI*2,
+        morphSpeed:0.005+Math.random()*0.01,
+        color:['#ff6600','#ff0080'][Math.floor(Math.random()*2)],
+        alpha:Math.random()*.08+.03
+      });
+    }
+
+    function drawShape(s,time){
+      g.save();
+      g.globalAlpha=s.alpha;
+      g.translate(s.x,s.y);
+      g.rotate(s.rotation);
+      var m=Math.sin(s.morph)*0.3;
+      var half=s.sz/2;
+      // Morphing rounded square
+      g.strokeStyle=s.color;
+      g.lineWidth=1;
+      var r=half*(0.15+m*0.5);
+      if(r<1)r=1;
+      g.beginPath();
+      g.moveTo(-half+r,-half);
+      g.lineTo(half-r,-half);
+      g.quadraticCurveTo(half,-half,half,-half+r);
+      g.lineTo(half,half-r);
+      g.quadraticCurveTo(half,half,half-r,half);
+      g.lineTo(-half+r,half);
+      g.quadraticCurveTo(-half,half,-half,half-r);
+      g.lineTo(-half,-half+r);
+      g.quadraticCurveTo(-half,-half,-half+r,-half);
+      g.closePath();
+      g.stroke();
+      // Small image icon inside (mountain + sun)
+      g.globalAlpha=s.alpha*0.7;
+      g.strokeStyle=s.color;
+      g.lineWidth=0.8;
+      var is=half*0.5;
+      g.beginPath();
+      g.arc(is*0.3,-is*0.3,is*0.2,0,Math.PI*2);
+      g.stroke();
+      g.beginPath();
+      g.moveTo(-is*0.6,is*0.5);
+      g.lineTo(-is*0.1,-is*0.2);
+      g.lineTo(is*0.2,is*0.1);
+      g.lineTo(is*0.6,-is*0.3);
+      g.lineTo(is*0.8,is*0.5);
+      g.stroke();
+      g.restore();
+    }
+
+    var time=0;
+    function draw(){
+      time++;
+      g.clearRect(0,0,W,H);
+
+      // Radial glow spots
+      var grd1=g.createRadialGradient(W*.3,H*.25,0,W*.3,H*.25,H*.5);
+      grd1.addColorStop(0,'rgba(255,102,0,.04)');grd1.addColorStop(1,'transparent');
+      g.fillStyle=grd1;g.fillRect(0,0,W,H);
+
+      var grd2=g.createRadialGradient(W*.7,H*.6,0,W*.7,H*.6,H*.4);
+      grd2.addColorStop(0,'rgba(255,0,128,.03)');grd2.addColorStop(1,'transparent');
+      g.fillStyle=grd2;g.fillRect(0,0,W,H);
+
+      var grd3=g.createRadialGradient(W*.5,H*.8,0,W*.5,H*.8,H*.35);
+      grd3.addColorStop(0,'rgba(255,102,0,.025)');grd3.addColorStop(1,'transparent');
+      g.fillStyle=grd3;g.fillRect(0,0,W,H);
+
+      // Particles + connections
+      for(var i=0;i<particles.length;i++){
+        var p=particles[i];
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+        if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+
+        var dx=p.x-mouse.x,dy=p.y-mouse.y;
+        var dist=Math.sqrt(dx*dx+dy*dy);
+        var glowAlpha=p.alpha;
+        if(dist<150){
+          glowAlpha=p.alpha+.3*(1-dist/150);
+          p.x+=dx/dist*.5;
+          p.y+=dy/dist*.5;
+        }
+
+        g.beginPath();
+        g.arc(p.x,p.y,p.r,0,Math.PI*2);
+        g.fillStyle=p.color;
+        g.globalAlpha=glowAlpha;
+        g.fill();
+
+        if(p.r>1.5){
+          g.beginPath();
+          g.arc(p.x,p.y,p.r*3,0,Math.PI*2);
+          g.fillStyle=p.color;
+          g.globalAlpha=glowAlpha*.15;
+          g.fill();
+        }
+
+        for(var j=i+1;j<particles.length;j++){
+          var p2=particles[j];
+          var dx2=p.x-p2.x,dy2=p.y-p2.y;
+          var d=Math.sqrt(dx2*dx2+dy2*dy2);
+          if(d<120){
+            g.beginPath();
+            g.moveTo(p.x,p.y);
+            g.lineTo(p2.x,p2.y);
+            g.strokeStyle=p.color;
+            g.globalAlpha=(1-d/120)*.08;
+            g.lineWidth=.5;
+            g.stroke();
+          }
+        }
+      }
+      g.globalAlpha=1;
+
+      // Floating morphing shapes
+      for(var i=0;i<shapes.length;i++){
+        var s=shapes[i];
+        s.x+=s.vx+Math.sin(time*.005+i)*0.1;
+        s.y+=s.vy+Math.cos(time*.004+i)*0.08;
+        s.rotation+=s.rotSpeed;
+        s.morph+=s.morphSpeed;
+        if(s.x<-60)s.x=W+60;if(s.x>W+60)s.x=-60;
+        if(s.y<-60)s.y=H+60;if(s.y>H+60)s.y=-60;
+        drawShape(s,time);
+      }
+
+      // Grid lines
+      g.globalAlpha=.015;
+      g.strokeStyle='#ff6600';
+      g.lineWidth=.5;
+      for(var x=0;x<W;x+=80){
+        g.beginPath();g.moveTo(x,0);g.lineTo(x,H);g.stroke();
+      }
+      for(var y=0;y<H;y+=80){
+        g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke();
+      }
+      g.globalAlpha=1;
+
+      // Scanlines
+      g.fillStyle='rgba(255,102,0,.006)';
+      for(var y=0;y<H;y+=3){
+        g.fillRect(0,y,W,1);
+      }
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+  </script>
+
+  <!-- Overlay -->
+  <div class="fixed inset-0 pointer-events-none" style="z-index:1;background:radial-gradient(ellipse 72% 58% at 50% 50%, transparent 0%, rgba(6,8,10,0.32) 58%, rgba(6,8,10,0.88) 100%), linear-gradient(to bottom, rgba(6,8,10,0.80) 0%, transparent 16%, transparent 78%, rgba(6,8,10,0.82) 100%)"></div>
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#06080a]/50 border-b border-white/[0.04]" aria-label="Hauptnavigation">
+    <div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
+      <a href="/" aria-label="Zur&uuml;ck zur Startseite">
+        <div class="flex items-center gap-3">
+          <svg width="32" height="32" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="gz-fus1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b44aff"></stop><stop offset="50%" stop-color="#00d4ff"></stop><stop offset="100%" stop-color="#00ff41"></stop></linearGradient>
+              <linearGradient id="gz-fus2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b44aff"></stop><stop offset="100%" stop-color="#00d4ff"></stop></linearGradient>
+              <filter id="gz-fusglow"><feGaussianBlur stdDeviation="3.5" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+            </defs>
+            <g transform="translate(50,50)">
+              <text x="-40" y="-36" font-family="JetBrains Mono" font-size="7" fill="#b44aff" opacity=".18">01</text>
+              <text x="32" y="-32" font-family="JetBrains Mono" font-size="6" fill="#00d4ff" opacity=".15">10</text>
+              <text x="-42" y="12" font-family="JetBrains Mono" font-size="5" fill="#00ff41" opacity=".12">11</text>
+              <text x="36" y="18" font-family="JetBrains Mono" font-size="6" fill="#b44aff" opacity=".12">00</text>
+              <line x1="-32" y1="-28" x2="-14" y2="-12" stroke="#b44aff" stroke-width=".9" opacity=".4"></line>
+              <line x1="32" y1="-28" x2="14" y2="-12" stroke="#00d4ff" stroke-width=".9" opacity=".4"></line>
+              <line x1="-32" y1="28" x2="-14" y2="12" stroke="#00ff41" stroke-width=".7" opacity=".3"></line>
+              <line x1="32" y1="28" x2="14" y2="12" stroke="#b44aff" stroke-width=".7" opacity=".3"></line>
+              <line x1="-40" y1="0" x2="-18" y2="0" stroke="#9933ff" stroke-width=".6" opacity=".22"></line>
+              <line x1="40" y1="0" x2="18" y2="0" stroke="#00cc33" stroke-width=".6" opacity=".22"></line>
+              <line x1="0" y1="-38" x2="0" y2="-16" stroke="#00d4ff" stroke-width=".6" opacity=".22"></line>
+              <line x1="0" y1="38" x2="0" y2="16" stroke="#9933ff" stroke-width=".6" opacity=".22"></line>
+              <circle cx="-32" cy="-28" r="3" fill="#b44aff" opacity=".65"></circle>
+              <circle cx="32" cy="-28" r="3" fill="#00d4ff" opacity=".65"></circle>
+              <circle cx="-32" cy="28" r="2.5" fill="#00ff41" opacity=".4"></circle>
+              <circle cx="32" cy="28" r="2.5" fill="#b44aff" opacity=".4"></circle>
+              <circle cx="-40" cy="0" r="1.8" fill="#9933ff" opacity=".3"></circle>
+              <circle cx="40" cy="0" r="1.8" fill="#00cc33" opacity=".3"></circle>
+              <circle cx="0" cy="-38" r="1.8" fill="#00d4ff" opacity=".3"></circle>
+              <circle cx="0" cy="38" r="1.8" fill="#9933ff" opacity=".3"></circle>
+              <rect x="-22" y="-17" width="44" height="34" rx="7" fill="rgba(180,74,255,.06)" stroke="url(#gz-fus1)" stroke-width="1.6" filter="url(#gz-fusglow)"></rect>
+              <rect x="-16" y="11" width="32" height="1.5" rx=".75" fill="url(#gz-fus2)" opacity=".2"></rect>
+              <text x="0" y="-2" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="19" font-weight="700" fill="url(#gz-fus1)" letter-spacing="3" filter="url(#gz-fusglow)">AI</text>
+            </g>
+          </svg>
+          <div class="flex flex-col">
+            <span class="font-[900] text-[10px] tracking-[2px] leading-tight bg-clip-text text-transparent block" style="font-family:Outfit;background-image:linear-gradient(90deg, #b44aff, #00d4ff, #00ff41)">AI.-Systems</span>
+            <div class="w-full h-[2px] rounded-full mt-1" style="background:linear-gradient(90deg, #b44aff, #00d4ff, #00ff41)"></div>
+          </div>
+        </div>
+      </a>
+      <a class="flex items-center gap-2 text-[10px] tracking-[2px] text-white/30 hover:text-white/70 transition-colors" style="font-family:JetBrains Mono" href="/" aria-label="Zur&uuml;ck zur Startseite">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+        ZUR&Uuml;CK
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="relative max-w-5xl mx-auto px-8 pt-40 pb-32" style="z-index:10">
+
+    <!-- Hero Section -->
+    <div class="mb-20 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border mb-6 text-[9px] tracking-[2.5px] uppercase" style="font-family:JetBrains Mono;border-color:#ff660030;color:#ff660080;background:#ff660008">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+        Bild-Konverter
+      </div>
+      <h1 class="text-5xl md:text-6xl font-[900] mb-4 bg-clip-text text-transparent" style="font-family:Outfit;background-image:linear-gradient(135deg, #ff6600 0%, #ff0080 100%)">AI.-Ready Converter</h1>
+      <p class="text-lg text-white/30 max-w-lg mx-auto mb-3" style="font-family:Sora">Bilder konvertieren, skalieren, komprimieren</p>
+      <p class="text-sm text-white/20 max-w-md mx-auto mb-10" style="font-family:JetBrains Mono">19,99&euro; &middot; Einmalkauf &middot; Keine Abos</p>
+
+      <div class="flex items-center justify-center gap-4 flex-wrap">
+        <a href="mailto:gz.ai.stacks@gmail.com?subject=AI.-Ready Converter kaufen" class="flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300" style="font-family:Sora;background:linear-gradient(135deg,#ff6600,#ff0080);color:#fff;box-shadow:0 0 30px #ff660040" aria-label="AI.-Ready Converter jetzt kaufen">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Jetzt kaufen &mdash; 19,99&euro;
+        </a>
+        <a href="#features" class="flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-sm border border-white/10 text-white/50 hover:text-white/80 hover:border-white/20 transition-all duration-300" style="font-family:Sora">
+          Funktionen ansehen
+        </a>
+      </div>
+
+      <!-- Key Selling Points -->
+      <div class="flex items-center justify-center gap-6 flex-wrap mt-10">
+        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
+          <span style="color:#ff6600">&#10003;</span> Batch-Konvertierung
+        </div>
+        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
+          <span style="color:#ff6600">&#10003;</span> Drag &amp; Drop
+        </div>
+        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
+          <span style="color:#ff6600">&#10003;</span> Social Media Gr&ouml;&szlig;en
+        </div>
+        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
+          <span style="color:#ff6600">&#10003;</span> Portable (USB-Stick)
+        </div>
+      </div>
+    </div>
+
+    <!-- 01 Formate Section -->
+    <div id="formate" class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#ff660040">01</span>
+        <div class="w-8 h-px" style="background:#ff660020"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Unterst&uuml;tzte Formate</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <!-- PNG -->
+        <div class="p-5 rounded-2xl border border-white/[0.06] backdrop-blur-sm text-center" style="background:rgba(255,255,255,0.02)">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:#ff660012">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" style="color:#ff6600" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 text-sm mb-1" style="font-family:Outfit">PNG</h3>
+          <p class="text-[10px] text-white/25" style="font-family:JetBrains Mono">Transparent</p>
+        </div>
+        <!-- JPG -->
+        <div class="p-5 rounded-2xl border border-white/[0.06] backdrop-blur-sm text-center" style="background:rgba(255,255,255,0.02)">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:#ff008012">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" style="color:#ff0080" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 text-sm mb-1" style="font-family:Outfit">JPG</h3>
+          <p class="text-[10px] text-white/25" style="font-family:JetBrains Mono">Komprimiert</p>
+        </div>
+        <!-- BMP -->
+        <div class="p-5 rounded-2xl border border-white/[0.06] backdrop-blur-sm text-center" style="background:rgba(255,255,255,0.02)">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:#ff660012">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" style="color:#ff6600" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 text-sm mb-1" style="font-family:Outfit">BMP</h3>
+          <p class="text-[10px] text-white/25" style="font-family:JetBrains Mono">Bitmap</p>
+        </div>
+        <!-- GIF -->
+        <div class="p-5 rounded-2xl border border-white/[0.06] backdrop-blur-sm text-center" style="background:rgba(255,255,255,0.02)">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:#ff008012">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" style="color:#ff0080" aria-hidden="true"><path d="M12 3v12"/><circle cx="12" cy="15" r="2"/><path d="M17.66 9.53a8 8 0 1 1-11.32 0"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 text-sm mb-1" style="font-family:Outfit">GIF</h3>
+          <p class="text-[10px] text-white/25" style="font-family:JetBrains Mono">Animiert</p>
+        </div>
+        <!-- TIFF -->
+        <div class="p-5 rounded-2xl border border-white/[0.06] backdrop-blur-sm text-center" style="background:rgba(255,255,255,0.02)">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:#ff660012">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" style="color:#ff6600" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 2v20"/><path d="M17 2v20"/><path d="M2 12h20"/><path d="M2 7h5"/><path d="M2 17h5"/><path d="M17 7h5"/><path d="M17 17h5"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 text-sm mb-1" style="font-family:Outfit">TIFF</h3>
+          <p class="text-[10px] text-white/25" style="font-family:JetBrains Mono">Druckqualit&auml;t</p>
+        </div>
+        <!-- ICO -->
+        <div class="p-5 rounded-2xl border border-white/[0.06] backdrop-blur-sm text-center" style="background:rgba(255,255,255,0.02)">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:#ff008012">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" style="color:#ff0080" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 text-sm mb-1" style="font-family:Outfit">ICO</h3>
+          <p class="text-[10px] text-white/25" style="font-family:JetBrains Mono">Icons</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 Vordefinierte Gr&ouml;&szlig;en Section -->
+    <div id="groessen" class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#ff660040">02</span>
+        <div class="w-8 h-px" style="background:#ff660020"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Vordefinierte Gr&ouml;&szlig;en</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Standard Gr&ouml;&szlig;en -->
+        <div class="p-5 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#ff660012">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+            </div>
+            <div>
+              <h4 class="font-[700] text-white/70 text-sm" style="font-family:Outfit">Icon</h4>
+              <p class="text-[10px]" style="font-family:JetBrains Mono;color:#ff660080">64 &times; 64 px</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#ff660012">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+            </div>
+            <div>
+              <h4 class="font-[700] text-white/70 text-sm" style="font-family:Outfit">Thumbnail</h4>
+              <p class="text-[10px]" style="font-family:JetBrains Mono;color:#ff660080">150 &times; 150 px</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#ff660012">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+            </div>
+            <div>
+              <h4 class="font-[700] text-white/70 text-sm" style="font-family:Outfit">HD</h4>
+              <p class="text-[10px]" style="font-family:JetBrains Mono;color:#ff660080">1280 &times; 720 px</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#ff008012">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+            </div>
+            <div>
+              <h4 class="font-[700] text-white/70 text-sm" style="font-family:Outfit">Full HD</h4>
+              <p class="text-[10px]" style="font-family:JetBrains Mono;color:#ff008080">1920 &times; 1080 px</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#ff008012">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+            </div>
+            <div>
+              <h4 class="font-[700] text-white/70 text-sm" style="font-family:Outfit">4K</h4>
+              <p class="text-[10px]" style="font-family:JetBrains Mono;color:#ff008080">3840 &times; 2160 px</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Media Gr&ouml;&szlig;en -->
+        <div class="p-5 rounded-2xl border backdrop-blur-sm" style="background:rgba(255,102,0,0.03);border-color:#ff660020">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#ff660012">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </div>
+            <div>
+              <h4 class="font-[700] text-white/70 text-sm" style="font-family:Outfit">Instagram Post</h4>
+              <p class="text-[10px]" style="font-family:JetBrains Mono;color:#ff660080">1080 &times; 1080 px</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 rounded-2xl border backdrop-blur-sm" style="background:rgba(255,102,0,0.03);border-color:#ff660020">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#ff660012">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </div>
+            <div>
+              <h4 class="font-[700] text-white/70 text-sm" style="font-family:Outfit">Instagram Story</h4>
+              <p class="text-[10px]" style="font-family:JetBrains Mono;color:#ff660080">1080 &times; 1920 px</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 rounded-2xl border backdrop-blur-sm" style="background:rgba(255,0,128,0.03);border-color:#ff008020">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#ff008012">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+            </div>
+            <div>
+              <h4 class="font-[700] text-white/70 text-sm" style="font-family:Outfit">LinkedIn Banner</h4>
+              <p class="text-[10px]" style="font-family:JetBrains Mono;color:#ff008080">1584 &times; 396 px</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 rounded-2xl border backdrop-blur-sm" style="background:rgba(255,0,128,0.03);border-color:#ff008020">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#ff008012">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+            </div>
+            <div>
+              <h4 class="font-[700] text-white/70 text-sm" style="font-family:Outfit">LinkedIn Post</h4>
+              <p class="text-[10px]" style="font-family:JetBrains Mono;color:#ff008080">1200 &times; 627 px</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 rounded-2xl border backdrop-blur-sm" style="background:rgba(255,102,0,0.03);border-color:#ff660020">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#ff660012">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>
+            </div>
+            <div>
+              <h4 class="font-[700] text-white/70 text-sm" style="font-family:Outfit">YouTube Thumbnail</h4>
+              <p class="text-[10px]" style="font-family:JetBrains Mono;color:#ff660080">1280 &times; 720 px</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 rounded-2xl border backdrop-blur-sm" style="background:rgba(255,0,128,0.03);border-color:#ff008020">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#ff008012">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </div>
+            <div>
+              <h4 class="font-[700] text-white/70 text-sm" style="font-family:Outfit">Facebook Cover</h4>
+              <p class="text-[10px]" style="font-family:JetBrains Mono;color:#ff008080">820 &times; 312 px</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 rounded-2xl border backdrop-blur-sm" style="background:rgba(255,102,0,0.03);border-color:#ff660020">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#ff660012">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+            </div>
+            <div>
+              <h4 class="font-[700] text-white/70 text-sm" style="font-family:Outfit">Twitter Header</h4>
+              <p class="text-[10px]" style="font-family:JetBrains Mono;color:#ff660080">1500 &times; 500 px</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 Features Section -->
+    <div id="features" class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#ff660040">03</span>
+        <div class="w-8 h-px" style="background:#ff660020"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Funktionen</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#ff660012">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#ff660090" aria-hidden="true"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Batch-Konvertierung</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Hunderte Bilder auf einmal konvertieren. Alle Dateien werden parallel verarbeitet &mdash; spart Zeit.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#ff008012">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#ff008090" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Qualit&auml;t w&auml;hlbar</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">JPEG-Qualit&auml;t von 30% bis 100% einstellbar. Perfekte Balance zwischen Dateigr&ouml;&szlig;e und Bildqualit&auml;t.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#ff660012">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#ff660090" aria-hidden="true"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Seitenverh&auml;ltnis beibehalten</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Automatische Berechnung der proportionalen Gr&ouml;&szlig;e. Kein Verzerren, kein Strecken.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#ff008012">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#ff008090" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Vorschau</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Bildvorschau vor der Konvertierung. Ergebnis direkt pr&uuml;fen, bevor die Datei gespeichert wird.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#ff660012">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#ff660090" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Ausgabeordner w&auml;hlbar</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Zielordner frei w&auml;hlen. Konvertierte Bilder landen genau dort, wo du sie brauchst.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style="background:rgba(255,255,255,0.02)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#ff008012">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#ff008090" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+          </div>
+          <h3 class="font-[700] text-white/80 mb-2 text-sm" style="font-family:Outfit">Auto-&Ouml;ffnen</h3>
+          <p class="text-xs text-white/30 leading-relaxed" style="font-family:Sora">Ausgabeordner wird nach der Konvertierung automatisch ge&ouml;ffnet. Kein manuelles Suchen n&ouml;tig.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Pricing Section -->
+    <div id="pricing" class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#ff660040">04</span>
+        <div class="w-8 h-px" style="background:#ff660020"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Preis</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="max-w-md mx-auto">
+        <div class="p-8 rounded-2xl border neon-border text-center" style="background:linear-gradient(145deg, rgba(255,102,0,0.06), rgba(255,0,128,0.04));border-color:#ff660040;box-shadow:0 0 40px #ff660010">
+          <div class="mb-6">
+            <div class="text-[10px] tracking-[2px] uppercase mb-2" style="font-family:JetBrains Mono;color:#ff6600">Einmalkauf</div>
+            <div class="text-xs text-white/40 mb-2" style="font-family:JetBrains Mono">AI.-Ready Converter</div>
+            <div class="flex items-baseline justify-center gap-1">
+              <span class="text-5xl font-[900] bg-clip-text text-transparent" style="font-family:Outfit;background-image:linear-gradient(135deg,#ff6600,#ff0080)">19,99</span>
+              <span class="text-lg text-white/30" style="font-family:JetBrains Mono">&euro;</span>
+            </div>
+            <p class="text-xs text-white/25 mt-2" style="font-family:Sora">Bild-Konverter &middot; Einmalzahlung &middot; Keine Abos</p>
+          </div>
+          <ul class="space-y-2.5 mb-8 text-left max-w-xs mx-auto">
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#ff6600" class="mt-0.5 shrink-0">&#10003;</span>PNG, JPG, BMP, GIF, TIFF, ICO</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#ff6600" class="mt-0.5 shrink-0">&#10003;</span>Batch-Konvertierung (hunderte Bilder)</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#ff6600" class="mt-0.5 shrink-0">&#10003;</span>Drag &amp; Drop Bedienung</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#ff6600" class="mt-0.5 shrink-0">&#10003;</span>12 vordefinierte Social Media Gr&ouml;&szlig;en</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#ff6600" class="mt-0.5 shrink-0">&#10003;</span>Qualit&auml;t w&auml;hlbar (30&ndash;100%)</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#ff6600" class="mt-0.5 shrink-0">&#10003;</span>Seitenverh&auml;ltnis beibehalten</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#ff6600" class="mt-0.5 shrink-0">&#10003;</span>Vorschau &amp; Auto-&Ouml;ffnen</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#ff6600" class="mt-0.5 shrink-0">&#10003;</span>Alle Updates kostenlos</li>
+            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#ff6600" class="mt-0.5 shrink-0">&#10003;</span>Portable &mdash; keine Installation</li>
+          </ul>
+          <a href="mailto:gz.ai.stacks@gmail.com?subject=AI.-Ready Converter kaufen" class="inline-flex items-center gap-2.5 px-7 py-3 rounded-xl font-[700] text-sm transition-all duration-300" style="font-family:Sora;background:linear-gradient(135deg,#ff6600,#ff0080);color:#fff;box-shadow:0 0 30px #ff660040" aria-label="AI.-Ready Converter jetzt kaufen">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            Jetzt kaufen
+          </a>
+        </div>
+      </div>
+
+      <p class="text-center text-xs text-white/20 mt-8" style="font-family:JetBrains Mono">Alle Preise inkl. MwSt. gem. &sect;19 UStG (Kleinunternehmerregelung) &middot; Einmalzahlung &middot; Keine Abos &middot; Alle Updates kostenlos</p>
+    </div>
+
+    <!-- 05 Technische Details -->
+    <div class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#ff660040">05</span>
+        <div class="w-8 h-px" style="background:#ff660020"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Technische Details</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div class="p-6 rounded-2xl border border-white/[0.06]" style="background:rgba(255,255,255,0.02)">
+          <h4 class="text-xs text-white/50 mb-4 tracking-[2px] uppercase" style="font-family:JetBrains Mono">Systemanforderungen</h4>
+          <ul class="space-y-2.5">
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#ff660060">OS</span>
+              Windows 7, 8, 8.1, 10, 11
+            </li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#ff660060">RAM</span>
+              ab 512 MB
+            </li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#ff660060">HDD</span>
+              &lt; 50 KB
+            </li>
+          </ul>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/[0.06]" style="background:rgba(255,255,255,0.02)">
+          <h4 class="text-xs text-white/50 mb-4 tracking-[2px] uppercase" style="font-family:JetBrains Mono">Technologie</h4>
+          <ul class="space-y-2.5">
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#ff660060">Lang</span>
+              C# / .NET Framework
+            </li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#ff660060">Dist</span>
+              Portable EXE, kein Installer
+            </li>
+            <li class="flex items-start gap-3 text-xs text-white/40" style="font-family:Sora">
+              <span class="text-[10px] shrink-0 mt-0.5" style="font-family:JetBrains Mono;color:#ff660060">UI</span>
+              WinForms, Cyberpunk Theme
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kontakt -->
+    <div class="text-center">
+      <div class="flex items-center gap-4 mb-10">
+        <div class="flex-1 h-px bg-white/5"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Kontakt</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+      <p class="text-sm text-white/25 mb-6" style="font-family:Sora">Fragen oder Feedback?</p>
+      <a href="mailto:gz.ai.stacks@gmail.com" class="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-sm border border-white/10 text-white/40 hover:text-white/70 hover:border-white/20 transition-all duration-300" style="font-family:Sora" aria-label="E-Mail an gz.ai.stacks@gmail.com senden">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        gz.ai.stacks@gmail.com
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="relative z-10 border-t border-white/[0.04] px-8 py-10">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <svg width="18" height="18" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="gz-fus1f" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b44aff"></stop><stop offset="50%" stop-color="#00d4ff"></stop><stop offset="100%" stop-color="#00ff41"></stop></linearGradient>
+            <filter id="gz-fusglowf"><feGaussianBlur stdDeviation="3.5" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+          </defs>
+          <g transform="translate(50,50)">
+            <rect x="-22" y="-17" width="44" height="34" rx="7" fill="rgba(180,74,255,.06)" stroke="url(#gz-fus1f)" stroke-width="1.6" filter="url(#gz-fusglowf)"></rect>
+            <text x="0" y="-2" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="19" font-weight="700" fill="url(#gz-fus1f)" letter-spacing="3" filter="url(#gz-fusglowf)">AI</text>
+          </g>
+        </svg>
+        <span class="text-[10px] tracking-[2px] text-white/30" style="font-family:JetBrains Mono">ZIMMERMANN AI SYSTEMS &middot; 2026</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a class="text-[10px] tracking-[1.5px] uppercase text-white/25 hover:text-white/55 transition-colors" style="font-family:JetBrains Mono" href="/impressum">Impressum</a>
+        <a class="text-[10px] tracking-[1.5px] uppercase text-white/25 hover:text-white/55 transition-colors" style="font-family:JetBrains Mono" href="/datenschutz">Datenschutz</a>
+      </div>
+    </div>
+    <div class="max-w-5xl mx-auto mt-6 text-center">
+      <p class="text-[9px] text-white/15" style="font-family:JetBrains Mono">Windows ist eine eingetragene Marke der Microsoft Corporation.</p>
+    </div>
+  </footer>
+
+  <!-- Darstellungs-Button -->
+  <div class="fixed bottom-6 right-6 z-[200] flex flex-col items-end gap-3" role="toolbar" aria-label="Darstellung und Barrierefreiheit">
+    <div id="a11y-panel" style="display:none;background:rgba(6,8,10,0.94);border:1px solid rgba(255,102,0,0.15);border-radius:16px;backdrop-filter:blur(24px);box-shadow:0 8px 40px rgba(0,0,0,0.5);min-width:240px;overflow:hidden;margin-bottom:8px" role="dialog" aria-label="Darstellungseinstellungen">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,0.06)">
+        <span style="font-family:JetBrains Mono;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3)">Darstellung</span>
+        <button id="a11y-close" style="width:24px;height:24px;border-radius:6px;border:none;background:transparent;color:rgba(255,255,255,0.3);cursor:pointer;display:flex;align-items:center;justify-content:center" aria-label="Schlie&szlig;en">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-family:Sora;font-size:11px;color:rgba(255,255,255,0.35)">Zoom</span>
+          <div style="display:flex;align-items:center;gap:4px">
+            <button id="zoom-out" style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center" aria-label="Zoom verkleinern"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></button>
+            <span id="zoom-val" style="font-family:JetBrains Mono;font-size:11px;color:rgba(255,255,255,0.5);min-width:36px;text-align:center">100%</span>
+            <button id="zoom-in" style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center" aria-label="Zoom vergr&ouml;&szlig;ern"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button id="a11y-btn" aria-expanded="false" aria-haspopup="dialog" aria-label="Darstellungseinstellungen &ouml;ffnen" style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(6,8,10,0.88);border:1px solid rgba(255,255,255,0.14);backdrop-filter:blur(16px);box-shadow:0 4px 24px rgba(0,0,0,0.2);color:rgba(255,255,255,0.65);cursor:pointer;transition:all 0.3s">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+    </button>
+  </div>
+  <script>
+  (function(){
+    var btn=document.getElementById('a11y-btn'),panel=document.getElementById('a11y-panel');
+    var closeBtn=document.getElementById('a11y-close');
+    var zoom=100;
+    var sz=localStorage.getItem('gz-zoom');if(sz)zoom=Math.max(80,Math.min(150,parseInt(sz)));
+    applyZoom();
+    btn.addEventListener('click',function(){var open=panel.style.display==='none';panel.style.display=open?'block':'none';btn.setAttribute('aria-expanded',open);});
+    closeBtn.addEventListener('click',function(){panel.style.display='none';btn.setAttribute('aria-expanded','false');});
+    document.getElementById('zoom-in').addEventListener('click',function(){zoom=Math.min(150,zoom+10);applyZoom();localStorage.setItem('gz-zoom',zoom);});
+    document.getElementById('zoom-out').addEventListener('click',function(){zoom=Math.max(80,zoom-10);applyZoom();localStorage.setItem('gz-zoom',zoom);});
+    function applyZoom(){document.documentElement.style.fontSize=zoom+'%';document.getElementById('zoom-val').textContent=zoom+'%';}
+  })();
+  </script>
+
+</div>
+</body>
+</html>
