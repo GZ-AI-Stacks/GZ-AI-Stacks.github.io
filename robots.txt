@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gz-ai-stacks.de/sitemap.xml
+Sitemap: https://gz-ai-stacks.github.io/sitemap.xml
