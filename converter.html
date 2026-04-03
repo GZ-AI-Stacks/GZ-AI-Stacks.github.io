@@ -30,8 +30,24 @@
     }
     .animate-float { animation: float 4s ease-in-out infinite; }
   </style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "AI Converter", "url": "https://gz-ai-stacks.de/converter", "applicationCategory": "BusinessApplication", "operatingSystem": "Windows, Web", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "author": {"@type": "Organization", "name": "GZ-AI.-Stacks"}}</script></head>
-<body class="antialiased">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "AI Converter", "url": "https://gz-ai-stacks.de/converter", "applicationCategory": "BusinessApplication", "operatingSystem": "Windows, Web", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "author": {"@type": "Organization", "name": "GZ-AI.-Stacks"}}</script><style id="gz-boot-css">
+#gz-boot{position:fixed;top:0;left:0;width:100%;height:100%;background:#06080a;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Courier New',monospace;transition:opacity .8s}
+#gz-boot.fade{opacity:0;pointer-events:none}
+#gz-boot.hidden{display:none}
+#gz-boot canvas{position:absolute;top:0;left:0;width:100%;height:100%;opacity:.08}
+#gz-boot-lines{position:relative;z-index:1;max-width:480px;width:90%;color:#00e676;font-size:13px;line-height:1.8}
+#gz-boot-lines div{opacity:0;transform:translateX(-10px);transition:opacity .3s,transform .3s}
+#gz-boot-lines div.show{opacity:1;transform:translateX(0)}
+#gz-boot-bar{position:relative;z-index:1;width:260px;height:4px;background:rgba(255,255,255,.06);border-radius:4px;margin-top:22px;overflow:hidden}
+#gz-boot-fill{width:0;height:100%;background:linear-gradient(90deg,#00e676,#00b4d8);border-radius:4px;transition:width .3s}
+#gz-boot-brand{position:relative;z-index:1;margin-top:24px;font-size:26px;font-weight:900;opacity:0;transition:opacity .6s;background:linear-gradient(135deg,#00e676,#00b4d8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Segoe UI',sans-serif}
+</style></head>
+<body class="antialiased"><div id="gz-boot">
+<canvas id="gz-boot-mx"></canvas>
+<div id="gz-boot-lines"><div>&gt; AI Converter Engine v2.0</div><div>&gt; Bild-Codecs geladen</div><div>&gt; Dokument-Parser aktiv</div><div>&gt; Medien-Transcoder bereit</div><div>&gt; Alle Formate unterstützt</div><div>&gt; Konvertierung startklar.</div></div>
+<div id="gz-boot-bar"><div id="gz-boot-fill"></div></div>
+<div id="gz-boot-brand">GZ-AI.-Stacks</div>
+</div>
 <div class="min-h-screen relative" style="background:#06080a">
 
   <!-- Theme Glow -->
@@ -745,5 +761,38 @@
   </script>
 
 </div>
-</body>
+<script id="gz-boot-js">
+(function(){
+var KEY='gz-boot-'+location.pathname;
+var boot=document.getElementById('gz-boot');
+if(!boot)return;
+if(sessionStorage.getItem(KEY)){boot.classList.add('hidden');return;}
+var mc=document.getElementById('gz-boot-mx'),bx=mc.getContext('2d');
+mc.width=window.innerWidth;mc.height=window.innerHeight;
+var cols=Math.floor(mc.width/16),dr=[];
+for(var i=0;i<cols;i++)dr[i]=Math.random()*mc.height/16;
+var ch='01GZAISTACKS';
+var bi=setInterval(function(){
+bx.fillStyle='rgba(6,8,10,.07)';bx.fillRect(0,0,mc.width,mc.height);
+bx.fillStyle='#00e676';bx.font='13px monospace';
+for(var i=0;i<dr.length;i++){
+bx.fillText(ch[Math.floor(Math.random()*ch.length)],i*16,dr[i]*16);
+if(dr[i]*16>mc.height&&Math.random()>.975)dr[i]=0;dr[i]++;}
+},50);
+var lines=document.querySelectorAll('#gz-boot-lines div');
+var bar=document.getElementById('gz-boot-fill');
+var brand=document.getElementById('gz-boot-brand');
+var d=0;
+lines.forEach(function(l,i){
+d+=300+Math.random()*150;
+setTimeout(function(){l.classList.add('show');bar.style.width=Math.min(100,Math.round((i+1)/lines.length*90))+'%';},d);
+});
+setTimeout(function(){bar.style.width='100%';brand.style.opacity='1';},d+350);
+setTimeout(function(){
+boot.classList.add('fade');
+sessionStorage.setItem(KEY,'1');
+setTimeout(function(){boot.classList.add('hidden');clearInterval(bi);},800);
+},d+1200);
+})();
+</script></body>
 </html>
