@@ -418,55 +418,150 @@
 
     <!-- Pricing Section -->
     <div class="mb-24">
-      <div class="flex items-center gap-4 mb-10">
+      <div class="flex items-center gap-4 mb-4">
         <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#00b4ff40">03</span>
         <div class="w-8 h-px" style="background:#00b4ff20"></div>
-        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Preis</span>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Editionen &amp; Preise</span>
         <div class="flex-1 h-px bg-white/5"></div>
       </div>
+      <p class="text-center text-xs text-white/25 mb-10" style="font-family:Sora">Einmalkauf &mdash; keine Abo-Kosten, keine versteckten Geb&uuml;hren. Alle Preise inkl. 19&nbsp;% MwSt.</p>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-        <div class="p-8 rounded-2xl border neon-border text-center" style="background:linear-gradient(145deg, rgba(0,180,255,0.06), rgba(0,255,170,0.03));border-color:#00b4ff30;box-shadow:0 0 40px #00b4ff10">
-          <div class="mb-6">
-            <div class="text-[10px] tracking-[2px] uppercase mb-2" style="font-family:JetBrains Mono;color:#00b4ff">Einmalkauf &middot; Keine Abos</div>
-            <div class="text-xs text-white/40 mb-1" style="font-family:JetBrains Mono">AI.-Ready Cloud Drive</div>
-            <div class="flex items-baseline justify-center gap-1">
-              <span class="text-4xl font-[900]" style="font-family:Outfit;color:#00b4ff">Auf Anfrage</span>
+      <!-- 3-Spalten Preistabelle -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+
+        <!-- Basis -->
+        <div class="p-7 rounded-2xl border flex flex-col text-center" style="background:linear-gradient(145deg,rgba(0,180,255,0.05),rgba(0,180,255,0.01));border-color:#00b4ff25">
+          <div class="mb-5">
+            <div class="text-[9px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#00b4ff80">Basis Edition</div>
+            <div class="flex items-baseline justify-center gap-1 mb-1">
+              <span class="text-[11px] text-white/30" style="font-family:JetBrains Mono">ab</span>
+              <span class="text-4xl font-[900]" style="font-family:Outfit;color:#00b4ff">49&nbsp;&euro;</span>
             </div>
-            <p class="text-xs text-white/25 mt-2" style="font-family:Sora">Individuelles Angebot &middot; Privat, Business oder Enterprise</p>
+            <p class="text-[10px] text-white/20" style="font-family:Sora">inkl. 19&nbsp;% MwSt. &middot; Einmalkauf</p>
           </div>
-          <ul class="space-y-2.5 mb-8 text-left max-w-xs mx-auto">
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00b4ff" class="mt-0.5 shrink-0">&#10003;</span>Cloud Vault &ndash; lokaler Datentresor</li>
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00b4ff" class="mt-0.5 shrink-0">&#10003;</span>Fernzugriff mit Cloudflare Tunnel</li>
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00b4ff" class="mt-0.5 shrink-0">&#10003;</span>12 Sicherheitsebenen inkl. 2FA &amp; USB-Key</li>
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00b4ff" class="mt-0.5 shrink-0">&#10003;</span>Voller PC-Zugriff vom Handy</li>
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00b4ff" class="mt-0.5 shrink-0">&#10003;</span>Video- &amp; Audio-Streaming</li>
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00b4ff" class="mt-0.5 shrink-0">&#10003;</span>Custom Branding m&ouml;glich</li>
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00b4ff" class="mt-0.5 shrink-0">&#10003;</span>Alle Updates kostenlos</li>
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#00b4ff" class="mt-0.5 shrink-0">&#10003;</span>Keine Abo-Kosten &mdash; f&uuml;r immer</li>
+          <ul class="space-y-2 mb-6 text-left flex-1">
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00b4ff">&#10003;</span>Cloud Vault &ndash; lokaler Datentresor</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00b4ff">&#10003;</span>Fernzugriff &uuml;ber Cloudflare Tunnel</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00b4ff">&#10003;</span>QR-Code f&uuml;r einfachen Zugriff</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00b4ff">&#10003;</span>12 Sicherheitsebenen inkl. 2FA</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00b4ff">&#10003;</span>VS Code Extension inklusive</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00b4ff">&#10003;</span>Alle Updates kostenlos</li>
+            <li class="flex items-start gap-2 text-xs text-white/25" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#ffffff20">&mdash;</span><span style="color:rgba(255,255,255,0.2)">FLOW Board</span></li>
+            <li class="flex items-start gap-2 text-xs text-white/25" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#ffffff20">&mdash;</span><span style="color:rgba(255,255,255,0.2)">Remote Vault</span></li>
+            <li class="flex items-start gap-2 text-xs text-white/25" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#ffffff20">&mdash;</span><span style="color:rgba(255,255,255,0.2)">Fernwartung</span></li>
           </ul>
-          <a href="mailto:gz.ai.stacks@gmail.com?subject=AI.-Ready%20Cloud%20Drive%20%E2%80%93%20Anfrage" class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-[700] text-sm transition-all duration-300" style="font-family:Sora;background:#00b4ff;color:#06080a;box-shadow:0 0 30px #00b4ff40" aria-label="AI.-Ready Cloud Drive anfragen">Jetzt anfragen</a>
+          <!-- Datenblatt -->
+          <details class="mb-4 text-left">
+            <summary class="text-[9px] tracking-[2px] uppercase cursor-pointer text-white/25 hover:text-white/50 transition-colors" style="font-family:JetBrains Mono;list-style:none">&#9656;&nbsp;Datenblatt anzeigen</summary>
+            <div class="mt-3 p-3 rounded-xl text-[10px] text-white/35 leading-relaxed space-y-1" style="font-family:Sora;background:rgba(0,180,255,0.04);border:1px solid rgba(0,180,255,0.08)">
+              <div><strong class="text-white/50">Betriebssystem:</strong> Windows 10 / 11 (64-bit)</div>
+              <div><strong class="text-white/50">Technologie:</strong> .NET 4.0, C#, WinForms</div>
+              <div><strong class="text-white/50">Verschl&uuml;sselung:</strong> TLS 1.3, AES-256</div>
+              <div><strong class="text-white/50">Speicher:</strong> Lokal &mdash; keine Cloud-Abh&auml;ngigkeit</div>
+              <div><strong class="text-white/50">Fernzugriff:</strong> Cloudflare Tunnel (kostenlos)</div>
+              <div><strong class="text-white/50">Lizenz:</strong> Einzel-PC, nicht &uuml;bertragbar</div>
+              <div><strong class="text-white/50">Lieferung:</strong> Sofort-Download nach Kauf</div>
+            </div>
+          </details>
+          <a href="https://www.digistore24.com/product/BASIS-ID" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-[700] text-sm transition-all duration-300 hover:opacity-90" style="font-family:Sora;background:#00b4ff;color:#06080a;box-shadow:0 0 24px #00b4ff30" aria-label="Basis Edition kaufen">Jetzt kaufen</a>
         </div>
-        <div class="p-8 rounded-2xl border neon-border text-center" style="background:linear-gradient(145deg, rgba(180,74,255,0.06), rgba(140,0,255,0.03));border-color:#b44aff30;box-shadow:0 0 40px #b44aff10">
-          <div class="mb-6">
-            <div class="text-[10px] tracking-[2px] uppercase mb-2" style="font-family:JetBrains Mono;color:#b44aff">Custom Branding</div>
-            <div class="text-xs text-white/40 mb-1" style="font-family:JetBrains Mono">Mit eigenem Branding</div>
-            <div class="flex items-baseline justify-center gap-1">
-              <span class="text-4xl font-[900]" style="font-family:Outfit;color:#b44aff">Auf Anfrage</span>
-            </div>
-            <p class="text-xs text-white/25 mt-2" style="font-family:Sora">Ihr Logo &middot; Ihr Name &middot; Ihre Farben</p>
+
+        <!-- Pro -->
+        <div class="p-7 rounded-2xl border flex flex-col text-center relative" style="background:linear-gradient(145deg,rgba(0,255,170,0.07),rgba(0,180,255,0.04));border-color:#00ffaa40;box-shadow:0 0 40px #00ffaa08">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+            <span class="px-3 py-1 rounded-full text-[9px] font-[700] tracking-[2px] uppercase" style="font-family:JetBrains Mono;background:#00ffaa;color:#06080a">Beliebt</span>
           </div>
-          <ul class="space-y-2.5 mb-8 text-left max-w-xs mx-auto">
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#b44aff" class="mt-0.5 shrink-0">&#10003;</span>Alle Standard-Features inklusive</li>
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#b44aff" class="mt-0.5 shrink-0">&#10003;</span>Eigenes Logo &amp; Firmenname</li>
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#b44aff" class="mt-0.5 shrink-0">&#10003;</span>Individuelle Farbgestaltung</li>
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#b44aff" class="mt-0.5 shrink-0">&#10003;</span>White-Label m&ouml;glich</li>
-            <li class="flex items-start gap-2 text-xs text-white/45" style="font-family:Sora"><span style="color:#b44aff" class="mt-0.5 shrink-0">&#10003;</span>Pers&ouml;nliche Einrichtung</li>
+          <div class="mb-5 mt-2">
+            <div class="text-[9px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#00ffaa">Pro Edition</div>
+            <div class="flex items-baseline justify-center gap-1 mb-1">
+              <span class="text-[11px] text-white/30" style="font-family:JetBrains Mono">ab</span>
+              <span class="text-4xl font-[900]" style="font-family:Outfit;color:#00ffaa">149&nbsp;&euro;</span>
+            </div>
+            <p class="text-[10px] text-white/20" style="font-family:Sora">inkl. 19&nbsp;% MwSt. &middot; Einmalkauf</p>
+          </div>
+          <ul class="space-y-2 mb-6 text-left flex-1">
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00ffaa">&#10003;</span>Alle Basis-Features inklusive</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00ffaa">&#10003;</span>Cloud Vault &ndash; lokaler Datentresor</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00ffaa">&#10003;</span>Fernzugriff &uuml;ber Cloudflare Tunnel</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00ffaa">&#10003;</span>QR-Code f&uuml;r einfachen Zugriff</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00ffaa">&#10003;</span><strong style="color:#00ffaa90">FLOW Board</strong> &ndash; KI-Aufgabenplaner</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00ffaa">&#10003;</span>VS Code Extension inklusive</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#00ffaa">&#10003;</span>Alle Updates kostenlos</li>
+            <li class="flex items-start gap-2 text-xs text-white/25" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#ffffff20">&mdash;</span><span style="color:rgba(255,255,255,0.2)">Remote Vault</span></li>
+            <li class="flex items-start gap-2 text-xs text-white/25" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#ffffff20">&mdash;</span><span style="color:rgba(255,255,255,0.2)">Fernwartung</span></li>
           </ul>
-          <a href="mailto:gz.ai.stacks@gmail.com?subject=AI.-Ready Cloud Drive – Custom Branding Anfrage" class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-[700] text-sm transition-all duration-300" style="font-family:Sora;background:#b44aff;color:#fff;box-shadow:0 0 30px #b44aff40" aria-label="AI.-Ready Cloud Drive Custom Branding anfragen">Jetzt anfragen</a>
+          <details class="mb-4 text-left">
+            <summary class="text-[9px] tracking-[2px] uppercase cursor-pointer text-white/25 hover:text-white/50 transition-colors" style="font-family:JetBrains Mono;list-style:none">&#9656;&nbsp;Datenblatt anzeigen</summary>
+            <div class="mt-3 p-3 rounded-xl text-[10px] text-white/35 leading-relaxed space-y-1" style="font-family:Sora;background:rgba(0,255,170,0.04);border:1px solid rgba(0,255,170,0.08)">
+              <div><strong class="text-white/50">Betriebssystem:</strong> Windows 10 / 11 (64-bit)</div>
+              <div><strong class="text-white/50">Technologie:</strong> .NET 4.0, C#, WinForms</div>
+              <div><strong class="text-white/50">Verschl&uuml;sselung:</strong> TLS 1.3, AES-256</div>
+              <div><strong class="text-white/50">FLOW Board:</strong> KI-gest&uuml;tzter Aufgabenplaner mit API-Anbindung</div>
+              <div><strong class="text-white/50">Speicher:</strong> Lokal &mdash; keine Cloud-Abh&auml;ngigkeit</div>
+              <div><strong class="text-white/50">Lizenz:</strong> Einzel-PC, nicht &uuml;bertragbar</div>
+              <div><strong class="text-white/50">Lieferung:</strong> Sofort-Download nach Kauf</div>
+            </div>
+          </details>
+          <a href="https://www.digistore24.com/product/PRO-ID" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-[700] text-sm transition-all duration-300 hover:opacity-90" style="font-family:Sora;background:#00ffaa;color:#06080a;box-shadow:0 0 24px #00ffaa30" aria-label="Pro Edition kaufen">Jetzt kaufen</a>
+        </div>
+
+        <!-- NEXUS -->
+        <div class="p-7 rounded-2xl border flex flex-col text-center relative" style="background:linear-gradient(145deg,rgba(180,74,255,0.08),rgba(100,0,200,0.04));border-color:#b44aff35;box-shadow:0 0 40px #b44aff0a">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+            <span class="px-3 py-1 rounded-full text-[9px] font-[700] tracking-[2px] uppercase" style="font-family:JetBrains Mono;background:linear-gradient(90deg,#b44aff,#7c3aed);color:#fff">NEXUS</span>
+          </div>
+          <div class="mb-5 mt-2">
+            <div class="text-[9px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#b44aff">NEXUS Edition</div>
+            <div class="flex items-baseline justify-center gap-1 mb-1">
+              <span class="text-[11px] text-white/30" style="font-family:JetBrains Mono">ab</span>
+              <span class="text-4xl font-[900]" style="font-family:Outfit;color:#b44aff">299&nbsp;&euro;</span>
+            </div>
+            <p class="text-[10px] text-white/20" style="font-family:Sora">inkl. 19&nbsp;% MwSt. &middot; Einmalkauf</p>
+          </div>
+          <ul class="space-y-2 mb-6 text-left flex-1">
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#b44aff">&#10003;</span>Alle Pro-Features inklusive</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#b44aff">&#10003;</span><strong style="color:#b44aff90">Remote Vault</strong> &ndash; fremde Server zugreifen</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#b44aff">&#10003;</span><strong style="color:#b44aff90">Fernwartung</strong> &ndash; Dateien reparieren aus der Ferne</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#b44aff">&#10003;</span>Zur&uuml;ck-Hochladen ge&auml;nderter Dateien</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#b44aff">&#10003;</span>VS Code NEXUS Extension + Lizenz</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#b44aff">&#10003;</span>Priorit&auml;t-Support per E-Mail</li>
+            <li class="flex items-start gap-2 text-xs text-white/50" style="font-family:Sora"><span class="shrink-0 mt-0.5" style="color:#b44aff">&#10003;</span>Alle Updates kostenlos</li>
+          </ul>
+          <details class="mb-4 text-left">
+            <summary class="text-[9px] tracking-[2px] uppercase cursor-pointer text-white/25 hover:text-white/50 transition-colors" style="font-family:JetBrains Mono;list-style:none">&#9656;&nbsp;Datenblatt anzeigen</summary>
+            <div class="mt-3 p-3 rounded-xl text-[10px] text-white/35 leading-relaxed space-y-1" style="font-family:Sora;background:rgba(180,74,255,0.04);border:1px solid rgba(180,74,255,0.10)">
+              <div><strong class="text-white/50">Betriebssystem:</strong> Windows 10 / 11 (64-bit)</div>
+              <div><strong class="text-white/50">Technologie:</strong> .NET 4.0, C#, WinForms + VS Code Extension</div>
+              <div><strong class="text-white/50">Verschl&uuml;sselung:</strong> TLS 1.3, AES-256</div>
+              <div><strong class="text-white/50">Remote Vault:</strong> Zugriff auf beliebige Cloud Drive Server weltweit</div>
+              <div><strong class="text-white/50">Fernwartung:</strong> Dateien reparieren &amp; zur&uuml;ckspielen &uuml;ber Remote</div>
+              <div><strong class="text-white/50">VS Code:</strong> NEXUS Extension mit Lizenzschl&uuml;ssel</div>
+              <div><strong class="text-white/50">Lizenz:</strong> Einzel-PC, nicht &uuml;bertragbar</div>
+              <div><strong class="text-white/50">Lieferung:</strong> Sofort-Download + Lizenzschl&uuml;ssel per E-Mail</div>
+            </div>
+          </details>
+          <a href="https://www.digistore24.com/product/NEXUS-ID" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-[700] text-sm transition-all duration-300 hover:opacity-90" style="font-family:Sora;background:linear-gradient(90deg,#b44aff,#7c3aed);color:#fff;box-shadow:0 0 24px #b44aff30" aria-label="NEXUS Edition kaufen">Jetzt kaufen</a>
         </div>
       </div>
-      <p class="text-center text-[10px] text-white/15 mt-4" style="font-family:JetBrains Mono">Individuelles Angebot per E-Mail</p>
+
+      <!-- Rechtlicher Hinweis -->
+      <div class="max-w-3xl mx-auto mt-8 p-5 rounded-xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05)">
+        <p class="text-[10px] text-white/20 leading-relaxed text-center" style="font-family:Sora">
+          Alle Preise inkl. 19&nbsp;% MwSt. &middot; Einmalkauf ohne laufende Kosten &middot; Keine automatische Verl&auml;ngerung &middot;
+          Lieferung als Sofort-Download (digitales Gut) &middot; <strong class="text-white/30">Kein Widerrufsrecht</strong> bei sofort verf&uuml;gbaren digitalen Inhalten gem.
+          &sect;&nbsp;356 Abs.&nbsp;5 BGB, sofern der Download umgehend nach Kauf bereitgestellt und die Zustimmung zum Verlust des Widerrufsrechts erteilt wurde &middot;
+          Anbieter: Gerd Zimmermann &middot; GZ-AI.-Stacks &middot; <a href="/impressum" style="color:#00b4ff50;text-decoration:underline">Impressum</a> &middot;
+          <a href="/datenschutz" style="color:#00b4ff50;text-decoration:underline">Datenschutz</a>
+        </p>
+      </div>
+
+      <!-- Custom Branding -->
+      <div class="max-w-2xl mx-auto mt-10 p-7 rounded-2xl border text-center" style="background:linear-gradient(145deg,rgba(180,74,255,0.04),rgba(0,0,0,0));border-color:#b44aff20">
+        <div class="text-[9px] tracking-[3px] uppercase mb-2" style="font-family:JetBrains Mono;color:#b44aff60">Custom Branding</div>
+        <h3 class="text-lg font-[800] text-white/70 mb-2" style="font-family:Outfit">Ihr Logo. Ihr Name. Ihr Produkt.</h3>
+        <p class="text-xs text-white/30 mb-5 leading-relaxed" style="font-family:Sora">White-Label-Version f&uuml;r Unternehmen und Wiederverkäufer. Individuelles Angebot auf Anfrage.</p>
+        <a href="mailto:gz.ai.stacks@gmail.com?subject=AI.-Ready Cloud Drive &ndash; Custom Branding Anfrage" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-[700] text-sm transition-all duration-300 hover:opacity-90" style="font-family:Sora;background:rgba(180,74,255,0.15);color:#b44aff;border:1px solid #b44aff30" aria-label="Custom Branding anfragen">Angebot anfragen</a>
+      </div>
     </div>
 
     <!-- Datenschutz Section -->
