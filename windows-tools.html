@@ -837,13 +837,16 @@
         </div>
 
         <!-- FUSION - Premium Flagship Bundle mit Cloud Drive NEXUS -->
-        <div class="p-8 rounded-2xl border relative text-center overflow-hidden" style="background:linear-gradient(155deg,rgba(30,64,175,0.18) 0%,rgba(30,58,138,0.10) 45%,rgba(15,23,42,0.04) 100%);border:1px solid rgba(96,165,250,0.35);box-shadow:0 0 60px rgba(30,64,175,0.25),0 8px 40px rgba(0,0,0,0.4),inset 0 1px 0 rgba(147,197,253,0.25)">
-          <!-- Shimmer-Linie oben -->
-          <div class="absolute top-0 left-0 right-0 h-[1px] pointer-events-none" style="background:linear-gradient(90deg,transparent 0%,rgba(147,197,253,0.8) 50%,transparent 100%)"></div>
-          <!-- Sanftes Radial-Glow hinten -->
-          <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at top,rgba(59,130,246,0.12) 0%,transparent 60%)"></div>
+        <div class="p-8 rounded-2xl border relative text-center" style="background:linear-gradient(155deg,rgba(30,64,175,0.18) 0%,rgba(30,58,138,0.10) 45%,rgba(15,23,42,0.04) 100%);border:1px solid rgba(96,165,250,0.35);box-shadow:0 0 60px rgba(30,64,175,0.25),0 8px 40px rgba(0,0,0,0.4),inset 0 1px 0 rgba(147,197,253,0.25)">
+          <!-- Deko-Layer (overflow-hidden, damit Shimmer und Glow die Rundung respektieren) -->
+          <div class="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+            <!-- Shimmer-Linie oben -->
+            <div class="absolute top-0 left-0 right-0 h-[1px]" style="background:linear-gradient(90deg,transparent 0%,rgba(147,197,253,0.8) 50%,transparent 100%)"></div>
+            <!-- Sanftes Radial-Glow hinten -->
+            <div class="absolute inset-0" style="background:radial-gradient(ellipse at top,rgba(59,130,246,0.12) 0%,transparent 60%)"></div>
+          </div>
 
-          <!-- Flagship Badge mit Tri-Color Gradient -->
+          <!-- Flagship Badge mit Tri-Color Gradient (au&szlig;erhalb overflow-hidden, damit es oben rausragen kann) -->
           <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-[10px] tracking-[3px] uppercase font-bold z-10" style="font-family:JetBrains Mono;background:linear-gradient(90deg,#1e3a8a 0%,#3b82f6 50%,#1e3a8a 100%);color:#fff;box-shadow:0 4px 20px rgba(30,64,175,0.55),inset 0 1px 0 rgba(147,197,253,0.35),inset 0 -1px 0 rgba(15,23,42,0.4);border:1px solid rgba(147,197,253,0.3)">Flagship</div>
 
           <div class="mb-4 mt-2 relative">
