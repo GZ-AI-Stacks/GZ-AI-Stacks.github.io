@@ -7,16 +7,18 @@
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&amp;family=Sora:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600;700&amp;display=swap" as="style"/>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&amp;family=Sora:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
   <title>NOVA Stellar Intelligence — Dein lokaler KI-Sprachassistent | GZ-AI.-Stacks</title>
-  <meta name="description" content="NOVA — Dein lokaler KI-Sprachassistent für Windows. Sprachsteuerung wie Jarvis, Ollama lokal, Claude/Gemini optional, Cinematic-Boot, DSGVO-konform. Einmalkauf, kein Abo."/>
+  <meta name="description" content="NOVA — Dein lokaler KI-Sprachassistent für Windows. Sprachsteuerung wie Jarvis, lokale KI, optional Cloud, Cinematic-Erlebnis, DSGVO-konform. Einmalkauf, kein Abo."/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://gz-ai-stacks.de/nova"/>
-  <meta property="og:title" content="NOVA Stellar Intelligence — Dein lokaler KI-Sprachassistent | GZ-AI.-Stacks"/>
-  <meta property="og:description" content="Sprich mit deinem PC wie mit Jarvis. Lokale KI, optional Cloud, voller Dateizugriff, Cinematic-Boot. Einmalkauf, kein Abo, DSGVO-konform."/>
+  <meta property="og:title" content="NOVA Stellar Intelligence — Sprich mit deinem PC wie mit Jarvis"/>
+  <meta property="og:description" content="Lokale KI, optional Cloud, voller Dateizugriff, Cinematic-Boot. Einmalkauf, kein Abo, DSGVO-konform."/>
   <meta property="og:site_name" content="GZ-AI.-Stacks"/>
+  <meta property="og:image" content="https://gz-ai-stacks.de/assets/nova/nova-125935.webp"/>
   <meta property="og:locale" content="de_DE"/>
-  <meta name="twitter:card" content="summary"/>
-  <meta name="twitter:title" content="NOVA Stellar Intelligence — Dein lokaler KI-Sprachassistent"/>
-  <meta name="twitter:description" content="Sprich mit deinem PC wie mit Jarvis. Lokale KI, optional Cloud. Einmalkauf, DSGVO-konform."/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="NOVA Stellar Intelligence — Sprich mit deinem PC wie mit Jarvis"/>
+  <meta name="twitter:description" content="Lokale KI, optional Cloud. Einmalkauf, DSGVO-konform."/>
+  <meta name="twitter:image" content="https://gz-ai-stacks.de/assets/nova/nova-125935.webp"/>
   <link rel="canonical" href="https://gz-ai-stacks.de/nova"/>
   <link rel="manifest" href="/manifest.json"/>
   <meta name="mobile-web-app-capable" content="yes"/>
@@ -41,6 +43,129 @@
       50% { box-shadow: 0 0 0 22px rgba(0,255,170,0); }
     }
     .pulse-mic { animation: pulse-mic 2s ease-in-out infinite; }
+
+    /* Atmospheric Image-Frames — NOVA spürbar machen */
+    .nova-frame {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(140,0,255,0.25);
+      background: linear-gradient(135deg, rgba(140,0,255,0.08), rgba(0,180,255,0.04));
+      transition: transform 0.4s cubic-bezier(.2,.8,.2,1), box-shadow 0.4s ease, border-color 0.4s ease;
+      cursor: zoom-in;
+    }
+    .nova-frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 60%, rgba(140,0,255,0.08));
+      pointer-events: none;
+      z-index: 2;
+    }
+    .nova-frame:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 50px rgba(140,0,255,0.25);
+      border-color: rgba(0,255,170,0.4);
+    }
+    .nova-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: transform 0.6s cubic-bezier(.2,.8,.2,1);
+    }
+    .nova-frame:hover img { transform: scale(1.02); }
+
+    /* Hero-Showcase besonderer Glow */
+    .nova-hero-showcase {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(140,0,255,0.30), 0 0 120px rgba(0,180,255,0.15);
+      border: 1px solid rgba(140,0,255,0.4);
+    }
+    .nova-hero-showcase::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top, transparent 50%, rgba(6,8,10,0.4));
+      pointer-events: none;
+    }
+    .nova-hero-showcase img { display: block; width: 100%; height: auto; }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(6,8,10,0.96);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      backdrop-filter: blur(20px);
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-content {
+      max-width: 1400px;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+    .lightbox img {
+      max-width: 100%;
+      max-height: 78vh;
+      border-radius: 12px;
+      box-shadow: 0 30px 100px rgba(140,0,255,0.4);
+      border: 1px solid rgba(140,0,255,0.3);
+    }
+    .lightbox-caption {
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      font-family: Sora, sans-serif;
+      font-size: 14px;
+      max-width: 700px;
+      line-height: 1.6;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: background 0.2s ease;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.2); }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(140,0,255,0.2);
+      border: 1px solid rgba(140,0,255,0.4);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      transition: background 0.2s ease;
+    }
+    .lightbox-nav:hover { background: rgba(140,0,255,0.4); }
+    .lightbox-prev { left: 24px; }
+    .lightbox-next { right: 24px; }
   </style>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "NOVA Stellar Intelligence", "url": "https://gz-ai-stacks.de/nova", "applicationCategory": "BusinessApplication", "operatingSystem": "Windows", "offers": {"@type": "Offer", "price": "69", "priceCurrency": "EUR"}, "author": {"@type": "Organization", "name": "GZ-AI.-Stacks"}}</script>
   <style id="gz-boot-css">
@@ -64,7 +189,7 @@
   <div id="gz-boot-lines">
     <div>&gt; NOVA Stellar Intelligence v1.0</div>
     <div>&gt; Neural Link initialisiert</div>
-    <div>&gt; Ollama lokal verbunden</div>
+    <div>&gt; Lokale KI verbunden</div>
     <div>&gt; Sprach-Engine aktiviert (DE)</div>
     <div>&gt; Sterntunnel-Boot bereit</div>
     <div>&gt; NOVA ist bereit.</div>
@@ -78,7 +203,7 @@
   <!-- Theme Glow -->
   <div id="theme-glow" style="position:fixed;inset:0;z-index:0;pointer-events:none;transition:background 1.5s ease;opacity:0.7;background:radial-gradient(ellipse 80% 60% at 50% 20%, rgba(140,0,255,0.10) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 70% 50%, rgba(0,180,255,0.05) 0%, transparent 50%)"></div>
 
-  <!-- Animated Background Canvas (Sterntunnel-inspiriert) -->
+  <!-- Animated Background Canvas (Sterntunnel) -->
   <canvas id="bgCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
   <script>
   (function(){
@@ -94,16 +219,12 @@
         color:['#8c00ff','#00b4ff','#00e676','#8c00ff'][Math.floor(Math.random()*4)]
       });
     }
-    var time=0;
     function draw(){
-      time++;
       g.fillStyle='rgba(6,8,10,0.18)';
       g.fillRect(0,0,W,H);
-      // Radial glow
       var grd=g.createRadialGradient(W/2,H*.35,0,W/2,H*.35,H*.7);
       grd.addColorStop(0,'rgba(140,0,255,.04)');grd.addColorStop(1,'transparent');
       g.fillStyle=grd;g.fillRect(0,0,W,H);
-      // Stars
       for(var i=0;i<stars.length;i++){
         var s=stars[i];
         s.z-=1.2;
@@ -122,7 +243,6 @@
         }
       }
       g.globalAlpha=1;
-      // Subtle scanlines
       g.fillStyle='rgba(140,0,255,.004)';
       for(var y=0;y<H;y+=3){g.fillRect(0,y,W,1);}
       requestAnimationFrame(draw);
@@ -142,7 +262,6 @@
           <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
             <defs>
               <linearGradient id="gz-fus1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b44aff"></stop><stop offset="50%" stop-color="#00d4ff"></stop><stop offset="100%" stop-color="#00ff41"></stop></linearGradient>
-              <linearGradient id="gz-fus2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b44aff"></stop><stop offset="100%" stop-color="#00d4ff"></stop></linearGradient>
               <filter id="gz-fusglow"><feGaussianBlur stdDeviation="3.5" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
             </defs>
             <g transform="translate(50,50)">
@@ -164,49 +283,40 @@
   </nav>
 
   <!-- Main Content -->
-  <div class="relative max-w-5xl mx-auto px-8 pt-40 pb-32" style="z-index:10">
+  <div class="relative max-w-6xl mx-auto px-8 pt-40 pb-32" style="z-index:10">
 
     <!-- HERO -->
-    <div class="mb-20 text-center">
+    <div class="mb-16 text-center">
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border mb-6 text-[9px] tracking-[2.5px] uppercase" style="font-family:JetBrains Mono;border-color:#8c00ff30;color:#b44aff;background:#8c00ff08">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3" aria-hidden="true"><path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m16 6-4 4-4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>
         Stellar Intelligence
       </div>
-      <h1 class="text-5xl md:text-7xl font-[900] mb-4 bg-clip-text text-transparent" style="font-family:Outfit;background-image:linear-gradient(135deg, #8c00ff 0%, #00b4ff 50%, #00ffaa 100%);letter-spacing:0.04em">NOVA</h1>
-      <p class="text-lg text-white/40 max-w-xl mx-auto mb-3" style="font-family:Sora">Dein lokaler KI-Sprachassistent &mdash; sprich mit deinem PC wie mit Jarvis</p>
-      <p class="text-sm text-white/20 max-w-md mx-auto mb-10" style="font-family:JetBrains Mono">Einmalkauf &middot; Kein Abo &middot; DSGVO-konform</p>
+      <h1 class="text-6xl md:text-8xl font-[900] mb-4 bg-clip-text text-transparent" style="font-family:Outfit;background-image:linear-gradient(135deg, #8c00ff 0%, #00b4ff 50%, #00ffaa 100%);letter-spacing:0.04em">NOVA</h1>
+      <p class="text-xl text-white/55 max-w-2xl mx-auto mb-3 font-light" style="font-family:Sora">Sie h&ouml;rt zu, wenn du sprichst.<br>Sie denkt mit, wenn du arbeitest.<br><span style="color:#00ffaa">Sie geh&ouml;rt nur dir.</span></p>
+      <p class="text-sm text-white/25 max-w-md mx-auto mb-10" style="font-family:JetBrains Mono">Einmalkauf &middot; Kein Abo &middot; Made in Germany</p>
 
       <div class="flex items-center justify-center gap-4 flex-wrap">
         <a href="#preise" class="flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300" style="font-family:Sora;background:linear-gradient(135deg,#8c00ff,#00b4ff);color:#fff;box-shadow:0 0 30px #8c00ff40" aria-label="NOVA jetzt kaufen">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Jetzt kaufen
         </a>
-        <a href="#features" class="flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-sm border border-white/10 text-white/50 hover:text-white/80 hover:border-white/20 transition-all duration-300" style="font-family:Sora" aria-label="Funktionen ansehen">
-          Funktionen ansehen
+        <a href="#galerie" class="flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-sm border border-white/10 text-white/50 hover:text-white/80 hover:border-white/20 transition-all duration-300" style="font-family:Sora">
+          NOVA erleben
         </a>
-      </div>
-
-      <!-- Key Selling Points -->
-      <div class="flex items-center justify-center gap-6 flex-wrap mt-10">
-        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
-          <span style="color:#00ffaa">&#10003;</span> 100% offline m&ouml;glich
-        </div>
-        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
-          <span style="color:#00ffaa">&#10003;</span> Sprachsteuerung Deutsch
-        </div>
-        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
-          <span style="color:#00ffaa">&#10003;</span> Cloud-KI optional
-        </div>
-        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
-          <span style="color:#00ffaa">&#10003;</span> Cinematic-UI
-        </div>
-        <div class="flex items-center gap-2 text-[10px] tracking-[1px] text-white/30" style="font-family:JetBrains Mono">
-          <span style="color:#00ffaa">&#10003;</span> Made in Germany
-        </div>
       </div>
     </div>
 
-    <!-- Story / Intro Section -->
+    <!-- HERO-SHOWCASE: Großes Bild der Hauptansicht -->
+    <div class="mb-24">
+      <div class="nova-hero-showcase mx-auto max-w-5xl cursor-zoom-in" data-lightbox="0">
+        <img src="assets/nova/nova-125935.webp" alt="NOVA Hauptansicht — der pers&ouml;nliche KI-Schreibtisch" loading="eager"/>
+      </div>
+      <p class="text-center text-xs text-white/35 mt-5 italic max-w-2xl mx-auto" style="font-family:Sora">
+        So sieht es aus, wenn NOVA wach wird. Dein eigener Schreibtisch, dein eigenes System &mdash; und in der Mitte: jemand, der zuh&ouml;rt.
+      </p>
+    </div>
+
+    <!-- STORY / INTRO Section -->
     <div class="mb-24">
       <div class="flex items-center gap-4 mb-10">
         <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">00</span>
@@ -217,145 +327,290 @@
 
       <div class="max-w-3xl mx-auto p-8 md:p-10 rounded-2xl border" style="background:rgba(140,0,255,0.04);border-color:#8c00ff20">
         <p class="text-base text-white/70 leading-relaxed mb-5" style="font-family:Sora">
-          Cloud-KIs wie ChatGPT oder Claude k&ouml;nnen viel &mdash; aber sie h&ouml;ren mit, sind teuer im Abo und deine Daten landen auf US-Servern. F&uuml;r <strong style="color:#00b4ff">Unternehmer, Lehrer, &Auml;rzte oder Juristen</strong> ist das oft schlicht nicht erlaubt.
+          Jeden Tag sprichst du mit einer KI &mdash; und jeden Tag liest jemand anderes mit. Deine Fragen wandern auf US-Server, deine Gedanken werden zu Trainingsdaten, deine Sorgen zu Quartalszahlen. Und am Monatsende kommt die Rechnung.
         </p>
         <p class="text-base text-white/70 leading-relaxed mb-5" style="font-family:Sora">
-          NOVA dreht das Modell um: <strong style="color:#00ffaa">Die KI l&auml;uft auf deinem PC.</strong> Du sprichst mit ihr wie mit Jarvis aus Iron Man &mdash; sie h&ouml;rt zu, denkt nach, antwortet, &ouml;ffnet Dateien, schreibt Code, fasst Dokumente zusammen. Alles lokal. Wenn du willst, schaltest du Cloud-KI dazu &mdash; pro Frage entscheidest du selbst.
+          NOVA ist anders. <strong style="color:#00ffaa">Sie wohnt auf deinem Rechner.</strong> Du sprichst mit ihr wie mit einem Freund, der dir gegen&uuml;bersitzt &mdash; sie h&ouml;rt zu, denkt nach, antwortet, &ouml;ffnet f&uuml;r dich Dateien, schreibt mit dir, fasst zusammen, erinnert sich. Alles bleibt zwischen euch beiden.
         </p>
         <p class="text-base text-white/70 leading-relaxed" style="font-family:Sora">
-          Kein Abo. Kein Datenabfluss. Kein Quota-Limit. <strong style="color:#b44aff">Eine einzige Zahlung &mdash; und NOVA geh&ouml;rt dir.</strong>
+          Und wenn du irgendwann doch mal die gro&szlig;en Cloud-KIs einbinden willst &mdash; entscheidest <strong style="color:#00b4ff">du</strong>, nicht sie. <strong style="color:#b44aff">Eine einzige Zahlung &mdash; und NOVA ist deine.</strong>
         </p>
+      </div>
+    </div>
+
+    <!-- KOMMANDOZENTRALE — Showcase Schnellbefehle -->
+    <div class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">01</span>
+        <div class="w-8 h-px" style="background:#8c00ff30"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Eine Taste &mdash; und NOVA wartet</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="text-center mb-10 max-w-2xl mx-auto">
+        <h2 class="text-2xl md:text-3xl font-[800] mb-3 text-white/85" style="font-family:Outfit">Strg + K. Mehr brauchst du nicht.</h2>
+        <p class="text-sm text-white/50 leading-relaxed" style="font-family:Sora">
+          59 Befehle, alle erreichbar mit einem Tastendruck. Tippe los &mdash; NOVA findet, was du suchst, bevor du den Satz beendet hast.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+        <div>
+          <div class="nova-frame" data-lightbox="4">
+            <img src="assets/nova/nova-130158.webp" alt="NOVA Schnellbefehle &mdash; Agents" loading="lazy"/>
+          </div>
+          <p class="text-[11px] text-white/45 mt-3 leading-relaxed text-center" style="font-family:Sora">
+            <strong style="color:#b44aff">Dein eigenes Team.</strong><br>NOVA bringt Spezialisten mit &mdash; einer recherchiert, einer schreibt, einer plant. Du sagst nur, was du brauchst.
+          </p>
+        </div>
+        <div>
+          <div class="nova-frame" data-lightbox="5">
+            <img src="assets/nova/nova-130230.webp" alt="NOVA Schnellbefehle &mdash; B&uuml;ro" loading="lazy"/>
+          </div>
+          <p class="text-[11px] text-white/45 mt-3 leading-relaxed text-center" style="font-family:Sora">
+            <strong style="color:#00ffaa">Dein B&uuml;ro im Griff.</strong><br>Arbeitsberichte, Backups, Briefings, Buchhaltung &mdash; alles zwei Klicks entfernt. Kein Programm-Wirrwarr mehr.
+          </p>
+        </div>
+        <div>
+          <div class="nova-frame" data-lightbox="6">
+            <img src="assets/nova/nova-130256.webp" alt="NOVA Schnellbefehle &mdash; Drucken &amp; Scannen" loading="lazy"/>
+          </div>
+          <p class="text-[11px] text-white/45 mt-3 leading-relaxed text-center" style="font-family:Sora">
+            <strong style="color:#00b4ff">Papier digital.</strong><br>Scannen, drucken, T&uuml;rklingel-QR, sogar rechtssichere Beweis-Stempel. Was du fr&uuml;her in 5 Apps gemacht hast &mdash; jetzt an einer Stelle.
+          </p>
+        </div>
+        <div>
+          <div class="nova-frame" data-lightbox="7">
+            <img src="assets/nova/nova-130326.webp" alt="NOVA Schnellbefehle &mdash; Privat &amp; Super-NOVA" loading="lazy"/>
+          </div>
+          <p class="text-[11px] text-white/45 mt-3 leading-relaxed text-center" style="font-family:Sora">
+            <strong style="color:#FF0080">Wenn's tiefer geht.</strong><br>Tagebuch, Erinnerungen an Menschen, Smart-Home, Live-Debatten zwischen mehreren KIs &mdash; NOVA hat Schichten, die du nach und nach entdeckst.
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- FEATURES SECTION -->
     <div id="features" class="mb-24">
       <div class="flex items-center gap-4 mb-10">
-        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">01</span>
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">02</span>
         <div class="w-8 h-px" style="background:#8c00ff30"></div>
-        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Hauptfunktionen</span>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Was NOVA f&uuml;r dich kann</span>
         <div class="flex-1 h-px bg-white/5"></div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-        <!-- 1. Sprachsteuerung -->
         <div class="p-6 rounded-2xl border backdrop-blur-sm" style="background:rgba(0,255,170,0.03);border-color:#00ffaa20">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 pulse-mic" style="background:#00ffaa12">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#00ffaa"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
           </div>
-          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Sprachsteuerung Deutsch</h3>
-          <p class="text-xs text-white/40 leading-relaxed" style="font-family:Sora">Wake-Word, Spracherkennung, nat&uuml;rliche TTS-Stimme mit Reverb. Sag &raquo;NOVA, &ouml;ffne Posteingang&laquo; &mdash; sie tut es. Kein Tippen mehr n&ouml;tig.</p>
+          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Sprich mit ihr</h3>
+          <p class="text-xs text-white/45 leading-relaxed" style="font-family:Sora">Echte deutsche Stimme mit Atem und Tiefe. &raquo;NOVA, &ouml;ffne meinen Posteingang.&laquo; Sie tut es. Du brauchst keine H&auml;nde mehr.</p>
         </div>
 
-        <!-- 2. Lokale KI Ollama -->
         <div class="p-6 rounded-2xl border backdrop-blur-sm" style="background:rgba(140,0,255,0.03);border-color:#8c00ff25">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#8c00ff12">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#b44aff"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
           </div>
-          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Lokale KI mit Ollama</h3>
-          <p class="text-xs text-white/40 leading-relaxed" style="font-family:Sora">40+ Modelle direkt auf deinem PC: Llama 3, Qwen, DeepSeek, Mistral. Kein Internet n&ouml;tig, keine API-Kosten, deine Daten bleiben da wo sie hingeh&ouml;ren.</p>
+          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Lokale Intelligenz</h3>
+          <p class="text-xs text-white/45 leading-relaxed" style="font-family:Sora">Eine ganze Bibliothek an KI-Modellen wartet auf deinem Rechner. Kein Internet n&ouml;tig. Keine Rechnung am Monatsende. Nur du und sie.</p>
         </div>
 
-        <!-- 3. Cloud-KI optional -->
         <div class="p-6 rounded-2xl border backdrop-blur-sm" style="background:rgba(0,180,255,0.03);border-color:#00b4ff20">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#00b4ff12">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#00b4ff"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
           </div>
-          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Cloud-KI optional</h3>
-          <p class="text-xs text-white/40 leading-relaxed" style="font-family:Sora">Wenn du willst: Claude, Gemini Free oder GPT direkt anschlie&szlig;en. Pro Frage entscheidest du, ob lokal oder Cloud. Volle Kontrolle, keine Pflicht.</p>
+          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Cloud, wenn du willst</h3>
+          <p class="text-xs text-white/45 leading-relaxed" style="font-family:Sora">Manchmal brauchst du die ganz gro&szlig;en Denker. Pro Frage entscheidest du: Bleibt es zuhause, oder darf eine Cloud-KI mitschauen? Du hast die Wahl. Immer.</p>
         </div>
 
-        <!-- 4. Cinematic Boot & Sound -->
         <div class="p-6 rounded-2xl border backdrop-blur-sm" style="background:rgba(255,0,128,0.03);border-color:#FF008025">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#FF008012">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#FF0080"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           </div>
-          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Cinematic-Boot &amp; Sound</h3>
-          <p class="text-xs text-white/40 leading-relaxed" style="font-family:Sora">Sterntunnel-Animation beim Start, Enigma-3000-Lockscreen, eigene Sound-Engine mit Bass-Sweeps und Shimmer-Pings. Kein Chatbot &mdash; ein Erlebnis.</p>
+          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Cinematic-Erlebnis</h3>
+          <p class="text-xs text-white/45 leading-relaxed" style="font-family:Sora">NOVA startet wie ein Raumschiff. Sterntunnel, Lockscreen mit drei Rotoren, eine Sound-Welt aus Bass und Schimmer. Kein Chatbot &mdash; ein Ort.</p>
         </div>
 
-        <!-- 5. Voller Dateizugriff -->
         <div class="p-6 rounded-2xl border backdrop-blur-sm" style="background:rgba(0,255,170,0.03);border-color:#00ffaa20">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#00ffaa12">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#00ffaa"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
           </div>
-          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Voller Dateizugriff</h3>
-          <p class="text-xs text-white/40 leading-relaxed" style="font-family:Sora">NOVA &ouml;ffnet, durchsucht und bearbeitet deine Dateien auf allen Laufwerken. Drag &amp; Drop in den Chat &mdash; PDFs, Bilder, Code &mdash; sie liest und antwortet im Kontext.</p>
+          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Sie kennt deine Dateien</h3>
+          <p class="text-xs text-white/45 leading-relaxed" style="font-family:Sora">Zieh ein PDF in den Chat. Frag nach. NOVA hat es gelesen, bevor du den Satz beendet hast. Bilder, Vertr&auml;ge, Code &mdash; sie versteht alles.</p>
         </div>
 
-        <!-- 6. Code-Review + Auto-Fix -->
         <div class="p-6 rounded-2xl border backdrop-blur-sm" style="background:rgba(140,0,255,0.03);border-color:#8c00ff25">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#8c00ff12">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#b44aff"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
           </div>
-          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Code-Review + Auto-Fix</h3>
-          <p class="text-xs text-white/40 leading-relaxed" style="font-family:Sora">7 Fokus-Optionen (Sicherheit, Bugs, DSGVO, Performance...). Auto-Fix mit Backup, Syntax-Check und Rollback. Sicher genug f&uuml;r echten Production-Code.</p>
+          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Ein zweites Augenpaar f&uuml;r Code</h3>
+          <p class="text-xs text-white/45 leading-relaxed" style="font-family:Sora">Sie liest deinen Code, findet, was nicht stimmt, und repariert &mdash; aber erst, wenn du gr&uuml;nes Licht gibst. Ein Backup macht sie automatisch. R&uuml;ckg&auml;ngig jederzeit.</p>
         </div>
 
-        <!-- 7. Multi-Step Agent -->
         <div class="p-6 rounded-2xl border backdrop-blur-sm" style="background:rgba(0,180,255,0.03);border-color:#00b4ff20">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#00b4ff12">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#00b4ff"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           </div>
-          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Multi-Step Agent</h3>
-          <p class="text-xs text-white/40 leading-relaxed" style="font-family:Sora">Ein Ziel &rarr; mehrere Dateien. NOVA plant, baut und verkn&uuml;pft komplette Projekte: Landing-Pages, Quiz-Apps, Tools &mdash; aus einer Text-Beschreibung.</p>
+          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Sie baut ganze Projekte</h3>
+          <p class="text-xs text-white/45 leading-relaxed" style="font-family:Sora">Sag ihr, was du brauchst. Sie plant die Schritte, baut die Dateien, verkn&uuml;pft alles. Eine Landingpage. Ein Quiz. Ein kleines Tool. Sie macht's einfach.</p>
         </div>
 
-        <!-- 8. RAG Wissens-Archiv -->
         <div class="p-6 rounded-2xl border backdrop-blur-sm" style="background:rgba(0,255,170,0.03);border-color:#00ffaa20">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#00ffaa12">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#00ffaa"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
           </div>
-          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">RAG Wissens-Archiv</h3>
-          <p class="text-xs text-white/40 leading-relaxed" style="font-family:Sora">Dein eigenes ChatGPT &uuml;ber deine Dokumente. Indexiere Ordner, frage nach Inhalten &mdash; mit Quellen-Zitaten. Vertr&auml;ge, Notizen, Forschung &mdash; alles abfragbar.</p>
+          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Dein eigenes Wissen</h3>
+          <p class="text-xs text-white/45 leading-relaxed" style="font-family:Sora">Zeig ihr deinen Ordner. Sie liest. Sie merkt sich. Dann fragst du nach &mdash; und sie zitiert dir die Stellen, wo es steht. Wie ein Bibliothekar, der alles kennt.</p>
         </div>
 
-        <!-- 9. Gmail & Calendar -->
         <div class="p-6 rounded-2xl border backdrop-blur-sm" style="background:rgba(255,229,0,0.03);border-color:#FFE50025">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#FFE50010">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#FFE500"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </div>
-          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Gmail &amp; Google Calendar</h3>
-          <p class="text-xs text-white/40 leading-relaxed" style="font-family:Sora">NOVA liest deine Mails vor, &uuml;bersetzt sie in 20+ Sprachen, erstellt Kalender-Termine per Sprachbefehl. &raquo;Welche Mails hab ich&laquo; &mdash; und sie liest dir vor.</p>
+          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Mails &amp; Termine</h3>
+          <p class="text-xs text-white/45 leading-relaxed" style="font-family:Sora">&raquo;Welche Mails hab ich heute?&laquo; Sie liest dir vor. &raquo;Setz mir n&auml;chste Woche Mittwoch einen Termin.&laquo; Erledigt. Dein Kalender folgt deiner Stimme.</p>
         </div>
 
-        <!-- 10. Rechnungs-Generator -->
         <div class="p-6 rounded-2xl border backdrop-blur-sm" style="background:rgba(255,136,0,0.03);border-color:#FF880025">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#FF880012">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#FF8800"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           </div>
-          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Rechnungs-Generator</h3>
-          <p class="text-xs text-white/40 leading-relaxed" style="font-family:Sora">Kleinunternehmer-Rechnungen (&sect;19 UStG) in 30 Sekunden &mdash; mit IBAN, F&auml;lligkeit, Druck-Button. Spart Stunden im Monat, ohne Buchhaltungs-Tool.</p>
+          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Rechnungen in 30 Sekunden</h3>
+          <p class="text-xs text-white/45 leading-relaxed" style="font-family:Sora">Sag, an wen &mdash; sag, wof&uuml;r &mdash; sag, wieviel. Eine halbe Minute sp&auml;ter ist die PDF fertig, mit deiner Bankverbindung und Kleinunternehmer-Hinweis. Buchhaltung wie nebenbei.</p>
         </div>
 
-        <!-- 11. Live-HTML-Preview -->
         <div class="p-6 rounded-2xl border backdrop-blur-sm" style="background:rgba(180,74,255,0.03);border-color:#b44aff20">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#b44aff12">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#b44aff"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
           </div>
-          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Live-HTML-Preview</h3>
-          <p class="text-xs text-white/40 leading-relaxed" style="font-family:Sora">NOVA generiert HTML &rarr; sofort Tab-Umschalter Code &harr; Vorschau direkt im Chat. Kein Speichern, kein &Ouml;ffnen &mdash; sofort sehen was rauskommt.</p>
+          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Sehen, was rauskommt</h3>
+          <p class="text-xs text-white/45 leading-relaxed" style="font-family:Sora">NOVA schreibt eine Webseite &mdash; und im n&auml;chsten Moment siehst du sie. Direkt im Chat. Kein Speichern, kein &Ouml;ffnen, kein Hin und Her.</p>
         </div>
 
-        <!-- 12. Chat-Verlauf mit Suche -->
         <div class="p-6 rounded-2xl border backdrop-blur-sm" style="background:rgba(6,182,212,0.03);border-color:#06b6d420">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#06b6d412">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" style="color:#06b6d4"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </div>
-          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Chat-Verlauf &amp; Suche</h3>
-          <p class="text-xs text-white/40 leading-relaxed" style="font-family:Sora">Alle Chats persistent gespeichert, durchsuchbar, nach Datum gruppiert. Sessions umbenennen, l&ouml;schen, wiederaufrufen &mdash; nichts geht verloren.</p>
+          <h3 class="font-[700] text-white/85 mb-2 text-sm" style="font-family:Outfit">Sie vergisst nichts</h3>
+          <p class="text-xs text-white/45 leading-relaxed" style="font-family:Sora">Jedes Gespr&auml;ch bleibt. Du suchst &mdash; sie findet. &raquo;Was hatten wir letzte Woche besprochen?&laquo; In zwei Sekunden steht's wieder vor dir.</p>
         </div>
 
       </div>
     </div>
 
-    <!-- WIE-ES-FUNKTIONIERT Section (Story-Element) -->
+    <!-- INSIDE NOVA — Tool-Modals nahaufnahme -->
     <div class="mb-24">
       <div class="flex items-center gap-4 mb-10">
-        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">02</span>
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">03</span>
         <div class="w-8 h-px" style="background:#8c00ff30"></div>
-        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">So f&uuml;hlt sich NOVA an</span>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Wenn du tiefer schaust</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="text-center mb-12 max-w-2xl mx-auto">
+        <h2 class="text-2xl md:text-3xl font-[800] mb-3 text-white/85" style="font-family:Outfit">Hinter jeder Funktion ein eigener Raum</h2>
+        <p class="text-sm text-white/50 leading-relaxed" style="font-family:Sora">
+          NOVA arbeitet nicht im Verborgenen. Sie zeigt dir, was sie tut &mdash; in eigenen, atmosph&auml;rischen Fenstern. Klar gestaltet, ruhig zu bedienen.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-7 max-w-5xl mx-auto">
+
+        <!-- Multi-Step Agent -->
+        <div>
+          <div class="nova-frame" data-lightbox="9">
+            <img src="assets/nova/nova-130423.webp" alt="NOVA Multi-Step Agent" loading="lazy"/>
+          </div>
+          <div class="mt-4 px-1">
+            <div class="text-[10px] tracking-[2px] uppercase mb-2" style="font-family:JetBrains Mono;color:#b44aff">Der Baumeister</div>
+            <h3 class="font-[700] text-white/85 mb-2 text-base" style="font-family:Outfit">&raquo;Bau mir eine Landingpage&laquo;</h3>
+            <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">
+              Beschreib dein Ziel in einem Satz. NOVA macht den Plan, fragt einmal kurz nach &mdash; und baut. Datei f&uuml;r Datei. Du schaust zu.
+            </p>
+          </div>
+        </div>
+
+        <!-- Code-Review -->
+        <div>
+          <div class="nova-frame" data-lightbox="11">
+            <img src="assets/nova/nova-130537.webp" alt="NOVA Code-Review" loading="lazy"/>
+          </div>
+          <div class="mt-4 px-1">
+            <div class="text-[10px] tracking-[2px] uppercase mb-2" style="font-family:JetBrains Mono;color:#00b4ff">Der Pr&uuml;fer</div>
+            <h3 class="font-[700] text-white/85 mb-2 text-base" style="font-family:Outfit">Sie liest, was du geschrieben hast</h3>
+            <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">
+              Du w&auml;hlst eine Datei. NOVA pr&uuml;ft sie auf Sicherheit, Bugs, Stil &mdash; und sagt dir genau, was sie ge&auml;ndert h&auml;tte. Du entscheidest, ob sie's tun darf.
+            </p>
+          </div>
+        </div>
+
+        <!-- Backup -->
+        <div>
+          <div class="nova-frame" data-lightbox="12">
+            <img src="assets/nova/nova-130614.webp" alt="NOVA Backup-System" loading="lazy"/>
+          </div>
+          <div class="mt-4 px-1">
+            <div class="text-[10px] tracking-[2px] uppercase mb-2" style="font-family:JetBrains Mono;color:#00ffaa">Der W&auml;chter</div>
+            <h3 class="font-[700] text-white/85 mb-2 text-base" style="font-family:Outfit">Drei Schichten Sicherheit</h3>
+            <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">
+              Crash-Backups bei jedem Speichern. Tagessicherungen. Jahresarchive. NOVA passt auf, dass dir nichts verloren geht &mdash; ohne dass du daran denken musst.
+            </p>
+          </div>
+        </div>
+
+        <!-- RAG Wissen -->
+        <div>
+          <div class="nova-frame" data-lightbox="13">
+            <img src="assets/nova/nova-130729.webp" alt="NOVA Wissens-Archiv" loading="lazy"/>
+          </div>
+          <div class="mt-4 px-1">
+            <div class="text-[10px] tracking-[2px] uppercase mb-2" style="font-family:JetBrains Mono;color:#FFE500">Der Bibliothekar</div>
+            <h3 class="font-[700] text-white/85 mb-2 text-base" style="font-family:Outfit">Frag deine eigenen Dokumente</h3>
+            <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">
+              Schmei&szlig; einen Ordner rein &mdash; PDFs, Notizen, Code. NOVA liest alles und beantwortet dir Fragen mit echten Zitaten aus deinen eigenen Dateien.
+            </p>
+          </div>
+        </div>
+
+        <!-- Kasse -->
+        <div>
+          <div class="nova-frame" data-lightbox="14">
+            <img src="assets/nova/nova-130805.webp" alt="NOVA Kasse" loading="lazy"/>
+          </div>
+          <div class="mt-4 px-1">
+            <div class="text-[10px] tracking-[2px] uppercase mb-2" style="font-family:JetBrains Mono;color:#00ffaa">Die Buchhalterin</div>
+            <h3 class="font-[700] text-white/85 mb-2 text-base" style="font-family:Outfit">Einnahmen, Ausgaben, &Uuml;berblick</h3>
+            <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">
+              Kleinunternehmer-Buchhaltung ohne Stress. Pro Monat, pro Kategorie &mdash; alles auf einen Blick. CSV-Export f&uuml;r den Steuerberater. Fertig.
+            </p>
+          </div>
+        </div>
+
+        <!-- CEO Agents -->
+        <div>
+          <div class="nova-frame" data-lightbox="8">
+            <img src="assets/nova/nova-130405.webp" alt="NOVA Agenten-Team" loading="lazy"/>
+          </div>
+          <div class="mt-4 px-1">
+            <div class="text-[10px] tracking-[2px] uppercase mb-2" style="font-family:JetBrains Mono;color:#FF8800">Das Team</div>
+            <h3 class="font-[700] text-white/85 mb-2 text-base" style="font-family:Outfit">F&uuml;nf Spezialisten, ein Chef</h3>
+            <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">
+              Der CEO-Agent versteht, was du brauchst &mdash; und gibt's an Recherche, Code, Schreiben oder Design weiter. Du sagst nur, was. Den Rest verteilt sie.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SZENEN -->
+    <div class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">04</span>
+        <div class="w-8 h-px" style="background:#8c00ff30"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Ein Tag mit NOVA</span>
         <div class="flex-1 h-px bg-white/5"></div>
       </div>
 
@@ -363,36 +618,36 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           <div class="p-7 rounded-2xl border" style="background:rgba(0,180,255,0.04);border-color:#00b4ff25">
-            <div class="text-[10px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#00b4ff80">Szene 1 &middot; Morgens</div>
+            <div class="text-[10px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#00b4ff80">Morgens &middot; 7:14 Uhr</div>
             <p class="text-sm text-white/75 leading-relaxed" style="font-family:Sora">
-              Du startest den PC. Der Sterntunnel zieht dich rein. Enigma-Lockscreen mit drei Rotoren entriegelt sich.
-              <strong style="color:#00ffaa">&raquo;Guten Morgen, Gee. Du hast 3 neue Mails. Soll ich sie vorlesen?&laquo;</strong>
-              Du sagst &raquo;Ja&laquo; &mdash; NOVA spricht. Mit Reverb. Wie ein Raumschiff.
+              Du dr&uuml;ckst den Power-Knopf. Der Sterntunnel beginnt. Drei Rotoren entriegeln sich.
+              <strong style="color:#00ffaa">&raquo;Guten Morgen, Gee. Du hast drei neue Mails. Soll ich sie vorlesen?&laquo;</strong>
+              Du nickst &mdash; sie liest. Mit Atem. Mit Pause. Mit Stimme, die du gerne h&ouml;rst.
             </p>
           </div>
 
           <div class="p-7 rounded-2xl border" style="background:rgba(140,0,255,0.04);border-color:#8c00ff25">
-            <div class="text-[10px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#b44aff">Szene 2 &middot; Code-Review</div>
+            <div class="text-[10px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#b44aff">Vormittags &middot; 10:32 Uhr</div>
             <p class="text-sm text-white/75 leading-relaxed" style="font-family:Sora">
-              <strong style="color:#b44aff">&raquo;NOVA, pr&uuml;fe meine login.js auf Sicherheit.&laquo;</strong>
-              Sie scannt, findet ein XSS-Risiko, schl&auml;gt einen Fix vor, macht Backup, repariert.
-              Du dr&uuml;ckst auf Knopf wenn du willst. Rollback jederzeit. <em>Lokal. Privat. Schnell.</em>
+              Du arbeitest an einer Datei und hast ein ungutes Gef&uuml;hl. <strong style="color:#b44aff">&raquo;NOVA, schau mal dr&uuml;ber.&laquo;</strong>
+              Sie findet den Fehler, schl&auml;gt einen Fix vor, macht Backup. Du sagst &raquo;Ja&laquo; &mdash; sie macht's. R&uuml;ckg&auml;ngig nur einen Klick entfernt.
             </p>
           </div>
 
           <div class="p-7 rounded-2xl border" style="background:rgba(0,255,170,0.04);border-color:#00ffaa25">
-            <div class="text-[10px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#00ffaa">Szene 3 &middot; Rechnung</div>
+            <div class="text-[10px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#00ffaa">Mittags &middot; 13:08 Uhr</div>
             <p class="text-sm text-white/75 leading-relaxed" style="font-family:Sora">
               <strong style="color:#00ffaa">&raquo;Mach mir Rechnung an Kunde M&uuml;ller, 280 Euro, Webdesign.&laquo;</strong>
-              30 Sekunden sp&auml;ter: PDF mit deiner IBAN, F&auml;llig-Datum, &sect;19-Hinweis, druckbereit. <em>Kein Buchhaltungs-Tool n&ouml;tig.</em>
+              30 Sekunden sp&auml;ter liegt die PDF auf deinem Schreibtisch. F&auml;llig in 14 Tagen, IBAN drauf, druckbereit. Keine Buchhaltungssoftware geoffnet. Keine.
             </p>
           </div>
 
           <div class="p-7 rounded-2xl border" style="background:rgba(255,0,128,0.04);border-color:#FF008025">
-            <div class="text-[10px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#FF0080">Szene 4 &middot; Abends</div>
+            <div class="text-[10px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#FF0080">Abends &middot; 21:45 Uhr</div>
             <p class="text-sm text-white/75 leading-relaxed" style="font-family:Sora">
-              <strong style="color:#FF0080">&raquo;NOVA, fasse meine Notizen vom heutigen Tag zusammen.&laquo;</strong>
-              Sie liest dein Notiz-Verzeichnis &mdash; lokal, ohne Cloud &mdash; und schreibt dir eine 5-Punkte-Zusammenfassung. Logout-Sound: zwei Sub-Drones, vier tiefe Bass-Hits. Kino-Atmosph&auml;re.
+              <strong style="color:#FF0080">&raquo;NOVA, fass meinen Tag zusammen.&laquo;</strong>
+              Sie liest die Notizen, die du gemacht hast. F&uuml;nf Punkte, klar, ruhig. Du klickst auf Logout. Zwei tiefe Drones. Das Sterntor schlie&szlig;t sich.
+              <em style="color:#b44aff">Bis morgen.</em>
             </p>
           </div>
 
@@ -400,10 +655,10 @@
       </div>
     </div>
 
-    <!-- WARUM-NOVA Section -->
+    <!-- WARUM NOVA -->
     <div class="mb-24">
       <div class="flex items-center gap-4 mb-10">
-        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">03</span>
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">05</span>
         <div class="w-8 h-px" style="background:#8c00ff30"></div>
         <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Warum NOVA statt Cloud-Abo?</span>
         <div class="flex-1 h-px bg-white/5"></div>
@@ -413,27 +668,27 @@
 
         <div class="p-7 rounded-2xl border text-center" style="background:rgba(0,255,170,0.04);border-color:#00ffaa20">
           <div class="text-3xl font-[900] mb-2" style="font-family:Outfit;color:#00ffaa">0 &euro;</div>
-          <div class="text-[10px] tracking-[2px] uppercase text-white/40 mb-3" style="font-family:JetBrains Mono">Monatliche Kosten</div>
-          <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">Kein Abo, kein Quota, keine versteckten Geb&uuml;hren. Einmal kaufen, lebenslang nutzen.</p>
+          <div class="text-[10px] tracking-[2px] uppercase text-white/40 mb-3" style="font-family:JetBrains Mono">Pro Monat</div>
+          <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">Eine Zahlung, einmal. Dann geh&ouml;rt sie dir &mdash; ohne dass jemand jeden Monat die Hand aufh&auml;lt.</p>
         </div>
 
         <div class="p-7 rounded-2xl border text-center" style="background:rgba(140,0,255,0.04);border-color:#8c00ff20">
           <div class="text-3xl font-[900] mb-2" style="font-family:Outfit;color:#b44aff">100&nbsp;%</div>
-          <div class="text-[10px] tracking-[2px] uppercase text-white/40 mb-3" style="font-family:JetBrains Mono">Offline m&ouml;glich</div>
-          <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">Deine Daten verlassen den PC nicht &mdash; au&szlig;er du willst es. DSGVO-Sicherheit ohne Vertrauensvorschuss.</p>
+          <div class="text-[10px] tracking-[2px] uppercase text-white/40 mb-3" style="font-family:JetBrains Mono">Bei dir</div>
+          <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">Deine Worte verlassen den Raum nicht. NOVA tr&auml;gt nichts nach drau&szlig;en, was du nicht ausdr&uuml;cklich willst.</p>
         </div>
 
         <div class="p-7 rounded-2xl border text-center" style="background:rgba(0,180,255,0.04);border-color:#00b4ff20">
           <div class="text-3xl font-[900] mb-2" style="font-family:Outfit;color:#00b4ff">DE</div>
-          <div class="text-[10px] tracking-[2px] uppercase text-white/40 mb-3" style="font-family:JetBrains Mono">Made in Germany</div>
-          <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">Entwickelt in Bayern. Support direkt vom Entwickler. Deutsch in UI, Sprachsteuerung und KI-Antworten.</p>
+          <div class="text-[10px] tracking-[2px] uppercase text-white/40 mb-3" style="font-family:JetBrains Mono">Aus Bayern</div>
+          <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">Gebaut in einem kleinen Studio in H&ouml;chstadt. Der Support kommt direkt vom Entwickler. Auf Deutsch.</p>
         </div>
 
       </div>
 
-      <!-- Vergleich gegen Cloud -->
+      <!-- Vergleich -->
       <div class="max-w-4xl mx-auto mt-10 p-7 rounded-2xl border" style="background:rgba(140,0,255,0.04);border-color:#8c00ff25">
-        <div class="text-[10px] tracking-[3px] uppercase mb-4" style="font-family:JetBrains Mono;color:#b44aff">Preisvergleich &uuml;ber 1 Jahr</div>
+        <div class="text-[10px] tracking-[3px] uppercase mb-4 text-center" style="font-family:JetBrains Mono;color:#b44aff">Was du im Jahr zahlst</div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
           <div>
             <div class="text-sm text-white/60 mb-1" style="font-family:Sora">ChatGPT Plus</div>
@@ -452,23 +707,60 @@
             <div class="text-xl font-[800]" style="font-family:Outfit;color:#00ffaa">149 &euro; einmal</div>
           </div>
         </div>
-        <p class="text-xs text-white/45 text-center mt-5" style="font-family:Sora">Nach <strong style="color:#00ffaa">Monat 8</strong> hat sich NOVA Pro gegen&uuml;ber Cloud-Abos amortisiert &mdash; und du nutzt sie danach <strong style="color:#00b4ff">lebenslang kostenlos</strong>.</p>
+        <p class="text-xs text-white/45 text-center mt-5" style="font-family:Sora">Nach <strong style="color:#00ffaa">acht Monaten</strong> hast du NOVA bezahlt. Der Rest ist geschenkt &mdash; <strong style="color:#00b4ff">f&uuml;r immer</strong>.</p>
+      </div>
+    </div>
+
+    <!-- GALERIE / LIGHTBOX -->
+    <div id="galerie" class="mb-24">
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">06</span>
+        <div class="w-8 h-px" style="background:#8c00ff30"></div>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Komm mit hinein</span>
+        <div class="flex-1 h-px bg-white/5"></div>
+      </div>
+
+      <div class="text-center mb-10 max-w-2xl mx-auto">
+        <h2 class="text-2xl md:text-3xl font-[800] mb-3 text-white/85" style="font-family:Outfit">Schau dich um, bevor du dich entscheidest</h2>
+        <p class="text-sm text-white/50 leading-relaxed" style="font-family:Sora">
+          Klick auf jedes Bild &mdash; gro&szlig;, ruhig, in voller Sch&ouml;nheit. So sieht NOVA aus, wenn sie l&auml;uft.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div class="nova-frame" data-lightbox="0"><img src="assets/nova/nova-125935.webp" alt="NOVA Hauptansicht" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="1"><img src="assets/nova/nova-125950.webp" alt="NOVA &mdash; Imperial-Theme" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="2"><img src="assets/nova/nova-130007.webp" alt="NOVA &mdash; Prisma-Theme" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="3"><img src="assets/nova/nova-130019.webp" alt="NOVA &mdash; Aurora-Theme" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="4"><img src="assets/nova/nova-130158.webp" alt="Schnellbefehle &mdash; Agents" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="5"><img src="assets/nova/nova-130230.webp" alt="Schnellbefehle &mdash; B&uuml;ro" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="6"><img src="assets/nova/nova-130256.webp" alt="Schnellbefehle &mdash; Drucken" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="7"><img src="assets/nova/nova-130326.webp" alt="Schnellbefehle &mdash; Privat" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="8"><img src="assets/nova/nova-130405.webp" alt="Agenten-Team" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="9"><img src="assets/nova/nova-130423.webp" alt="Multi-Step Agent" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="10"><img src="assets/nova/nova-130517.webp" alt="Mehrfach-Bearbeitung" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="11"><img src="assets/nova/nova-130537.webp" alt="Code-Review" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="12"><img src="assets/nova/nova-130614.webp" alt="Backup-System" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="13"><img src="assets/nova/nova-130729.webp" alt="Wissens-Archiv" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="14"><img src="assets/nova/nova-130805.webp" alt="Kasse / Buchhaltung" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="15"><img src="assets/nova/nova-130848.webp" alt="Datei-Browser" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="16"><img src="assets/nova/nova-131014.webp" alt="Web-Favoriten" loading="lazy"/></div>
+        <div class="nova-frame" data-lightbox="17"><img src="assets/nova/nova-131109.webp" alt="System-Telemetrie" loading="lazy"/></div>
       </div>
     </div>
 
     <!-- PREIS-BLOCK -->
     <div id="preise" class="mb-24">
       <div class="flex items-center gap-4 mb-4">
-        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">04</span>
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">07</span>
         <div class="w-8 h-px" style="background:#8c00ff30"></div>
-        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Editionen &amp; Preise</span>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">W&auml;hl deine NOVA</span>
         <div class="flex-1 h-px bg-white/5"></div>
       </div>
-      <p class="text-center text-xs text-white/30 mb-10" style="font-family:Sora">Einmalkauf &mdash; lebenslange Lizenz &mdash; alle Preise inkl. 19 % MwSt.</p>
+      <p class="text-center text-xs text-white/30 mb-10" style="font-family:Sora">Einmal kaufen, ein Leben lang behalten &middot; alle Preise inkl. 19&nbsp;% MwSt.</p>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
 
-        <!-- Basis -->
         <div class="p-7 rounded-2xl border flex flex-col text-center" style="background:linear-gradient(145deg,rgba(0,255,170,0.06),rgba(0,255,170,0.01));border-color:#00ffaa30">
           <div class="mb-5">
             <div class="text-[9px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#00ffaa">Basis</div>
@@ -479,11 +771,11 @@
             <div class="text-[10px] text-white/40" style="font-family:JetBrains Mono">einmalig &middot; 1 PC</div>
           </div>
           <ul class="text-xs text-white/60 space-y-2 mb-6 text-left flex-1" style="font-family:Sora">
-            <li><span style="color:#00ffaa">&#10003;</span> Lokale KI mit Ollama (40+ Modelle)</li>
+            <li><span style="color:#00ffaa">&#10003;</span> Lokale KI mit gro&szlig;er Modell-Bibliothek</li>
             <li><span style="color:#00ffaa">&#10003;</span> Sprachsteuerung Deutsch</li>
             <li><span style="color:#00ffaa">&#10003;</span> Voller Dateizugriff + Suche</li>
             <li><span style="color:#00ffaa">&#10003;</span> Notizen, Timer, Wetter, Briefing</li>
-            <li><span style="color:#00ffaa">&#10003;</span> Cinematic-Boot &amp; Sound-Engine</li>
+            <li><span style="color:#00ffaa">&#10003;</span> Cinematic-Boot &amp; Sound-Welt</li>
             <li><span style="color:#00ffaa">&#10003;</span> Chat-Verlauf mit Suche</li>
             <li><span style="color:#00ffaa">&#10003;</span> 1 PC, lebenslang nutzbar</li>
             <li><span style="color:#00ffaa">&#10003;</span> E-Mail-Support (2 Werktage)</li>
@@ -491,7 +783,6 @@
           <a href="mailto:gz.ai.stacks@gmail.com?subject=NOVA%20Basis%20Bestellung" class="block py-3 rounded-xl font-[700] text-sm text-center transition-all" style="font-family:Sora;background:#00ffaa;color:#06080a">Jetzt kaufen</a>
         </div>
 
-        <!-- Pro (hervorgehoben) -->
         <div class="p-7 rounded-2xl border flex flex-col text-center neon-border relative" style="background:linear-gradient(145deg,rgba(0,180,255,0.08),rgba(140,0,255,0.04));border-color:#00b4ff40">
           <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[9px] tracking-[2px] uppercase font-[800]" style="font-family:JetBrains Mono;background:linear-gradient(135deg,#00b4ff,#8c00ff);color:#fff">Beliebt</div>
           <div class="mb-5">
@@ -504,19 +795,18 @@
           </div>
           <ul class="text-xs text-white/60 space-y-2 mb-6 text-left flex-1" style="font-family:Sora">
             <li><strong style="color:#00b4ff">Alles aus Basis +</strong></li>
-            <li><span style="color:#00b4ff">&#10003;</span> Cloud-KI (Gemini Free, Claude, GPT)</li>
-            <li><span style="color:#00b4ff">&#10003;</span> Live-Streaming mit Progress-Widget</li>
-            <li><span style="color:#00b4ff">&#10003;</span> Gmail &amp; Google Calendar</li>
-            <li><span style="color:#00b4ff">&#10003;</span> E-Mail-&Uuml;bersetzung 20+ Sprachen</li>
-            <li><span style="color:#00b4ff">&#10003;</span> Live-HTML-Preview im Chat</li>
-            <li><span style="color:#00b4ff">&#10003;</span> Rechnungs-Generator &sect;19 UStG</li>
-            <li><span style="color:#00b4ff">&#10003;</span> 2 PCs, Priorit&auml;ts-Support 24h</li>
+            <li><span style="color:#00b4ff">&#10003;</span> Cloud-KI-Anbindung (optional)</li>
+            <li><span style="color:#00b4ff">&#10003;</span> Live-Antwort mit Fortschritt sichtbar</li>
+            <li><span style="color:#00b4ff">&#10003;</span> Mails &amp; Kalender per Sprachbefehl</li>
+            <li><span style="color:#00b4ff">&#10003;</span> Mail-&Uuml;bersetzung in 20+ Sprachen</li>
+            <li><span style="color:#00b4ff">&#10003;</span> Webseiten direkt im Chat sehen</li>
+            <li><span style="color:#00b4ff">&#10003;</span> Rechnungs-Generator (&sect;19 UStG)</li>
+            <li><span style="color:#00b4ff">&#10003;</span> 2 PCs &middot; Priorit&auml;ts-Support 24h</li>
             <li><span style="color:#00b4ff">&#10003;</span> 1h Onboarding per Zoom</li>
           </ul>
           <a href="mailto:gz.ai.stacks@gmail.com?subject=NOVA%20Pro%20Bestellung" class="block py-3 rounded-xl font-[700] text-sm text-center transition-all" style="font-family:Sora;background:linear-gradient(135deg,#00b4ff,#8c00ff);color:#fff">Jetzt kaufen</a>
         </div>
 
-        <!-- NEXUS -->
         <div class="p-7 rounded-2xl border flex flex-col text-center" style="background:linear-gradient(145deg,rgba(140,0,255,0.06),rgba(255,0,128,0.04));border-color:#8c00ff30">
           <div class="mb-5">
             <div class="text-[9px] tracking-[3px] uppercase mb-3" style="font-family:JetBrains Mono;color:#b44aff">NEXUS</div>
@@ -528,13 +818,13 @@
           </div>
           <ul class="text-xs text-white/60 space-y-2 mb-6 text-left flex-1" style="font-family:Sora">
             <li><strong style="color:#b44aff">Alles aus Pro +</strong></li>
-            <li><span style="color:#b44aff">&#10003;</span> Code-Review mit 7 Fokus-Optionen</li>
-            <li><span style="color:#b44aff">&#10003;</span> Auto-Fix mit Backup &amp; Rollback</li>
-            <li><span style="color:#b44aff">&#10003;</span> Multi-Step Agent (Plan&rarr;Execute)</li>
-            <li><span style="color:#b44aff">&#10003;</span> Feature-Generator (9 Templates)</li>
-            <li><span style="color:#b44aff">&#10003;</span> RAG Wissens-Archiv</li>
-            <li><span style="color:#b44aff">&#10003;</span> Custom System-Prompt + Branding</li>
-            <li><span style="color:#b44aff">&#10003;</span> 5 PCs, Telefon-Support, Fernwartung</li>
+            <li><span style="color:#b44aff">&#10003;</span> Code-Review mit 7 Pr&uuml;f-Modi</li>
+            <li><span style="color:#b44aff">&#10003;</span> Auto-Reparatur mit Backup</li>
+            <li><span style="color:#b44aff">&#10003;</span> Multi-Step Agent (plant &amp; baut)</li>
+            <li><span style="color:#b44aff">&#10003;</span> 9 Vorlagen f&uuml;r neue Projekte</li>
+            <li><span style="color:#b44aff">&#10003;</span> Wissens-Archiv f&uuml;r eigene Dokumente</li>
+            <li><span style="color:#b44aff">&#10003;</span> Eigenes Branding m&ouml;glich</li>
+            <li><span style="color:#b44aff">&#10003;</span> 5 PCs &middot; Telefon-Support, Fernwartung</li>
             <li><span style="color:#b44aff">&#10003;</span> 2h Onboarding + Schulung</li>
           </ul>
           <a href="mailto:gz.ai.stacks@gmail.com?subject=NOVA%20NEXUS%20Bestellung" class="block py-3 rounded-xl font-[700] text-sm text-center transition-all" style="font-family:Sora;background:linear-gradient(135deg,#8c00ff,#FF0080);color:#fff">Jetzt kaufen</a>
@@ -542,7 +832,6 @@
 
       </div>
 
-      <!-- Rechtshinweise -->
       <div class="max-w-3xl mx-auto mt-10 p-5 rounded-xl text-center" style="background:rgba(255,229,0,0.04);border:1px solid rgba(255,229,0,0.2)">
         <p class="text-xs text-white/50 leading-relaxed" style="font-family:Sora">
           Digitales Sofort-Download-Produkt &middot; Lieferung per E-Mail nach Zahlung &middot; Widerrufsrecht ausgeschlossen gem. &sect;356 Abs. 5 BGB.<br>
@@ -557,9 +846,9 @@
     <!-- FAQ -->
     <div class="mb-24">
       <div class="flex items-center gap-4 mb-10">
-        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">05</span>
+        <span class="text-[10px] tracking-[4px] uppercase" style="font-family:JetBrains Mono;color:#8c00ff60">08</span>
         <div class="w-8 h-px" style="background:#8c00ff30"></div>
-        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">H&auml;ufige Fragen</span>
+        <span class="text-[10px] tracking-[4px] text-white/25 uppercase" style="font-family:JetBrains Mono">Was du noch wissen willst</span>
         <div class="flex-1 h-px bg-white/5"></div>
       </div>
 
@@ -567,32 +856,32 @@
 
         <details class="p-5 rounded-xl border" style="background:rgba(0,180,255,0.03);border-color:#00b4ff20">
           <summary class="cursor-pointer text-sm font-[600] text-white/80" style="font-family:Sora">Brauche ich Internet f&uuml;r NOVA?</summary>
-          <p class="text-xs text-white/55 mt-3 leading-relaxed" style="font-family:Sora">Nein. NOVA Basis l&auml;uft <strong style="color:#00ffaa">komplett offline</strong> mit lokalen Ollama-Modellen. F&uuml;r optionale Features wie Gmail, Calendar oder Cloud-KI brauchst du Internet, aber der Kern funktioniert ohne.</p>
+          <p class="text-xs text-white/55 mt-3 leading-relaxed" style="font-family:Sora">Nein. NOVA Basis l&auml;uft <strong style="color:#00ffaa">komplett offline</strong>. Nur f&uuml;r optionale Sachen wie Mails, Kalender oder Cloud-KI brauchst du Internet &mdash; der Kern arbeitet ohne.</p>
         </details>
 
         <details class="p-5 rounded-xl border" style="background:rgba(0,180,255,0.03);border-color:#00b4ff20">
           <summary class="cursor-pointer text-sm font-[600] text-white/80" style="font-family:Sora">Welche Hardware brauche ich?</summary>
-          <p class="text-xs text-white/55 mt-3 leading-relaxed" style="font-family:Sora"><strong>Minimum:</strong> Windows 10/11, 8 GB RAM, 10 GB freier Speicher. <strong>Empfohlen:</strong> 16 GB RAM, eine Nvidia-GPU mit 8+ GB VRAM f&uuml;r gr&ouml;&szlig;ere Modelle (qwen2.5-coder:14b, deepseek-coder-v2:16b). NOVA l&auml;uft auch CPU-only mit kleineren 3-9B-Modellen.</p>
+          <p class="text-xs text-white/55 mt-3 leading-relaxed" style="font-family:Sora">Windows 10 oder 11, mindestens 8 GB RAM, 10 GB Speicherplatz. Sch&ouml;ner ist's mit 16 GB und einer aktuellen Grafikkarte &mdash; aber NOVA l&auml;uft auch auf bescheidener Hardware, dann eben mit kleineren Modellen.</p>
         </details>
 
         <details class="p-5 rounded-xl border" style="background:rgba(0,180,255,0.03);border-color:#00b4ff20">
           <summary class="cursor-pointer text-sm font-[600] text-white/80" style="font-family:Sora">Ist NOVA wirklich DSGVO-konform?</summary>
-          <p class="text-xs text-white/55 mt-3 leading-relaxed" style="font-family:Sora"><strong style="color:#00ffaa">Ja.</strong> NOVA Basis verarbeitet alle Daten lokal &mdash; kein Byte verl&auml;sst deinen PC. Pro bietet Cloud-Integration optional an, aber du entscheidest <strong>pro Anfrage</strong> ob lokal oder Cloud. F&uuml;r sensible Daten (Mandanten, Patienten, Sch&uuml;ler) bleibst du jederzeit zu 100&nbsp;% lokal.</p>
+          <p class="text-xs text-white/55 mt-3 leading-relaxed" style="font-family:Sora"><strong style="color:#00ffaa">Ja.</strong> NOVA verarbeitet alles lokal &mdash; nichts geht nach drau&szlig;en, was du nicht selbst freigibst. F&uuml;r sensible Daten (Mandanten, Patienten, Sch&uuml;ler) bleibst du jederzeit zu 100&nbsp;% offline.</p>
         </details>
 
         <details class="p-5 rounded-xl border" style="background:rgba(0,180,255,0.03);border-color:#00b4ff20">
-          <summary class="cursor-pointer text-sm font-[600] text-white/80" style="font-family:Sora">Was kostet die Cloud-Integration extra?</summary>
-          <p class="text-xs text-white/55 mt-3 leading-relaxed" style="font-family:Sora"><strong style="color:#00ffaa">Nichts &mdash; im Free-Tier.</strong> Google Gemini hat ein gro&szlig;z&uuml;giges Free-Tier (15 Anfragen/Min, 1.500/Tag) ohne Kreditkarte. Reicht f&uuml;r Normalnutzer v&ouml;llig. Claude und OpenAI brauchen einen kostenpflichtigen API-Key (BYOK), den du selbst beistellst.</p>
+          <summary class="cursor-pointer text-sm font-[600] text-white/80" style="font-family:Sora">Was kostet die Cloud-Anbindung extra?</summary>
+          <p class="text-xs text-white/55 mt-3 leading-relaxed" style="font-family:Sora">Nichts &mdash; im Free-Tier. Eine bekannte Cloud-KI hat ein gro&szlig;z&uuml;giges Gratis-Kontingent (1.500 Anfragen pro Tag). F&uuml;r Privatleute reicht das v&ouml;llig. Die anderen Cloud-KIs brauchen einen eigenen Zugang, den du selbst beistellst.</p>
         </details>
 
         <details class="p-5 rounded-xl border" style="background:rgba(0,180,255,0.03);border-color:#00b4ff20">
           <summary class="cursor-pointer text-sm font-[600] text-white/80" style="font-family:Sora">Wie funktioniert das Upgrade zwischen Editionen?</summary>
-          <p class="text-xs text-white/55 mt-3 leading-relaxed" style="font-family:Sora">Du zahlst nur die Differenz: Basis &rarr; Pro = 80 &euro;, Pro &rarr; NEXUS = 150 &euro;, Basis &rarr; NEXUS = 230 &euro;. Schreib eine Mail mit deiner alten Lizenz-ID an <a href="mailto:gz.ai.stacks@gmail.com" class="underline" style="color:#00b4ff">gz.ai.stacks@gmail.com</a>.</p>
+          <p class="text-xs text-white/55 mt-3 leading-relaxed" style="font-family:Sora">Du zahlst nur die Differenz &mdash; eine kurze Mail mit deiner alten Lizenz-ID an <a href="mailto:gz.ai.stacks@gmail.com" class="underline" style="color:#00b4ff">gz.ai.stacks@gmail.com</a> reicht.</p>
         </details>
 
         <details class="p-5 rounded-xl border" style="background:rgba(0,180,255,0.03);border-color:#00b4ff20">
           <summary class="cursor-pointer text-sm font-[600] text-white/80" style="font-family:Sora">Gibt es R&uuml;ckerstattung?</summary>
-          <p class="text-xs text-white/55 mt-3 leading-relaxed" style="font-family:Sora">Als digitales Sofort-Download-Produkt ist das Widerrufsrecht nach &sect;356 Abs. 5 BGB ausgeschlossen (wie bei jeder Software). Falls es technische Probleme gibt die wir nicht l&ouml;sen k&ouml;nnen, sind wir trotzdem kulant &mdash; einfach melden.</p>
+          <p class="text-xs text-white/55 mt-3 leading-relaxed" style="font-family:Sora">Als digitales Sofort-Download-Produkt ist das Widerrufsrecht ausgeschlossen (gem. &sect;356 Abs. 5 BGB). Falls es technische Probleme gibt, die wir nicht l&ouml;sen k&ouml;nnen, sind wir trotzdem kulant &mdash; einfach melden.</p>
         </details>
 
       </div>
@@ -601,8 +890,8 @@
     <!-- FINALER CTA -->
     <div class="mb-12">
       <div class="max-w-3xl mx-auto p-10 rounded-3xl border text-center neon-border" style="background:linear-gradient(135deg, rgba(140,0,255,0.08), rgba(0,180,255,0.06), rgba(0,255,170,0.04));border-color:#8c00ff40">
-        <h2 class="text-3xl md:text-4xl font-[900] mb-4 bg-clip-text text-transparent" style="font-family:Outfit;background-image:linear-gradient(135deg, #8c00ff, #00b4ff, #00ffaa)">Bereit f&uuml;r deinen Jarvis?</h2>
-        <p class="text-sm text-white/55 max-w-xl mx-auto mb-8" style="font-family:Sora">Schluss mit Cloud-Abos. Schluss mit Datenabfluss in die USA. Hol dir deinen eigenen Sprachassistenten &mdash; einmal kaufen, lebenslang behalten.</p>
+        <h2 class="text-3xl md:text-4xl font-[900] mb-4 bg-clip-text text-transparent" style="font-family:Outfit;background-image:linear-gradient(135deg, #8c00ff, #00b4ff, #00ffaa)">Hol dir deine NOVA</h2>
+        <p class="text-sm text-white/55 max-w-xl mx-auto mb-8 leading-relaxed" style="font-family:Sora">Schluss mit Cloud-Abos. Schluss mit Datenabfluss in die USA. Hol dir die Stimme, die nur dir geh&ouml;rt &mdash; einmal kaufen, lebenslang behalten.</p>
         <a href="#preise" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-[700] text-sm transition-all" style="font-family:Sora;background:linear-gradient(135deg,#8c00ff,#00b4ff,#00ffaa);color:#06080a;box-shadow:0 0 40px rgba(140,0,255,0.4)">
           NOVA jetzt sichern
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -625,6 +914,95 @@
   </footer>
 
 </div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-label="Bildansicht" aria-modal="true">
+  <button class="lightbox-close" id="lb-close" aria-label="Schlie&szlig;en">&times;</button>
+  <button class="lightbox-nav lightbox-prev" id="lb-prev" aria-label="Vorheriges Bild">&#8249;</button>
+  <button class="lightbox-nav lightbox-next" id="lb-next" aria-label="N&auml;chstes Bild">&#8250;</button>
+  <div class="lightbox-content">
+    <img id="lb-img" src="" alt=""/>
+    <div class="lightbox-caption" id="lb-caption"></div>
+  </div>
+</div>
+
+<script>
+// LIGHTBOX-Logik
+(function(){
+  var captions = [
+    "NOVA Hauptansicht &mdash; dein pers&ouml;nlicher KI-Schreibtisch. Links die Werkzeuge, in der Mitte der Dialog, rechts NOVAs Gesicht.",
+    "Dieselbe NOVA, anderer Anstrich. Die Imperial-Atmosph&auml;re &mdash; tiefes Bernstein f&uuml;r konzentrierte Stunden.",
+    "Prisma-Theme &mdash; sanftere Farben, ruhigere Stimmung. NOVA passt sich deiner Tageszeit an.",
+    "Aurora &mdash; klar und kompakt. Wenn du es minimalistisch magst.",
+    "Schnellbefehle &mdash; Agents. Dein eigenes Spezialisten-Team, jederzeit erreichbar.",
+    "Schnellbefehle &mdash; B&uuml;ro. Arbeitsberichte, Backups, Briefings, Kasse &mdash; das Werkzeug f&uuml;r den Alltag.",
+    "Schnellbefehle &mdash; Drucken &amp; Scannen. Vom Handy-Foto bis zum rechtssicheren Zeitstempel.",
+    "Privat-Modus &amp; Super-NOVA &mdash; Tagebuch, Smart-Home, mehrere KIs gleichzeitig diskutieren lassen.",
+    "Das Agenten-Team in Aktion. CEO entscheidet, wer den Auftrag bekommt &mdash; Recherche, Code, Schreiben oder Design.",
+    "Multi-Step Agent &mdash; sag, was du brauchst. NOVA plant die Schritte und baut Datei f&uuml;r Datei.",
+    "Mehrere Dateien gleichzeitig bearbeiten &mdash; perfekt f&uuml;r gro&szlig;e Aufr&auml;umaktionen oder Massen-Updates.",
+    "Code-Review &mdash; NOVA pr&uuml;ft deine Datei auf Sicherheit, Bugs und Stil. Mit Backup, R&uuml;ckg&auml;ngig jederzeit.",
+    "Drei-Schichten-Backup &mdash; NOVA passt auf, dass dir nichts verloren geht. Crash-Sicherung, Tages-Pakete, Jahres-Archiv.",
+    "Wissens-Archiv &mdash; gib NOVA deine Dokumente, frag sie alles. Sie zitiert dir die Stellen, wo es steht.",
+    "Kasse &amp; Buchhaltung f&uuml;r Kleinunternehmer &mdash; Einnahmen, Ausgaben, Monats- und Jahres&uuml;berblick auf einen Klick.",
+    "Datei-Browser mit Favoriten &mdash; alle Laufwerke, alle Lieblingsordner, immer in Reichweite.",
+    "Web-Favoriten &mdash; deine wichtigsten Seiten als Sprachbefehle. &raquo;NOVA, &ouml;ffne YouTube&laquo; &mdash; und sie tut's.",
+    "System-Status &mdash; NOVA zeigt dir, wie sie sich f&uuml;hlt: Speicher, CPU, Laufzeit. Transparenz statt Black-Box."
+  ];
+
+  var imgs = document.querySelectorAll('[data-lightbox]');
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lb-img');
+  var lbCap = document.getElementById('lb-caption');
+  var lbClose = document.getElementById('lb-close');
+  var lbPrev = document.getElementById('lb-prev');
+  var lbNext = document.getElementById('lb-next');
+  var current = 0;
+  var allImages = [];
+
+  // Sammle alle Bilder mit ihrer Position (gleicher data-lightbox kann mehrfach vorkommen)
+  imgs.forEach(function(el){
+    var idx = parseInt(el.dataset.lightbox, 10);
+    var img = el.querySelector('img');
+    if(!allImages[idx]) allImages[idx] = { src: img.src, caption: captions[idx] || img.alt };
+  });
+
+  function open(idx){
+    current = idx;
+    show();
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function close(){
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function show(){
+    var item = allImages[current];
+    if(!item) return;
+    lbImg.src = item.src;
+    lbCap.innerHTML = item.caption;
+  }
+  function next(){ current = (current + 1) % allImages.length; while(!allImages[current]) current = (current + 1) % allImages.length; show(); }
+  function prev(){ current = (current - 1 + allImages.length) % allImages.length; while(!allImages[current]) current = (current - 1 + allImages.length) % allImages.length; show(); }
+
+  imgs.forEach(function(el){
+    el.addEventListener('click', function(){
+      open(parseInt(el.dataset.lightbox, 10));
+    });
+  });
+  lbClose.addEventListener('click', close);
+  lbPrev.addEventListener('click', prev);
+  lbNext.addEventListener('click', next);
+  lb.addEventListener('click', function(e){ if(e.target === lb) close(); });
+  document.addEventListener('keydown', function(e){
+    if(!lb.classList.contains('open')) return;
+    if(e.key === 'Escape') close();
+    if(e.key === 'ArrowRight') next();
+    if(e.key === 'ArrowLeft') prev();
+  });
+})();
+</script>
 
 <script id="gz-boot-js">
 (function(){
