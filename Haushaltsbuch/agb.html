@@ -6,42 +6,101 @@
 <meta name="description" content="Allgemeine Geschäftsbedingungen für das Haushaltsbuch.">
 <title>Haushaltsbuch — AGB</title>
 <style>
-:root{
-  --bg:#0a0c10; --panel:#11141a; --raised:#181c24; --card:#1f242e;
-  --line:#3a4250; --line-strong:#5a6270;
-  --dim:#7a8290; --norm:#c8cfd8; --bright:#f0f4f8;
-  --accent:#f0883c; --accent2:#ffb347; --warm:#e0533c;
-}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{font-family:'Segoe UI',Tahoma,system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--norm); line-height:1.65; font-size:16px}
-.skip{position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden}
-.skip:focus{left:8px; top:8px; width:auto; height:auto; background:var(--accent); color:var(--bg); padding:8px 14px; z-index:100; font-weight:bold; outline:2px solid var(--bright)}
-header{background:linear-gradient(180deg, #181c24 0%, #0a0c10 100%); border-bottom:1px solid var(--line); padding:24px 32px}
-header .brand{display:flex; align-items:center; gap:14px; max-width:880px; margin:0 auto}
-header .stripe{width:4px; height:32px; background:var(--accent)}
-header h1{margin:0; font-size:28px; letter-spacing:2px; color:var(--accent); font-weight:800}
-header h1 .sub{color:var(--bright); margin-left:8px}
-header .tag{color:var(--dim); font-size:12px; margin-top:4px; font-family:Consolas,'Cascadia Mono',monospace}
-main{padding:32px 48px; max-width:880px; margin:0 auto}
-h2{font-size:20px; color:var(--accent); margin-top:36px; margin-bottom:8px; letter-spacing:0.5px; padding-bottom:8px; border-bottom:1px solid var(--line)}
+body{font-family:var(--font-text,Georgia,serif);line-height:1.78;font-size:17px;-webkit-font-smoothing:antialiased;transition:background .4s,color .4s}
+
+/* THEME: DUNKEL (Tannengrün + Gold, Standard) */
+body.hb-dark{
+  --bg:#070D0A; --panel:#0E1D17; --raised:#13241D;
+  --txt:#EDF2EE; --norm:#D5DCD7; --muted:#9AAFA4; --dim:#6E827A;
+  --akzent:#E3B23C; --akzent2:#F1C95A;
+  --linie:rgba(255,255,255,.10); --linie-stark:rgba(227,178,60,.35);
+  --hero-bg:linear-gradient(160deg,#0B1410 0%,#0E1D17 70%,#1B4332 130%);
+  --schatten:0 12px 40px rgba(0,0,0,.5);
+  --font-text:Georgia,"Iowan Old Style","Palatino Linotype",serif;
+  --font-titel:Georgia,"Iowan Old Style","Palatino Linotype",serif;
+  background:var(--bg);background-image:radial-gradient(ellipse at top,rgba(27,67,50,.4) 0%,var(--bg) 60%);background-attachment:fixed;color:var(--txt);
+}
+
+/* THEME: HELL (Sparbuch-Beige + Goldbraun) */
+body.hb-light{
+  --bg:#F8F5EC; --panel:#FBF8EF; --raised:#FFFCF4;
+  --txt:#1A2620; --norm:#3D4A42; --muted:#6E5A35; --dim:#9B8855;
+  --akzent:#B8860B; --akzent2:#9F6E08;
+  --linie:rgba(27,38,32,.12); --linie-stark:rgba(184,134,11,.35);
+  --hero-bg:linear-gradient(160deg,#F2EDE0 0%,#E8E0CA 100%);
+  --schatten:0 12px 40px rgba(27,38,32,.15);
+  --font-text:Georgia,"Iowan Old Style","Palatino Linotype",serif;
+  --font-titel:Georgia,"Iowan Old Style","Palatino Linotype",serif;
+  background:var(--bg);background-attachment:fixed;color:var(--txt);
+}
+
+/* THEME: WARM (Kaffee/Cognac, dunkel) */
+body.hb-warm{
+  --bg:#0F0D0B; --panel:#1A1612; --raised:#221C16;
+  --txt:#F2EBE0; --norm:#D8CEBE; --muted:#A89580; --dim:#7A6957;
+  --akzent:#C97B3C; --akzent2:#E59B5E;
+  --linie:rgba(242,235,224,.10); --linie-stark:rgba(201,123,60,.4);
+  --hero-bg:linear-gradient(160deg,#181410 0%,#251D14 70%,#3D2818 130%);
+  --schatten:0 12px 40px rgba(0,0,0,.5);
+  --font-text:Georgia,"Iowan Old Style","Palatino Linotype",serif;
+  --font-titel:Georgia,"Iowan Old Style","Palatino Linotype",serif;
+  background:var(--bg);background-image:radial-gradient(ellipse at top,rgba(201,123,60,.18) 0%,var(--bg) 60%);background-attachment:fixed;color:var(--txt);
+}
+
+.skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.skip:focus{left:8px;top:8px;width:auto;height:auto;background:var(--akzent);color:var(--bg);padding:8px 14px;z-index:1000;font-weight:bold;outline:2px solid var(--txt)}
+
+.theme-switch{position:fixed;top:14px;right:14px;z-index:1000;background:var(--panel);border:1px solid var(--linie);border-radius:10px;padding:6px;display:flex;gap:4px;box-shadow:var(--schatten)}
+.theme-switch button{background:transparent;border:none;color:var(--muted);padding:8px 12px;font-size:11px;font-weight:600;cursor:pointer;border-radius:7px;font-family:var(--font-text);transition:.18s;letter-spacing:.3px;font-style:italic}
+.theme-switch button:hover{color:var(--akzent2)}
+.theme-switch button.active{background:var(--akzent);color:var(--bg);font-style:normal;font-weight:700}
+
+header{border-bottom:1px solid var(--linie-stark);padding:56px 32px 38px;text-align:center;background:var(--hero-bg)}
+header .brand{display:inline-flex;flex-direction:column;align-items:center;gap:16px;max-width:880px;margin:0 auto}
+header .stripe{width:140px;height:1px;background:linear-gradient(90deg,transparent,var(--akzent),transparent)}
+header h1{margin:0;font-family:var(--font-titel);font-size:clamp(2.1rem,5vw,3.1rem);color:var(--txt);font-weight:400;letter-spacing:2px}
+header h1 .sub{color:var(--akzent);font-style:italic}
+header .tag{color:var(--muted);font-size:12px;margin-top:14px;font-family:Georgia,serif;letter-spacing:2px;font-style:italic}
+
+main{padding:48px 48px 32px;max-width:780px;margin:0 auto}
+
+h2{font-family:var(--font-titel);font-size:clamp(1.4rem,2.6vw,1.85rem);font-weight:400;color:var(--akzent);margin-top:48px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--linie)}
 h2:first-child{margin-top:0}
-p{margin:10px 0}
-a{color:var(--accent2)}
-a:focus, button:focus{outline:2px solid var(--accent); outline-offset:2px}
-ul,ol{margin:10px 0; padding-left:22px}
-li{margin:6px 0}
-.box{background:var(--raised); border:1px solid var(--line); padding:16px 20px; margin:18px 0; border-left:4px solid var(--accent)}
-.box h4{margin:0 0 6px; font-size:13px; letter-spacing:1.5px; font-family:Consolas,monospace; color:var(--accent)}
-.back{display:inline-block; margin-top:32px; color:var(--accent2); text-decoration:none; font-size:14px}
-.back:hover, .back:focus{text-decoration:underline}
-footer{border-top:1px solid var(--line); padding:24px 32px; color:var(--dim); font-size:12px; text-align:center; margin-top:60px}
-@media (max-width:760px){main{padding:24px}}
-@media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}
+h4{font-family:var(--font-titel);font-size:14px;letter-spacing:2px;font-weight:700;color:var(--akzent);margin:0 0 8px;text-transform:uppercase}
+p{margin:14px 0;color:var(--norm)}
+strong{color:var(--txt);font-weight:700}
+a{color:var(--akzent);text-decoration:none;border-bottom:1px solid rgba(227,178,60,.35);transition:.18s}
+a:hover{color:var(--akzent2);border-bottom-color:var(--akzent2)}
+a:focus,button:focus{outline:2px solid var(--akzent);outline-offset:3px}
+
+.box{background:linear-gradient(180deg,rgba(227,178,60,.06),rgba(255,255,255,.01));border:1px solid var(--linie);border-left:4px solid var(--akzent);border-radius:10px;padding:20px 24px;margin:24px 0;box-shadow:var(--schatten)}
+
+.data{font-family:Georgia,serif;color:var(--txt);font-size:1rem;line-height:1.9;font-style:italic}
+.back{display:inline-block;margin-top:48px;color:var(--akzent);text-decoration:none;font-size:14px;letter-spacing:1.5px;font-family:var(--font-titel);font-style:italic;border-bottom:1px solid var(--akzent);padding-bottom:2px}
+.back:hover,.back:focus{color:var(--akzent2);border-bottom-color:var(--akzent2)}
+
+ul{padding-left:24px;margin:14px 0}
+li{margin:8px 0;color:var(--norm)}
+code{font-family:Consolas,monospace;background:rgba(227,178,60,.10);color:var(--akzent2);padding:2px 7px;border-radius:6px;font-size:.92rem;border:1px solid rgba(227,178,60,.22)}
+
+footer{border-top:1px solid var(--linie);padding:32px;color:var(--muted);font-size:12px;text-align:center;margin-top:72px;letter-spacing:1.5px;font-family:Georgia,serif;font-style:italic}
+
+.form-muster{background:linear-gradient(180deg,rgba(227,178,60,.06),rgba(255,255,255,.01));border:1px solid var(--linie);border-radius:10px;padding:22px 26px;margin:24px 0;font-family:var(--font-text);box-shadow:var(--schatten)}
+
+@media (max-width:760px){main{padding:32px 24px}header{padding:40px 20px 28px}.theme-switch{top:8px;right:8px}.theme-switch button{padding:6px 9px;font-size:10px}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
 @media (prefers-contrast:more){body{color:#fff} .box{border-width:2px}}
 </style>
 </head>
-<body>
+<body class="hb-dark">
+<div class="theme-switch" role="group" aria-label="Design-Stil">
+  <button type="button" data-theme="dark" class="active" aria-pressed="true">&#10052; Sparbuch</button>
+  <button type="button" data-theme="light" aria-pressed="false">&#9728; Hell</button>
+  <button type="button" data-theme="warm" aria-pressed="false">&#9749; Kaffee</button>
+</div>
+
 <a href="#content" class="skip">Zum Inhalt springen</a>
 <header role="banner">
   <div class="brand">
@@ -139,5 +198,28 @@ footer{border-top:1px solid var(--line); padding:24px 32px; color:var(--dim); fo
   <a class="back" href="index.html">&larr; Zurück zur App</a>
 </main>
 <footer>© Gerd Zimmermann GZ-AI.-Stacks &nbsp;&middot;&nbsp; Haushaltsbuch</footer>
+
+<script>
+(function(){
+  var LS_KEY = "gz-haushaltsbuch-theme";
+  var CLASS_PREFIX = "hb-";
+  var buttons = document.querySelectorAll(".theme-switch button");
+  function setTheme(name){
+    document.body.classList.remove("hb-dark","hb-light","hb-warm");
+    document.body.classList.add(CLASS_PREFIX+name);
+    buttons.forEach(function(b){
+      var active = b.dataset.theme===name;
+      b.classList.toggle("active",active);
+      b.setAttribute("aria-pressed",active);
+    });
+    try{localStorage.setItem(LS_KEY,name);}catch(e){}
+  }
+  buttons.forEach(function(b){b.addEventListener("click",function(){setTheme(b.dataset.theme);});});
+  try{
+    var saved = localStorage.getItem(LS_KEY);
+    if(saved && ["dark","light","warm"].indexOf(saved) >= 0){setTheme(saved);}
+  }catch(e){}
+})();
+</script>
 </body>
 </html>
