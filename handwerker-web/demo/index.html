@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GZ Handwerker-Web · DEMO — Website-Konfigurator zum Ausprobieren</title>
+<meta name="description" content="Kostenlose Demo: Konfigurieren Sie Ihre Handwerker-Website live. Hero & Leistungen frei nutzbar, weitere Bereiche in der Vollversion.">
+<style>
+:root{
+  --bg:#0a0e14; --panel:#0f1620; --panel2:#131c28; --line:#1e2b3a;
+  --txt:#e6f0f7; --muted:#8aa0b4; --accent:#00FFAA; --accent2:#00B4FF;
+  --pink:#FF0080; --purple:#8C00FF; --warn:#ffcc44; --err:#ff5577;
+  --radius:14px; --shadow:0 8px 30px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{
+  background:var(--bg);color:var(--txt);
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+  line-height:1.5;overflow:hidden;
+}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit}
+
+/* ---------- Matrix-Rain (nur Konfigurator-UI) ---------- */
+#matrix{position:fixed;inset:0;z-index:0;opacity:.12;pointer-events:none}
+
+/* ---------- LIZENZ-GATE ---------- */
+#gate{
+  position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 30%,#0d1622,#060a10);
+}
+.gate-card{
+  width:min(460px,92vw);background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);padding:34px 30px;box-shadow:var(--shadow);text-align:center;
+}
+.gate-logo{font-size:28px;font-weight:800;letter-spacing:.5px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px}
+.gate-sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+.gate-card label{display:block;text-align:left;font-size:13px;color:var(--muted);margin:0 0 6px}
+#licenseInput{
+  width:100%;padding:13px 14px;background:#0a121c;border:1px solid var(--line);
+  border-radius:10px;color:var(--txt);font-size:14px;letter-spacing:.5px;
+  text-align:center;font-family:"Consolas",monospace;
+}
+#licenseInput:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,170,.15)}
+.gate-btn{
+  width:100%;margin-top:16px;padding:13px;border:none;border-radius:10px;font-size:15px;font-weight:700;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));color:#04111a;
+  transition:transform .12s,box-shadow .12s;
+}
+.gate-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,255,170,.3)}
+.gate-btn:disabled{opacity:.55;cursor:wait;transform:none;box-shadow:none}
+.gate-msg{min-height:20px;margin-top:14px;font-size:13px}
+.gate-msg.err{color:var(--err)}
+.gate-msg.ok{color:var(--accent)}
+.gate-foot{margin-top:22px;font-size:11px;color:#5a6c7d;line-height:1.6}
+.gate-foot a{color:var(--accent2);text-decoration:none}
+
+/* ---------- APP-LAYOUT ---------- */
+#app{position:relative;z-index:1;height:100vh;display:none;grid-template-columns:380px 1fr;grid-template-rows:56px 1fr}
+.topbar{
+  grid-column:1/3;display:flex;align-items:center;gap:14px;padding:0 18px;
+  background:var(--panel);border-bottom:1px solid var(--line);
+}
+.topbar .brand{font-weight:800;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;font-size:16px}
+.topbar .lic{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:3px 9px;border-radius:20px}
+.topbar .spacer{flex:1}
+.tb-btn{padding:8px 14px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);
+  border-radius:9px;font-size:13px;font-weight:600;transition:.12s}
+.tb-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tb-btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#04111a;border:none}
+.tb-btn.primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,255,170,.25);color:#04111a}
+
+/* ---------- KONFIGURATOR (links) ---------- */
+.config{background:var(--panel);border-right:1px solid var(--line);overflow-y:auto;padding:14px}
+.config::-webkit-scrollbar{width:9px}
+.config::-webkit-scrollbar-thumb{background:#22303f;border-radius:8px}
+.sec{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden;background:var(--panel2)}
+.sec > summary{
+  list-style:none;cursor:pointer;padding:12px 14px;font-weight:700;font-size:13px;
+  display:flex;align-items:center;gap:9px;-webkit-user-select:none;user-select:none;
+}
+.sec > summary::-webkit-details-marker{display:none}
+.sec > summary::before{content:"▸";color:var(--accent);transition:.15s;font-size:11px}
+.sec[open] > summary::before{transform:rotate(90deg)}
+.sec .body{padding:4px 14px 16px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.field input[type=text],.field input[type=tel],.field input[type=email],
+.field input[type=url],.field textarea,.field select{
+  width:100%;padding:9px 11px;background:#0a121c;border:1px solid var(--line);
+  border-radius:8px;color:var(--txt);font-size:13px;
+}
+.field input:focus,.field textarea:focus,.field select:focus{
+  outline:none;border-color:var(--accent2);box-shadow:0 0 0 2px rgba(0,180,255,.15)
+}
+.field textarea{resize:vertical;min-height:60px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.color-presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.swatch{width:30px;height:30px;border-radius:8px;border:2px solid transparent;cursor:pointer}
+.swatch.active{border-color:#fff;box-shadow:0 0 0 2px var(--accent)}
+.row3-color{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.row3-color > div{display:flex;flex-direction:column;gap:4px;align-items:center}
+.row3-color .cpl{font-size:11px;color:var(--muted)}
+.row3-color input[type=color]{width:100%;height:38px;padding:2px;background:#0a121c;border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.oeff-tage{display:flex;flex-direction:column;gap:6px}
+.oeff-tag{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:8px}
+.oeff-tag .oeff-day{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--txt);cursor:pointer;margin:0}
+.oeff-tag .oeff-day input{margin:0}
+.oeff-tag input[type=time]{height:32px;background:#0a121c;border:1px solid var(--line);border-radius:7px;color:var(--txt);font-size:12px;padding:0 6px;font-family:inherit}
+.oeff-tag input[type=time]:disabled{opacity:.4;cursor:not-allowed}
+.oeff-tag .oeff-bis-sep{color:var(--muted);font-size:12px}
+.grad4{display:flex;gap:6px;align-items:center}
+.grad4 input[type=color]{flex:1;height:36px;padding:2px;background:#0a121c;border:1px solid var(--line);border-radius:8px;cursor:pointer;min-width:0}
+.g4-wrap{flex:1;display:flex;gap:3px;align-items:center;min-width:0}
+.g4-wrap input[type=color]{flex:1}
+.g4-wrap .ci-reset{flex:0 0 auto;width:22px;height:36px}
+.grad-presets{display:flex;gap:8px;flex-wrap:wrap}
+.grad-presets button{flex:1 1 calc(33% - 6px);min-width:80px;height:30px;border:1px solid var(--line);border-radius:8px;cursor:pointer;
+  color:#fff;font-size:11px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.6);transition:.12s}
+.grad-presets button:hover{transform:translateY(-1px);border-color:var(--accent)}
+.bg-presets{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.bg-prev{position:relative;height:58px;border:1px solid var(--line);border-radius:9px;cursor:pointer;overflow:hidden;
+  background-color:#0a121c;display:flex;align-items:flex-end;justify-content:center;padding:0;transition:.12s}
+.bg-prev:hover{transform:translateY(-1px);border-color:var(--accent)}
+.bg-prev.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.bg-prev span{width:100%;font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8);
+  background:linear-gradient(transparent,rgba(0,0,0,.55));padding:3px 4px;text-align:center}
+.bg-prev[aria-label]{}
+.bereich-card{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:#0a121c}
+.bereich-title{font-size:12px;font-weight:800;color:var(--txt);margin-bottom:8px;letter-spacing:.02em}
+.bereich-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.bereich-grid > div{display:flex;flex-direction:column;gap:4px;align-items:center}
+.bereich-grid .cpl{font-size:11px;color:var(--muted)}
+.ci-wrap{display:flex;align-items:center;gap:3px;width:100%}
+.ci-wrap input[type=color]{flex:1;height:34px;padding:2px;background:#0a121c;border:1px solid var(--line);border-radius:7px;cursor:pointer;min-width:0}
+.ci-reset{flex:0 0 auto;width:24px;height:34px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--muted);cursor:pointer;font-size:13px;line-height:1}
+.ci-reset:hover{border-color:var(--accent);color:var(--accent)}
+.bereich-cardstyle{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.bereich-cardstyle > summary{font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px}
+.bereich-cardstyle > summary::before{content:"▸";font-size:9px}
+.bereich-cardstyle[open] > summary::before{content:"▾"}
+.bereich-cardstyle select{width:100%;height:32px;background:#0a121c;border:1px solid var(--line);border-radius:7px;color:var(--txt);font-size:12px;padding:0 6px;cursor:pointer;min-width:0}
+.bereich-warn{display:none;margin-top:8px;font-size:11px;color:#f0b429;background:rgba(240,180,41,.08);border:1px solid rgba(240,180,41,.3);border-radius:7px;padding:6px 8px}
+.hint{font-size:11px;color:#5a6c7d;margin-top:4px}
+.list-item{border:1px solid var(--line);border-radius:9px;padding:10px;margin-bottom:9px;background:#0a121c;position:relative}
+.list-item input[type=text],.list-item input[type=tel],.list-item input[type=email],
+.list-item input[type=url],.list-item textarea,.list-item select{
+  width:100%;max-width:100%;box-sizing:border-box;padding:9px 11px;background:#0a121c;
+  border:1px solid var(--line);border-radius:8px;color:var(--txt);font-size:13px}
+.list-item textarea{resize:vertical;min-height:54px;font-family:inherit}
+.list-item .row2{min-width:0}.list-item .row2>div{min-width:0}
+.list-item label{display:block;margin-bottom:4px}
+.li-order{position:absolute;top:7px;right:30px;display:flex;gap:2px}
+.li-order button{background:none;border:1px solid var(--line);color:var(--muted);width:20px;height:20px;border-radius:5px;font-size:10px;line-height:1;cursor:pointer;padding:0}
+.li-order button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.li-order button:disabled{opacity:.3;cursor:default}
+.add-btn{width:100%;padding:9px;border:1px dashed var(--accent2);background:transparent;color:var(--accent2);
+  border-radius:8px;font-size:13px;font-weight:600}
+.add-btn:hover{background:rgba(0,180,255,.08)}
+.imgprev{max-width:100%;max-height:80px;border-radius:6px;margin-top:6px;display:none}
+.disclaimer{font-size:11px;color:var(--warn);background:rgba(255,204,68,.08);
+  border:1px solid rgba(255,204,68,.25);border-radius:8px;padding:9px 11px;margin-top:6px}
+
+/* ---------- VORSCHAU (rechts) ---------- */
+.preview-wrap{background:#1a2330;overflow:hidden;display:flex;flex-direction:column}
+.preview-bar{height:38px;display:flex;align-items:center;gap:10px;padding:0 14px;
+  background:var(--panel2);border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
+.preview-bar .dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+.preview-bar .url{flex:1;background:#0a121c;border-radius:6px;padding:4px 10px;color:var(--muted);font-size:11px}
+.vp-btn{border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:6px;padding:3px 9px;font-size:11px}
+.vp-btn.active{color:var(--accent);border-color:var(--accent)}
+#previewFrame{flex:1;width:100%;border:none;background:#fff;transition:max-width .2s;margin:0 auto}
+
+/* ---------- TOAST ---------- */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--panel);border:1px solid var(--accent);color:var(--txt);padding:12px 22px;
+  border-radius:10px;z-index:2000;opacity:0;transition:.25s;box-shadow:var(--shadow);font-size:14px}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:900px){
+  #app{grid-template-columns:1fr;grid-template-rows:56px auto 1fr}
+  .config{border-right:none;border-bottom:1px solid var(--line);max-height:42vh}
+  .preview-wrap{grid-column:1}
+}
+
+/* ---------- DEMO-MODE ---------- */
+#demoBanner{
+  position:fixed;top:0;left:0;right:0;z-index:1500;
+  background:linear-gradient(90deg,#ff6a00,#ff0080);
+  color:#fff;text-align:center;padding:10px 16px;font-size:13.5px;font-weight:600;
+  box-shadow:0 2px 12px rgba(255,0,128,.35);
+}
+#demoBanner strong{font-weight:800;letter-spacing:.3px}
+#demoBanner a{color:#fff;text-decoration:underline;font-weight:800;margin-left:8px}
+#demoBanner a:hover{text-decoration:none}
+body.demo-mode #app{padding-top:42px}
+body.demo-mode .topbar{top:42px}
+
+.sec.locked{position:relative;opacity:.55;pointer-events:none;-webkit-user-select:none;user-select:none}
+.sec.locked > summary::after{
+  content:"🔒 Vollversion";
+  margin-left:auto;font-size:11px;font-weight:700;
+  background:linear-gradient(90deg,#ff6a00,#ff0080);color:#fff;
+  padding:3px 10px;border-radius:999px;pointer-events:auto;
+}
+.sec.locked > summary{pointer-events:auto;cursor:not-allowed}
+.sec.locked > summary:hover::after{filter:brightness(1.15)}
+.sec.locked .body{display:none !important}
+
+.tb-btn.demo-cta{
+  background:linear-gradient(90deg,#ff6a00,#ff0080) !important;color:#fff !important;border:none !important;
+  font-weight:800;letter-spacing:.3px;
+}
+.tb-btn.demo-cta:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,0,128,.35);color:#fff !important}
+</style>
+</head>
+<body class="demo-mode">
+
+<div id="demoBanner" role="note" aria-label="Demo-Hinweis">
+  🔧 <strong>DEMO-VERSION</strong> · Hero &amp; Leistungen frei testbar · Galerie, Über uns, CTA, Kontakt &amp; Export nur in der Vollversion
+  <a href="../landingpage/index.html#preis">Vollversion holen →</a>
+</div>
+
+<canvas id="matrix" aria-hidden="true"></canvas>
+
+<!-- Gate in Demo deaktiviert, App startet direkt -->
+<div id="gate" style="display:none" aria-hidden="true"></div>
+
+<!-- ============ APP ============ -->
+<div id="app">
+  <div class="topbar">
+    <span class="brand">GZ Handwerker-Web · DEMO</span>
+    <span class="lic" id="licBadge">Demo-Modus</span>
+    <span class="spacer"></span>
+    <a class="tb-btn" href="../HANDBUCH.html" target="_blank" rel="noopener" title="Handbuch öffnen">Handbuch</a>
+    <a class="tb-btn demo-cta" id="btnExport" href="../landingpage/index.html#preis" title="Vollversion freischalten">🔓 Vollversion freischalten</a>
+    <!-- versteckte Stubs damit Topbar-JS nicht crasht -->
+    <button type="button" id="btnSaveCfg" style="display:none"></button>
+    <button type="button" id="btnLoadCfg" style="display:none"></button>
+    <button type="button" id="btnLicReset" style="display:none"></button>
+  </div>
+
+  <!-- KONFIGURATOR -->
+  <div class="config" id="config"></div>
+
+  <!-- VORSCHAU -->
+  <div class="preview-wrap">
+    <div class="preview-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="url" id="previewUrl">www.ihre-firma.de</span>
+      <button type="button" class="vp-btn active" data-vp="desktop">Desktop</button>
+      <button type="button" class="vp-btn" data-vp="mobile">Mobil</button>
+    </div>
+    <iframe id="previewFrame" title="Website-Vorschau" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+  </div>
+</div>
+
+<input type="file" id="fileLoadCfg" accept=".json" style="display:none">
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   1) LIZENZ — in Demo-Version nicht aktiv (Code bleibt für Konsistenz)
+   ========================================================= */
+const LICENSE_PUBLIC_JWK = {"crv":"Ed25519","x":"ti7emjBwXlq-t0WaO6MBXc0OZICiajESZX8vNksZnK4","kty":"OKP"};
+
+const PRODUCT_PREFIX = "GZWEB";
+const ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"; // Crockford Base32
+
+function base32decode(str){
+  let bits=0,value=0;const out=[];
+  for(const ch of str.toUpperCase()){
+    const idx=ALPHABET.indexOf(ch);
+    if(idx<0) continue;
+    value=(value<<5)|idx; bits+=5;
+    if(bits>=8){ out.push((value>>>(bits-8))&0xff); bits-=8; }
+  }
+  return new Uint8Array(out);
+}
+
+/* Key-Format: GZWEB-<ED>-<SERIAL>-<SIG-GRUPPEN...>
+   Signatur deckt den Payload "GZWEB-<ED>-<SERIAL>" ab. */
+function parseLicense(raw){
+  const clean = raw.trim().toUpperCase().replace(/\s+/g,"");
+  const parts = clean.split("-");
+  if(parts.length < 4) return null;
+  if(parts[0] !== PRODUCT_PREFIX) return null;
+  const editionCode = parts[1];
+  const serial = parts[2];
+  const sigB32 = parts.slice(3).join("");
+  const payload = `${PRODUCT_PREFIX}-${editionCode}-${serial}`;
+  return { editionCode, serial, sigB32, payload, clean };
+}
+
+const EDITION_NAMES = { BAS:"Basis", PRO:"Pro", MAS:"Master" };
+
+async function verifyLicense(raw){
+  const p = parseLicense(raw);
+  if(!p) return { ok:false, reason:"Format ungültig." };
+  if(!EDITION_NAMES[p.editionCode]) return { ok:false, reason:"Unbekannte Edition." };
+  let sig;
+  try { sig = base32decode(p.sigB32); } catch(e){ return { ok:false, reason:"Signatur unlesbar." }; }
+  if(sig.length !== 64) return { ok:false, reason:"Signaturlänge ungültig." };
+  try{
+    const key = await crypto.subtle.importKey("jwk", LICENSE_PUBLIC_JWK, {name:"Ed25519"}, false, ["verify"]);
+    const data = new TextEncoder().encode(p.payload);
+    const valid = await crypto.subtle.verify({name:"Ed25519"}, key, sig, data);
+    if(!valid) return { ok:false, reason:"Schlüssel ungültig oder gefälscht." };
+    return { ok:true, edition:p.editionCode, editionName:EDITION_NAMES[p.editionCode], serial:p.serial, key:p.clean };
+  }catch(e){
+    return { ok:false, reason:"Krypto-Fehler: "+e.message };
+  }
+}
+
+const LS_LICENSE = "gzweb_license";
+
+async function tryUnlock(raw, fromStorage){
+  const res = await verifyLicense(raw);
+  const msg = document.getElementById("gateMsg");
+  if(res.ok){
+    localStorage.setItem(LS_LICENSE, res.key);
+    document.getElementById("licBadge").textContent = "Lizenz: " + res.editionName + " · " + res.serial;
+    document.getElementById("gate").style.display="none";
+    document.getElementById("app").style.display="grid";
+    initApp();
+    return true;
+  } else {
+    if(!fromStorage){
+      msg.className="gate-msg err";
+      msg.textContent = "✗ " + res.reason;
+    }
+    localStorage.removeItem(LS_LICENSE);
+    return false;
+  }
+}
+
+/* DEMO-MODUS: kein Gate, App startet direkt, Lock auf 4 von 6 Bereichen */
+const DEMO_MODE = true;
+const DEMO_UNLOCKED_SECTIONS = ["hero","leistungen"]; // alle anderen werden gesperrt
+
+window.addEventListener("DOMContentLoaded", async ()=>{
+  startMatrix();
+  document.getElementById("app").style.display="grid";
+  initApp();
+  applyDemoLock();
+});
+
+function applyDemoLock(){
+  /* Demo-Lock: alle Konfigurator-Sections sperren, die NICHT in der Allow-Liste stehen.
+     Allow = freie Sections fuer Hero + Leistungen + Grundeinstellungen (Firma, Design, Farben). */
+  const allowKeywords = [
+    "firma","logo",            // Firma & Logo
+    "design","stil","schrift", // Design — Stil & Schrift
+    "hintergrund",             // Seiten-Hintergrund
+    "farben","rahmen",         // Farben & Rahmen pro Bereich
+    "startbereich","hero",     // Hero
+    "leistungen",              // Leistungen
+    "karten-stil","standard"   // Karten-Stil global
+  ];
+  document.querySelectorAll("#config details.sec").forEach(d=>{
+    const sumTxt = (d.querySelector("summary")?.textContent || "").toLowerCase();
+    const allowed = allowKeywords.some(kw=>sumTxt.includes(kw));
+    if(!allowed){
+      d.classList.add("locked");
+      d.removeAttribute("open");
+      d.addEventListener("click", e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        toast("🔒 Dieser Bereich ist in der Vollversion freigeschaltet");
+        setTimeout(()=>{ location.href = "../landingpage/index.html#preis"; }, 1300);
+      }, true);
+    }
+  });
+}
+
+/* =========================================================
+   2) MATRIX-RAIN (nur Konfigurator-Oberflaeche)
+   ========================================================= */
+function startMatrix(){
+  const c=document.getElementById("matrix"),x=c.getContext("2d");
+  let cols,drops;
+  function resize(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/14);drops=Array(cols).fill(1);}
+  resize();addEventListener("resize",resize);
+  const chars="01アイウエオカキABCDEF<>{}/\\".split("");
+  setInterval(()=>{
+    x.fillStyle="rgba(10,14,20,.08)";x.fillRect(0,0,c.width,c.height);
+    x.fillStyle="#00FFAA";x.font="13px monospace";
+    for(let i=0;i<drops.length;i++){
+      x.fillText(chars[Math.floor(Math.random()*chars.length)],i*14,drops[i]*14);
+      if(drops[i]*14>c.height&&Math.random()>.975)drops[i]=0;
+      drops[i]++;
+    }
+  },60);
+}
+
+/* =========================================================
+   3) KONFIGURATIONS-MODELL
+   ========================================================= */
+const DEFAULT_CFG = {
+  firma:"Mustermann Metallbau",
+  slogan:"Ihr Handwerk in besten Händen",
+  branche:"Metallbau & Schlosserei",
+  logo:"",
+  stil:"stahl",
+  font:"sans",
+  accent:"#ff6a00",
+  c1:"#00FFAA",
+  c2:"#00B4FF",
+  c3:"#8C00FF",
+  theme:"dunkel",
+  // Seiten-Hintergrundbild (ganze Seite): eigenes Bild ODER Vorlage + Schleier-Staerke
+  bg_image:"",        // Data-URI vom Upload (gewinnt vor bg_preset)
+  bg_preset:"",       // Schluessel aus BG_PRESETS, "" = keiner
+  bg_overlay:72,      // Schleier-Deckkraft in % (Lesbarkeit), 0-95
+  // Globaler Karten-Rahmen-Standard: gilt, wo ein Bereich keinen eigenen Wert setzt.
+  card_radius:14,     // px, 0 = eckig
+  card_border:1,      // px Rahmendicke, 0-4
+  card_shadow:1,      // 0 = kein, 1 = weich, 2 = stark
+  card_accent:"top",  // Position des farbigen Akzentbalkens: top|left|bottom|none
+  card_color:"",      // Rahmenfarbe (einfarbig), "" = Stil-Standard (--line)
+  card_fill:"",       // Flächenfarbe der Karten (das "Weiß"), "" = Stil-Standard (--card)
+  text_color:"",      // Globale Schriftfarbe (Fließtext), "" = Stil-Standard (--txt)
+  head_color:"",      // Globale Überschriftfarbe, "" = Stil-Standard (--txt)
+  card_mode:"solid",  // "solid" = einfarbig | "grad" = Mehrfarben-Verlauf
+  card_grad:["#00FFAA","#00B4FF","#8C00FF",""],  // bis zu 4 Verlaufsfarben, leere ignoriert
+  card_angle:135,     // Winkel des Rahmen-Verlaufs in Grad
+  // Pro-Bereich-Einstellungen. Farben: leer = Stil-Standard erben.
+  // Karten-Stil pro Bereich: cr/cb/cs/ca = null -> globalen card_*-Standard erben.
+  //   cc = Rahmenfarbe einfarbig ("" -> erben).
+  //   cf = Flächenfarbe der Karten/Boxen ("" -> globalen card_fill bzw. Stil-Standard --card erben).
+  //   cm = Modus ("" -> globalen card_mode erben | "solid" | "grad").
+  //   cg = Array bis 4 Verlaufsfarben (null/leer -> globalen card_grad erben).
+  //   cgA = Verlauf-Winkel (null -> globalen card_angle erben).
+  // Bereiche: hero, leistungen, galerie, ueber, cta, kontakt
+  bereiche:{
+    hero:      {bg:"", head:"", text:"", cr:null, cb:null, cs:null, ca:null, cc:"", cf:"", cm:"", cg:null, cgA:null},
+    leistungen:{bg:"", head:"", text:"", cr:null, cb:null, cs:null, ca:null, cc:"", cf:"", cm:"", cg:null, cgA:null},
+    galerie:   {bg:"", head:"", text:"", cr:null, cb:null, cs:null, ca:null, cc:"", cf:"", cm:"", cg:null, cgA:null},
+    ueber:     {bg:"", head:"", text:"", cr:null, cb:null, cs:null, ca:null, cc:"", cf:"", cm:"", cg:null, cgA:null},
+    cta:       {bg:"", head:"", text:"", cr:null, cb:null, cs:null, ca:null, cc:"", cf:"", cm:"", cg:null, cgA:null},
+    kontakt:   {bg:"", head:"", text:"", cr:null, cb:null, cs:null, ca:null, cc:"", cf:"", cm:"", cg:null, cgA:null}
+  },
+  hero_bild:"",
+  hero_eyebrow:"Schlosserei · Metallbau · Schweißtechnik",
+  trust:[
+    {gross:"Meister", klein:"Qualität aus einer Hand"},
+    {gross:"Region", klein:"Ihre Stadt & Umgebung"},
+    {gross:"Eigene", klein:"Fertigung & Montage"}
+  ],
+  tel:"01234 567890",
+  email:"info@ihre-firma.de",
+  adresse:"Musterstraße 1, 91315 Höchstadt a.d. Aisch",
+  oeffnung:"Mo–Fr 8:00–17:00 Uhr",
+  // Strukturierte Öffnungszeiten (optional). modus "text" = Freitext oben, "tabelle" = Wochen-Tabelle + Live-Status.
+  oeffnung_modus:"text",
+  oeffnung_tage:[
+    {auf:true,  von:"08:00", bis:"17:00"}, // Mo
+    {auf:true,  von:"08:00", bis:"17:00"}, // Di
+    {auf:true,  von:"08:00", bis:"17:00"}, // Mi
+    {auf:true,  von:"08:00", bis:"17:00"}, // Do
+    {auf:true,  von:"08:00", bis:"16:00"}, // Fr
+    {auf:false, von:"09:00", bis:"12:00"}, // Sa
+    {auf:false, von:"",      bis:""}       // So
+  ],
+  domain:"www.ihre-firma.de",
+  // Menü-Beschriftungen im Header (Anker bleiben fest, nur die Texte sind frei wählbar)
+  nav_home:"Home",
+  nav_leistungen:"Leistungen",
+  nav_galerie:"Referenzen",
+  nav_ueber:"Über uns",
+  nav_kontakt:"Kontakt",
+  ueber_titel:"Ihr Handwerksbetrieb in der Region",
+  ueber:"Seit über 20 Jahren stehen wir für saubere, termintreue und faire Handwerksarbeit in der Region. Vom Privatkunden bis zum Gewerbe — wir packen an.",
+  ueber_punkte:[
+    "Persönliche Beratung und individuelle Maßanfertigung",
+    "Eigene Werkstatt mit moderner Bearbeitung",
+    "Termintreue und faire, transparente Preise",
+    "Service und Montage in der gesamten Region"
+  ],
+  leistungen:[
+    {titel:"Innenanstrich", text:"Wände und Decken in Wunschfarbe, sauber und schnell."},
+    {titel:"Fassadengestaltung", text:"Wetterfeste Außenanstriche, die Jahre halten."},
+    {titel:"Tapezierarbeiten", text:"Von Raufaser bis Designtapete — alles aus einer Hand."}
+  ],
+  galerie:[],
+  // Kundenstimmen / Referenz-Zitate (statisch, offline, DSGVO-konform — keine Google-API).
+  bewertungen:[
+    {text:"Saubere Arbeit, pünktlich und fair im Preis. Jederzeit wieder!", name:"Familie Berger", ort:"Höchstadt", sterne:5},
+    {text:"Top beraten, alles termingerecht erledigt. Sehr empfehlenswert.", name:"M. Schuster", ort:"Adelsdorf", sterne:5}
+  ],
+  zeige_bewertungen:true,
+  // Firmen-Vorstellung: beliebig viele Bild+Text-Blöcke (Bilder als Data-URI, offline).
+  zeige_firma:false,
+  firma_titel:"Unsere Firma",
+  firma_intro:"",
+  firma_bloecke:[],   // [{bild:"data:...", titel:"", text:""}]
+  zeige_kontaktform:true,
+  maps_link:"",
+  impressum_name:"Max Mustermann",
+  impressum_firma:"Mustermann Malerbetrieb",
+  impressum_adresse:"Musterstraße 1\n91315 Höchstadt a.d. Aisch",
+  impressum_tel:"01234 567890",
+  impressum_email:"info@ihre-firma.de",
+  impressum_ustid:"",
+  datenschutz_verantwortlich:"Max Mustermann, Musterstraße 1, 91315 Höchstadt a.d. Aisch",
+  seo_title:"Mustermann Malerbetrieb — Maler in Höchstadt",
+  seo_desc:"Malerbetrieb in Höchstadt a.d. Aisch. Innenanstrich, Fassade, Tapezieren. Jetzt unverbindlich anfragen.",
+  seo_keywords:"Maler, Malerbetrieb, Höchstadt, Anstrich, Fassade"
+};
+
+const ACCENT_PRESETS = ["#ff6a00","#1f6feb","#2b8a3e","#9c36b5","#c92a2a","#0c8599","#b8860b","#343a40"];
+
+/* Kuratierte Stil-Vorlagen — jede in sich stimmig (wie eine handgebaute Seite). */
+const STILE = {
+  stahl:{
+    name:"Stahl-Industrie", dark:true, accentDefault:"#ff6a00",
+    bg:"#0d1117", bg2:"#161b22", card:"#21262d", line:"#30363d",
+    txt:"#f0f3f6", muted:"#8b949e", grid:true, glow:true
+  },
+  clean:{
+    name:"Hell & Clean", dark:false, accentDefault:"#1f6feb",
+    bg:"#ffffff", bg2:"#f4f7fa", card:"#ffffff", line:"#e3e8ee",
+    txt:"#1d2733", muted:"#5b6b7a", grid:false, glow:false
+  },
+  warm:{
+    name:"Warm & Handwerklich", dark:false, accentDefault:"#c2410c",
+    bg:"#fbf7f0", bg2:"#f3ebdd", card:"#fffdf8", line:"#e6d9c4",
+    txt:"#2b211a", muted:"#7a6a57", grid:false, glow:false
+  },
+  nacht:{
+    name:"Modern Dunkel", dark:true, accentDefault:"#3b82f6",
+    bg:"#0f1115", bg2:"#171a21", card:"#1c2029", line:"#2a2f3a",
+    txt:"#e8edf4", muted:"#9aa4b2", grid:false, glow:false
+  },
+  natur:{
+    name:"Natur & Garten", dark:false, accentDefault:"#2f9e44",
+    bg:"#f6faf4", bg2:"#eaf3e6", card:"#ffffff", line:"#d7e6d0",
+    txt:"#1e2b1c", muted:"#5e7158", grid:false, glow:false
+  },
+  beton:{
+    name:"Beton & Bau", dark:true, accentDefault:"#f59f00",
+    bg:"#15161a", bg2:"#1d1f24", card:"#26282e", line:"#373a42",
+    txt:"#eef0f3", muted:"#9a9ea8", grid:true, glow:false
+  },
+  marine:{
+    name:"Marine & Sanitär", dark:false, accentDefault:"#0c7faf",
+    bg:"#f3f9fc", bg2:"#e4f0f6", card:"#ffffff", line:"#cfe2ec",
+    txt:"#13242e", muted:"#557081", grid:false, glow:false
+  },
+  edel:{
+    name:"Edel Dunkel & Gold", dark:true, accentDefault:"#c9a227",
+    bg:"#100f0d", bg2:"#1a1813", card:"#221f18", line:"#36322a",
+    txt:"#f3efe6", muted:"#a39b88", grid:false, glow:true
+  }
+};
+
+/* Profi-Schriften (System-Stacks — keine externen Downloads nötig).
+   'stack' = Fließtext, 'head' = optionale eigene Überschriften-Schrift (Schrift-Paar).
+   Fehlt 'head', nutzen Überschriften denselben Stack wie der Text. */
+const FONTS = {
+  sans:    {name:"Modern (Sans)",   stack:'"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif'},
+  grotesk: {name:"Technisch (Grotesk)", stack:'"Inter","Segoe UI",system-ui,Arial,sans-serif'},
+  serif:   {name:"Klassisch (Serif)", stack:'Georgia,"Times New Roman",serif'},
+  slab:    {name:"Robust (Slab)",   stack:'"Rockwell","Roboto Slab",Georgia,serif'},
+  rounded: {name:"Freundlich (Rund)", stack:'"Trebuchet MS","Segoe UI",Verdana,sans-serif'},
+  // ── Schrift-Paare: markante Überschrift + ruhiger Fließtext ──
+  slab_sans:  {name:"Paar · Slab-Titel + Sans-Text", head:'"Rockwell","Roboto Slab",Georgia,serif', stack:'"Segoe UI",system-ui,Arial,sans-serif'},
+  serif_sans: {name:"Paar · Serif-Titel + Sans-Text", head:'Georgia,"Times New Roman",serif', stack:'"Segoe UI",system-ui,Arial,sans-serif'},
+  grotesk_serif:{name:"Paar · Grotesk-Titel + Serif-Text", head:'"Inter","Segoe UI",Arial,sans-serif', stack:'Georgia,"Times New Roman",serif'},
+  condensed:  {name:"Paar · Schmal-Titel + Sans-Text", head:'"Arial Narrow","Roboto Condensed","Segoe UI",sans-serif', stack:'"Segoe UI",system-ui,Arial,sans-serif'},
+  mono_sans:  {name:"Paar · Technisch-Titel + Sans-Text", head:'"Consolas","SFMono-Regular",ui-monospace,monospace', stack:'"Segoe UI",system-ui,Arial,sans-serif'}
+};
+
+/* Über-uns-Vorlagen — allgemeine, branchenneutrale Formulierungen zum Schnell-Einsetzen.
+   Der Kunde wählt eine Vorlage und kann den Text danach frei weiter bearbeiten. */
+const UEBER_TITEL_VORLAGEN = [
+  "Ihr Handwerksbetrieb in der Region",
+  "Handwerk mit Herz und Verstand",
+  "Ihr zuverlässiger Partner vor Ort",
+  "Qualität, auf die Sie sich verlassen können",
+  "Tradition trifft modernes Handwerk",
+  "Meisterbetrieb mit Erfahrung",
+  "Wir machen Ihr Projekt zur Sache"
+];
+const UEBER_TEXT_VORLAGEN = [
+  "Seit über 20 Jahren stehen wir für saubere, termintreue und faire Handwerksarbeit in der Region. Vom Privatkunden bis zum Gewerbe — wir packen an.",
+  "Als inhabergeführter Familienbetrieb verbinden wir bewährtes Handwerk mit moderner Technik. Wir nehmen uns Zeit für Sie und arbeiten genau so, wie Sie es sich vorstellen.",
+  "Ob kleine Reparatur oder großes Projekt — bei uns sind Sie in guten Händen. Wir beraten ehrlich, planen sorgfältig und liefern Qualität, die hält.",
+  "Pünktlichkeit, Sauberkeit und faire Preise sind für uns selbstverständlich. Wir behandeln jedes Zuhause so, als wäre es unser eigenes.",
+  "Unser eingespieltes Team aus erfahrenen Fachkräften steht für erstklassige Arbeit und persönlichen Service. Auf uns ist Verlass — von der ersten Beratung bis zur Abnahme.",
+  "Mit Leidenschaft fürs Detail und einem hohen Anspruch an Qualität setzen wir Ihre Wünsche zuverlässig um. Sprechen Sie uns an — wir freuen uns auf Ihr Projekt."
+];
+/* Vorlagen-Sets für die Vorteilsliste (jeweils 4 Punkte). */
+const UEBER_PUNKTE_VORLAGEN = [
+  {name:"Allgemein (Standard)", punkte:[
+    "Persönliche Beratung und individuelle Maßanfertigung",
+    "Eigene Werkstatt mit moderner Bearbeitung",
+    "Termintreue und faire, transparente Preise",
+    "Service und Montage in der gesamten Region"]},
+  {name:"Vertrauen & Service", punkte:[
+    "Kostenlose und unverbindliche Beratung vor Ort",
+    "Festpreis-Angebot ohne versteckte Kosten",
+    "Saubere Arbeit und Termintreue garantiert",
+    "Auch nach dem Auftrag für Sie da"]},
+  {name:"Erfahrung & Qualität", punkte:[
+    "Jahrzehntelange Erfahrung im Handwerk",
+    "Hochwertige Materialien von Markenherstellern",
+    "Meisterhafte Ausführung bis ins Detail",
+    "Gewährleistung auf alle Arbeiten"]},
+  {name:"Familienbetrieb", punkte:[
+    "Inhabergeführter Familienbetrieb",
+    "Ein fester Ansprechpartner für Ihr Projekt",
+    "Regional verwurzelt und gut erreichbar",
+    "Ehrliche Beratung statt Verkaufsdruck"]},
+  {name:"Modern & flexibel", punkte:[
+    "Moderne Technik und effiziente Abläufe",
+    "Flexible Termine — auch kurzfristig",
+    "Schnelle Reaktion auf Anfragen",
+    "Transparente Kommunikation in jeder Phase"]}
+];
+
+/* Fertige 3-Farben-Verläufe als Schnellstart (Kunde kann jede Farbe danach frei ändern). */
+const GRADIENT_PRESETS = [
+  {name:"Cyber",   c:["#00FFAA","#00B4FF","#8C00FF"]},
+  {name:"Sonnenuntergang", c:["#FF8A00","#FF0080","#8C00FF"]},
+  {name:"Stahl & Glut", c:["#2b8fd6","#7a8b9c","#ff6a00"]},
+  {name:"Wald",    c:["#0c8599","#2b8a3e","#a3c945"]},
+  {name:"Edelmetall", c:["#b8860b","#e6c34d","#8a6d1f"]},
+  {name:"Ozean",   c:["#1f6feb","#0c8599","#00d4c8"]}
+];
+
+/* Hintergrund-Vorlagen fuer die ganze Seite — reine CSS/SVG-Pattern (lizenzfrei,
+   keine externen Bilder, Single-File-tauglich). 'css' ist ein background-Wert. */
+const BG_PRESETS = {
+  beton: { name:"Beton", css:
+    "radial-gradient(circle at 20% 30%,rgba(255,255,255,.04),transparent 40%)," +
+    "radial-gradient(circle at 80% 70%,rgba(0,0,0,.22),transparent 45%)," +
+    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/></svg>\")," +
+    "linear-gradient(135deg,#3a3f45,#202327)" },
+  stahl: { name:"Stahl gebürstet", css:
+    "repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px)," +
+    "linear-gradient(180deg,#2b3138,#161a1f 60%,#23282e)" },
+  holz: { name:"Holz dunkel", css:
+    "repeating-linear-gradient(90deg,rgba(0,0,0,.18) 0 2px,transparent 2px 9px,rgba(255,255,255,.025) 9px 10px)," +
+    "linear-gradient(180deg,#4a3526,#2e2016)" },
+  blueprint: { name:"Blueprint", size:"26px 26px,26px 26px,auto", css:
+    "linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px)," +
+    "linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px)," +
+    "linear-gradient(135deg,#0d2a4a,#08182e)" },
+  verlauf_dunkel: { name:"Weicher Verlauf (dunkel)", css:
+    "radial-gradient(900px 500px at 80% -10%,#1c2b3f,transparent 60%)," +
+    "radial-gradient(800px 460px at -10% 110%,#1a2430,transparent 55%)," +
+    "linear-gradient(160deg,#0f141b,#161d27)" },
+  verlauf_hell: { name:"Weicher Verlauf (hell)", css:
+    "radial-gradient(900px 500px at 80% -10%,#eef3f9,transparent 60%)," +
+    "radial-gradient(800px 460px at -10% 110%,#e9eef5,transparent 55%)," +
+    "linear-gradient(160deg,#f7fafd,#eef2f7)" },
+  leinen: { name:"Leinen (hell)", css:
+    "repeating-linear-gradient(0deg,rgba(0,0,0,.025) 0 1px,transparent 1px 4px)," +
+    "repeating-linear-gradient(90deg,rgba(0,0,0,.025) 0 1px,transparent 1px 4px)," +
+    "linear-gradient(180deg,#faf7f1,#f1ece2)" },
+  karbon: { name:"Karbon", size:"8px 8px,8px 8px,auto", css:
+    "repeating-linear-gradient(45deg,rgba(255,255,255,.045) 0 1px,transparent 1px 4px)," +
+    "repeating-linear-gradient(-45deg,rgba(0,0,0,.4) 0 1px,transparent 1px 4px)," +
+    "linear-gradient(180deg,#1a1d22,#0e1014)" },
+  riffelblech: { name:"Riffelblech", size:"30px 30px,30px 30px,auto", css:
+    "repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 2px,transparent 2px 14px)," +
+    "repeating-linear-gradient(-45deg,rgba(0,0,0,.35) 0 2px,transparent 2px 14px)," +
+    "linear-gradient(180deg,#3b4148,#22272d)" },
+  ziegel: { name:"Ziegel", size:"54px 28px", css:
+    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='54' height='28'><rect width='54' height='28' fill='%23772f1f'/><g fill='none' stroke='%23351008' stroke-width='2'><path d='M0 14h54M0 0h54M0 28h54M13 0v14M40 0v14M27 14v14M0 14v14M54 14v14'/></g></svg>\")" },
+  kohle: { name:"Kohle (dunkel)", css:
+    "radial-gradient(1000px 520px at 50% -10%,#23262c,transparent 60%)," +
+    "linear-gradient(180deg,#15171b,#0b0c0f)" },
+  punkte_dunkel: { name:"Punkte (dunkel)", size:"22px 22px,auto", css:
+    "radial-gradient(rgba(255,255,255,.10) 1.4px,transparent 1.5px)," +
+    "linear-gradient(180deg,#12161d,#0c0f14)" },
+  punkte_hell: { name:"Punkte (hell)", size:"22px 22px,auto", css:
+    "radial-gradient(rgba(0,0,0,.10) 1.4px,transparent 1.5px)," +
+    "linear-gradient(180deg,#ffffff,#f2f5f9)" },
+  waben: { name:"Waben", size:"40px 23px", css:
+    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='23'><g fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.2'><path d='M20 0l17 10v3L20 23 3 13v-3z'/><path d='M0 13l3 2M40 13l-3 2'/></g></svg>\")," +
+    "linear-gradient(180deg,#171b22,#101319)" },
+  sand: { name:"Sand/Putz (hell)", css:
+    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='s'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23s)' opacity='0.05'/></svg>\")," +
+    "linear-gradient(160deg,#f6f1e7,#ece3d3)" },
+  schiefer: { name:"Schiefer (dunkel)", css:
+    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='sl'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.6' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23sl)' opacity='0.08'/></svg>\")," +
+    "linear-gradient(165deg,#2a2f36,#171a1f)" },
+  kupfer: { name:"Kupfer/Patina", css:
+    "radial-gradient(700px 420px at 75% -10%,rgba(0,180,140,.18),transparent 60%)," +
+    "radial-gradient(620px 380px at -10% 110%,rgba(180,90,40,.22),transparent 55%)," +
+    "linear-gradient(160deg,#3a2a20,#23302c)" },
+  marmor: { name:"Marmor (hell)", css:
+    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='0.012' numOctaves='4' seed='7'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='discrete' tableValues='0 0 0 0 .12 0 0 0'/></feComponentTransfer></filter><rect width='100%25' height='100%25' fill='%23000' filter='url(%23m)'/></svg>\")," +
+    "linear-gradient(160deg,#fbfbfc,#eef0f3)" },
+  raute: { name:"Rauten", size:"34px 34px,34px 34px,auto", css:
+    "repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 1px,transparent 1px 17px)," +
+    "repeating-linear-gradient(-45deg,rgba(255,255,255,.05) 0 1px,transparent 1px 17px)," +
+    "linear-gradient(180deg,#141821,#0d1118)" },
+  schraffur: { name:"Schraffur (technisch)", size:"12px 12px,auto", css:
+    "repeating-linear-gradient(45deg,rgba(0,180,255,.10) 0 1px,transparent 1px 12px)," +
+    "linear-gradient(180deg,#0c1622,#0a121c)" },
+  beton_hell: { name:"Beton (hell)", css:
+    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='nh'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23nh)' opacity='0.05'/></svg>\")," +
+    "radial-gradient(circle at 30% 20%,rgba(0,0,0,.04),transparent 45%)," +
+    "linear-gradient(160deg,#eef0f2,#dde1e6)" },
+  asphalt: { name:"Asphalt (dunkel)", css:
+    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><filter id='a'><feTurbulence type='turbulence' baseFrequency='0.65' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23a)' opacity='0.10'/></svg>\")," +
+    "linear-gradient(180deg,#1b1d20,#0e0f11)" },
+  gitter_fein: { name:"Gitter (fein)", size:"18px 18px,18px 18px,auto", css:
+    "linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px)," +
+    "linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px)," +
+    "linear-gradient(180deg,#11151c,#0c0f15)" },
+  verlauf_warm: { name:"Weicher Verlauf (warm)", css:
+    "radial-gradient(900px 520px at 80% -10%,#3a2418,transparent 60%)," +
+    "radial-gradient(800px 460px at -10% 110%,#2a1c14,transparent 55%)," +
+    "linear-gradient(160deg,#1a130d,#241811)" }
+};
+
+let cfg = structuredClone(DEFAULT_CFG);
+
+const LS_CFG = "gzweb_config";
+
+/* =========================================================
+   4) KONFIGURATOR-UI AUFBAUEN
+   ========================================================= */
+function initApp(){
+  const saved = localStorage.getItem(LS_CFG);
+  if(saved){ try{ cfg = Object.assign(structuredClone(DEFAULT_CFG), JSON.parse(saved)); }catch(e){} }
+  buildConfigUI();
+  renderPreview();
+  wireTopbar();
+}
+
+function buildConfigUI(){
+  const root = document.getElementById("config");
+  root.innerHTML = `
+  <details class="sec" open><summary>Firma & Logo</summary><div class="body">
+    ${textField("firma","Firmenname")}
+    ${textField("slogan","Slogan / Untertitel")}
+    ${textField("branche","Branche (z.B. Malerbetrieb)")}
+    <div class="field"><label>Logo (PNG/JPG — optional)</label>
+      <input type="file" id="logoFile" accept="image/*">
+      <img class="imgprev" id="logoPrev"><div class="hint">Wird in die Website eingebettet (keine externe Datei nötig).</div>
+    </div>
+  </div></details>
+
+  <details class="sec" open><summary>Design — Stil & Schrift</summary><div class="body">
+    <div class="field"><label for="stil">Stil-Vorlage</label>
+      <select id="stil">
+        ${Object.entries(STILE).map(([k,v])=>`<option value="${k}"${cfg.stil===k?" selected":""}>${v.name}</option>`).join("")}
+      </select>
+      <div class="hint">Jede Vorlage ist in sich abgestimmt — Farben, Hintergrund und Kontraste passen automatisch.</div>
+    </div>
+    <div class="field"><label for="font">Schriftart</label>
+      <select id="font">
+        ${Object.entries(FONTS).map(([k,v])=>`<option value="${k}"${cfg.font===k?" selected":""}>${v.name}</option>`).join("")}
+      </select>
+    </div>
+    <div class="field"><label>Farbverlauf — 3 Farben mischen</label>
+      <div id="gradientBar" style="height:26px;border-radius:8px;margin-bottom:10px;border:1px solid var(--line)"></div>
+      <div class="row3-color">
+        <div><span class="cpl">Farbe 1</span><input type="color" id="c1" value="${cfg.c1}"></div>
+        <div><span class="cpl">Farbe 2</span><input type="color" id="c2" value="${cfg.c2}"></div>
+        <div><span class="cpl">Farbe 3</span><input type="color" id="c3" value="${cfg.c3}"></div>
+      </div>
+      <div class="hint" style="margin:10px 0 6px">Schnellauswahl:</div>
+      <div class="grad-presets" id="gradPresets"></div>
+      <div class="hint">Der Verlauf erscheint in Überschriften, Buttons und Akzenten — wie ein Logo-Schriftzug.</div>
+    </div>
+  </div></details>
+
+  <details class="sec"><summary>Seiten-Hintergrund</summary><div class="body">
+    <div class="field"><label>Eigenes Hintergrundbild (optional)</label>
+      <input type="file" id="bgImageFile" accept="image/*">
+      <img class="imgprev" id="bgImagePrev">
+      <div class="hint">Liegt hinter der ganzen Seite (fixiert). Wird in die Datei eingebettet.</div>
+      <button type="button" class="add-btn" id="bgImageClear" style="margin-top:8px">Bild entfernen</button>
+    </div>
+    <div class="field"><label>Oder eine Vorlage wählen</label>
+      <div class="bg-presets" id="bgPresets"></div>
+      <div class="hint">Ein eigenes Bild hat Vorrang vor der Vorlage.</div>
+    </div>
+    <div class="field"><label for="bgOverlay">Lesbarkeits-Schleier: <span id="bgOverlayVal"></span>%</label>
+      <input type="range" id="bgOverlay" min="0" max="95" step="1">
+      <div class="hint">Dunkler/heller Schleier über dem Bild, damit Text lesbar bleibt. Höher = ruhiger.</div>
+    </div>
+  </div></details>
+
+  <details class="sec" open><summary>Farben &amp; Rahmen pro Bereich</summary><div class="body">
+    <div class="hint" style="margin-bottom:12px">Jeder Abschnitt (Hero, Leistungen, Galerie, Über uns, CTA, Kontakt) kann eigene Farben UND einen eigenen Karten-Stil (Rahmen, Rundung, Schatten, Akzentbalken) bekommen. Leer/„Standard" = Stil-Standard. Klappen Sie pro Bereich „Karten-Stil dieses Bereichs" auf.
+      <span id="contrastWarnBox"></span></div>
+    <div id="bereicheList"></div>
+  </div></details>
+
+  <details class="sec" open><summary>Startbereich (Hero)</summary><div class="body">
+    ${textField("hero_eyebrow","Kleiner Obertitel (z.B. Leistungsschlagworte)")}
+    <div class="field"><label>Hero-Bild (großes Bild oben rechts — optional)</label>
+      <input type="file" id="heroFile" accept="image/*">
+      <img class="imgprev" id="heroPrev"><div class="hint">Ihr bestes Referenzfoto. Ohne Bild zeigt die Seite einen dezenten Platzhalter.</div>
+    </div>
+    <div class="field"><label>Vertrauens-Punkte (3 kurze Stichworte unter dem Hero)</label>
+      <div id="trustList"></div>
+      <button type="button" class="add-btn" id="addTrust">+ Punkt hinzufügen</button>
+    </div>
+  </div></details>
+
+  <details class="sec" open><summary>Kontakt</summary><div class="body">
+    ${textField("tel","Telefon","tel")}
+    ${textField("email","E-Mail","email")}
+    ${textField("adresse","Adresse")}
+    <div class="field">
+      <label for="oeffnungModus">Öffnungszeiten — Darstellung</label>
+      <select id="oeffnungModus" aria-label="Darstellung der Öffnungszeiten">
+        <option value="text"${cfg.oeffnung_modus!=="tabelle"?" selected":""}>Einfacher Text</option>
+        <option value="tabelle"${cfg.oeffnung_modus==="tabelle"?" selected":""}>Wochen-Tabelle + Live-Status</option>
+      </select>
+      <div class="hint">„Wochen-Tabelle" zeigt auf der Website jeden Tag mit Zeiten und blendet automatisch ein „Jetzt geöffnet / geschlossen"-Schild ein (im Browser des Besuchers berechnet, ohne Server).</div>
+    </div>
+    <div id="oeffnungTextWrap"${cfg.oeffnung_modus==="tabelle"?' style="display:none"':""}>
+      ${textField("oeffnung","Öffnungszeiten (Freitext)")}
+    </div>
+    <div id="oeffnungTabelleWrap" class="field"${cfg.oeffnung_modus!=="tabelle"?' style="display:none"':""}>
+      <label>Öffnungszeiten pro Wochentag</label>
+      <div id="oeffnungTage" class="oeff-tage"></div>
+      <div class="hint">Häkchen entfernen = an diesem Tag geschlossen. Format der Zeiten: <strong>HH:MM</strong> (z.&nbsp;B. 08:00).</div>
+    </div>
+    ${textField("domain","Domain (für Anzeige)","text")}
+    ${textField("maps_link","Google-Maps-Link (optional)","url")}
+    <div class="field"><label><input type="checkbox" id="zeige_kontaktform"${cfg.zeige_kontaktform?" checked":""}> Kontaktformular anzeigen (per E-Mail)</label></div>
+  </div></details>
+
+  <details class="sec"><summary>Navigation / Menü-Beschriftungen</summary><div class="body">
+    <div class="hint">Hier ändern Sie nur die <strong>Texte</strong> im Menü oben — die Sprungziele bleiben gleich. „Referenzen" erscheint nur, wenn Galerie-Bilder vorhanden sind, „Unsere Firma" nur, wenn die Firmen-Vorstellung gefüllt ist.</div>
+    ${textField("nav_home","Startseite-Link (z.B. Home, Start)")}
+    ${textField("nav_leistungen","Leistungen-Link")}
+    ${textField("nav_galerie","Referenzen-/Galerie-Link")}
+    ${textField("nav_ueber","Über-uns-Link")}
+    ${textField("nav_kontakt","Kontakt-Link")}
+  </div></details>
+
+  <details class="sec"><summary>Über uns</summary><div class="body">
+    <div class="field"><label for="ueber_titel">Überschrift</label>
+      <input id="ueber_titel" type="text">
+      <div class="ci-wrap" style="margin-top:6px"><select id="ueberTitelVorlage" aria-label="Überschrift-Vorlage wählen">
+        <option value="">↳ Vorlage einsetzen …</option>
+        ${UEBER_TITEL_VORLAGEN.map((t,i)=>`<option value="${i}">${t}</option>`).join("")}
+      </select></div>
+      <div class="hint">Wählen Sie eine Vorlage oder schreiben Sie eine eigene Überschrift.</div>
+    </div>
+    <div class="field"><label for="ueber">Beschreibung</label>
+      <textarea id="ueber"></textarea>
+      <div class="ci-wrap" style="margin-top:6px"><select id="ueberTextVorlage" aria-label="Text-Vorlage wählen">
+        <option value="">↳ Vorlage einsetzen …</option>
+        ${UEBER_TEXT_VORLAGEN.map((t,i)=>`<option value="${i}">${t.length>60?t.slice(0,60)+"…":t}</option>`).join("")}
+      </select></div>
+      <div class="hint">Vorlage einsetzen und nach Belieben anpassen.</div>
+    </div>
+    <div class="field" style="margin-bottom:0"><label>Vorteils-Punkte (mit ✓)</label>
+      <div class="ci-wrap" style="margin-bottom:8px"><select id="ueberPunkteVorlage" aria-label="Punkte-Vorlage wählen">
+        <option value="">↳ Vorlagen-Set einsetzen …</option>
+        ${UEBER_PUNKTE_VORLAGEN.map((s,i)=>`<option value="${i}">${s.name}</option>`).join("")}
+      </select></div>
+      <div class="hint" style="margin-bottom:8px">Ein Vorlagen-Set ersetzt alle Punkte. Mit ▲ ▼ sortieren, × löschen, einzeln frei bearbeiten.</div>
+      <div id="ueberPunkteList"></div>
+      <button class="add-btn" id="addUeberPunkt">+ Punkt hinzufügen</button>
+    </div>
+  </div></details>
+
+  <details class="sec"><summary>Leistungen</summary><div class="body">
+    <div class="hint" style="margin-bottom:10px">Mit den Pfeilen ▲ ▼ ändern Sie die Reihenfolge der Karten.</div>
+    <div id="leistungenList"></div>
+    <button class="add-btn" id="addLeistung">+ Leistung hinzufügen</button>
+  </div></details>
+
+  <details class="sec"><summary>Karten-Stil — Standard für alle Bereiche</summary><div class="body">
+    <div class="hint">Grund-Einstellung für alle Bereiche. Einzelne Bereiche (Leistungen, Über uns, Galerie …) können davon abweichen — siehe „Farben & Stil pro Bereich".</div>
+    <div class="field"><label for="cardRadius">Ecken-Rundung: <span id="cardRadiusVal"></span> px</label>
+      <input type="range" id="cardRadius" min="0" max="28" step="1">
+      <div class="hint">0 = eckig, höher = runder.</div>
+    </div>
+    <div class="field"><label for="cardBorder">Rahmen-Dicke: <span id="cardBorderVal"></span> px</label>
+      <input type="range" id="cardBorder" min="0" max="4" step="1">
+    </div>
+    <div class="field"><label for="cardFill">Flächen-Farbe (Kartenhintergrund)</label>
+      <div class="ci-wrap"><input type="color" id="cardFill"><button type="button" class="ci-reset" id="cardFillReset" title="Standard">↺</button></div>
+      <div class="hint">Die Füllfarbe der Karten/Boxen (das „Weiß"). Standard (↺) = Kartenfarbe des Stils.</div>
+    </div>
+    <div class="field"><label for="textColor">Schriftfarbe (Fließtext)</label>
+      <div class="ci-wrap"><input type="color" id="textColor"><button type="button" class="ci-reset" id="textColorReset" title="Standard">↺</button></div>
+      <div class="hint">Farbe des Fließtextes auf der ganzen Seite. Standard (↺) = Textfarbe des Stils.</div>
+    </div>
+    <div class="field"><label for="headColor">Überschriftfarbe</label>
+      <div class="ci-wrap"><input type="color" id="headColor"><button type="button" class="ci-reset" id="headColorReset" title="Standard">↺</button></div>
+      <div class="hint">Farbe aller Überschriften (H1–H3). Standard (↺) = wie Fließtext.</div>
+    </div>
+    <div class="field"><label for="cardMode">Rahmen-Art</label>
+      <select id="cardMode">
+        <option value="solid">Einfarbig</option>
+        <option value="grad">Mehrfarbiger Verlauf</option>
+      </select>
+    </div>
+    <div class="field" id="cardColorField"><label for="cardColor">Rahmen-Farbe</label>
+      <div class="ci-wrap"><input type="color" id="cardColor"><button type="button" class="ci-reset" id="cardColorReset" title="Standard">↺</button></div>
+      <div class="hint">Standard (↺) = Linienfarbe des Stils. Eigene Farbe wirkt überall, wo kein Bereich etwas anderes vorgibt.</div>
+    </div>
+    <div class="field" id="cardGradField" style="display:none">
+      <label>Verlauf-Farben (2–4, leere werden ignoriert)</label>
+      <div id="cardGradBar" style="height:24px;border-radius:8px;margin:4px 0 8px;border:1px solid var(--line)"></div>
+      <div class="grad4">
+        <input type="color" id="cardGrad0" aria-label="Verlauf-Farbe 1">
+        <input type="color" id="cardGrad1" aria-label="Verlauf-Farbe 2">
+        <input type="color" id="cardGrad2" aria-label="Verlauf-Farbe 3">
+        <span class="g4-wrap"><input type="color" id="cardGrad3" aria-label="Verlauf-Farbe 4"><button type="button" class="ci-reset" id="cardGrad3Clear" title="4. Farbe leeren">×</button></span>
+      </div>
+      <label for="cardAngle" style="margin-top:8px">Winkel: <span id="cardAngleVal"></span>°</label>
+      <input type="range" id="cardAngle" min="0" max="360" step="5">
+    </div>
+    <div class="field"><label for="cardShadow">Schatten</label>
+      <select id="cardShadow">
+        <option value="0">Kein Schatten</option>
+        <option value="1">Weich</option>
+        <option value="2">Stark</option>
+      </select>
+    </div>
+    <div class="field" style="margin-bottom:0"><label for="cardAccent">Farbiger Akzentbalken</label>
+      <select id="cardAccent">
+        <option value="top">Oben</option>
+        <option value="left">Links</option>
+        <option value="bottom">Unten</option>
+        <option value="none">Aus</option>
+      </select>
+      <div class="hint">Der dünne Verlaufsbalken, der beim Überfahren der Karte erscheint.</div>
+    </div>
+  </div></details>
+
+  <details class="sec"><summary>Galerie / Referenzfotos</summary><div class="body">
+    <div class="field"><label>Bilder hinzufügen (mehrere möglich)</label>
+      <input type="file" id="galerieFile" accept="image/*" multiple></div>
+    <div id="galerieList"></div>
+    <div class="hint">Tipp: 4–8 Fotos reichen. Sehr viele große Bilder vergrößern die Datei.</div>
+  </div></details>
+
+  <details class="sec"><summary>Firmen-Vorstellung (Bild + Text, beliebig viele)</summary><div class="body">
+    <div class="field"><label><input type="checkbox" id="zeige_firma"${cfg.zeige_firma?" checked":""}> Firmen-Vorstellung auf der Website anzeigen</label></div>
+    ${textField("firma_titel","Überschrift des Bereichs")}
+    ${areaField("firma_intro","Einleitungstext (optional)")}
+    <div class="hint" style="margin-bottom:10px">Stellen Sie Ihre Firma mit beliebig vielen Bild-und-Text-Blöcken vor — z.&nbsp;B. Team, Werkstatt, Geschichte, Maschinen. Jeder Block hat ein Bild, eine Überschrift und einen Text. Die Bilder liegen offline in der Datei.</div>
+    <div id="firmaList"></div>
+    <button class="add-btn" id="addFirmaBlock">+ Bild-Text-Block hinzufügen</button>
+  </div></details>
+
+  <details class="sec"><summary>Kundenstimmen / Bewertungen</summary><div class="body">
+    <div class="field"><label><input type="checkbox" id="zeige_bewertungen"${cfg.zeige_bewertungen?" checked":""}> Bewertungs-Bereich auf der Website anzeigen</label></div>
+    <div class="hint" style="margin-bottom:10px">Tragen Sie echte Kundenstimmen selbst ein (Zitat, Name, Ort, Sterne). Vollständig offline — keine Google-Anbindung, kein Tracking, DSGVO-konform. Holen Sie sich vorher das Einverständnis der genannten Personen.</div>
+    <div id="bewertungenList"></div>
+    <button class="add-btn" id="addBewertung">+ Bewertung hinzufügen</button>
+  </div></details>
+
+  <details class="sec"><summary>Rechtstexte (Impressum & Datenschutz)</summary><div class="body">
+    ${textField("impressum_name","Verantwortliche Person")}
+    ${textField("impressum_firma","Firmenbezeichnung")}
+    ${areaField("impressum_adresse","Anschrift (mehrzeilig)")}
+    ${textField("impressum_tel","Telefon (Impressum)","tel")}
+    ${textField("impressum_email","E-Mail (Impressum)","email")}
+    ${textField("impressum_ustid","USt-IdNr. (falls vorhanden)")}
+    ${areaField("datenschutz_verantwortlich","Datenschutz — Verantwortlicher")}
+    <div class="disclaimer">⚠ Rechtshinweis: Diese Vorlagen sind ein unverbindliches Muster und ersetzen keine
+      Rechtsberatung. Sie als Betreiber sind selbst für korrekte und vollständige Rechtstexte verantwortlich.</div>
+  </div></details>
+
+  <details class="sec"><summary>SEO (Suchmaschinen)</summary><div class="body">
+    ${textField("seo_title","Seitentitel (Title-Tag)")}
+    ${areaField("seo_desc","Beschreibung (Meta-Description)")}
+    ${textField("seo_keywords","Schlagwörter (Komma-getrennt)")}
+    <div class="hint">Automatisch wird ein LocalBusiness-Schema für Google erzeugt — hilft beim Gefundenwerden.</div>
+  </div></details>
+  `;
+
+  // 3-Farben-Verlauf: Picker, Vorschaubalken, Presets
+  function gradCss(){ return `linear-gradient(90deg,${cfg.c1},${cfg.c2},${cfg.c3})`; }
+  function updateGradBar(){ const b=document.getElementById("gradientBar"); if(b) b.style.background=gradCss(); }
+  function syncPickers(){ ["c1","c2","c3"].forEach(k=>{const el=document.getElementById(k);if(el)el.value=cfg[k];}); }
+  ["c1","c2","c3"].forEach(k=>{
+    const el=document.getElementById(k);
+    if(el) el.addEventListener("input",()=>{ cfg[k]=el.value; cfg.accent=cfg.c1; updateGradBar(); onChange(); });
+  });
+  const gp=document.getElementById("gradPresets");
+  if(gp){ GRADIENT_PRESETS.forEach(p=>{
+    const b=document.createElement("button"); b.type="button"; b.textContent=p.name;
+    b.style.background=`linear-gradient(90deg,${p.c[0]},${p.c[1]},${p.c[2]})`;
+    b.onclick=()=>{ cfg.c1=p.c[0];cfg.c2=p.c[1];cfg.c3=p.c[2];cfg.accent=p.c[0]; syncPickers(); updateGradBar(); onChange(); };
+    gp.appendChild(b);
+  }); }
+  updateGradBar();
+
+  // ── Seiten-Hintergrund: eigenes Bild, Vorlagen, Schleier ─────────
+  if(cfg.bg_image){ const p=document.getElementById("bgImagePrev"); p.src=cfg.bg_image; p.style.display="block"; }
+  document.getElementById("bgImageFile").addEventListener("change",e=>readImage(e,d=>{
+    cfg.bg_image=d; cfg.bg_preset=""; renderBgPresets();
+    const p=document.getElementById("bgImagePrev"); p.src=d; p.style.display="block"; onChange();
+  }));
+  document.getElementById("bgImageClear").onclick=()=>{
+    cfg.bg_image=""; const p=document.getElementById("bgImagePrev"); p.src=""; p.style.display="none";
+    const f=document.getElementById("bgImageFile"); if(f) f.value=""; renderBgPresets(); onChange();
+  };
+  function renderBgPresets(){
+    const box=document.getElementById("bgPresets"); if(!box) return; box.innerHTML="";
+    const none=document.createElement("button"); none.type="button"; none.className="bg-prev"+(!cfg.bg_preset&&!cfg.bg_image?" active":"");
+    none.textContent="Kein"; none.title="Stil-Hintergrund verwenden";
+    none.onclick=()=>{ cfg.bg_preset=""; renderBgPresets(); onChange(); };
+    box.appendChild(none);
+    Object.entries(BG_PRESETS).forEach(([k,p])=>{
+      const b=document.createElement("button"); b.type="button";
+      b.className="bg-prev"+(cfg.bg_preset===k&&!cfg.bg_image?" active":"");
+      b.style.background=p.css; if(p.size) b.style.backgroundSize=p.size;
+      b.title=p.name; b.setAttribute("aria-label","Hintergrund "+p.name);
+      b.onclick=()=>{ cfg.bg_preset=k; cfg.bg_image=""; const pr=document.getElementById("bgImagePrev"); if(pr){pr.src="";pr.style.display="none";}
+        const f=document.getElementById("bgImageFile"); if(f)f.value=""; renderBgPresets(); onChange(); };
+      const cap=document.createElement("span"); cap.textContent=p.name; b.appendChild(cap);
+      box.appendChild(b);
+    });
+  }
+  renderBgPresets();
+  (function(){ const r=document.getElementById("bgOverlay"),v=document.getElementById("bgOverlayVal");
+    if(r){ r.value=cfg.bg_overlay; if(v)v.textContent=cfg.bg_overlay;
+      r.addEventListener("input",()=>{ cfg.bg_overlay=parseInt(r.value,10); if(v)v.textContent=r.value; onChange(); }); } })();
+
+  // ── Farben pro Bereich ───────────────────────────────────────────
+  renderBereiche();
+
+  // Bind simple text/area/select/checkbox
+  ["firma","slogan","branche","tel","email","adresse","oeffnung","domain","maps_link",
+   "firma_titel","firma_intro",
+   "nav_home","nav_leistungen","nav_galerie","nav_ueber","nav_kontakt",
+   "hero_eyebrow","ueber","ueber_titel","impressum_name","impressum_firma","impressum_adresse","impressum_tel",
+   "impressum_email","impressum_ustid","datenschutz_verantwortlich",
+   "seo_title","seo_desc","seo_keywords"].forEach(k=>{
+    const el=document.getElementById(k);
+    if(el){ el.value=cfg[k]||""; el.addEventListener("input",()=>{ cfg[k]=el.value; onChange(); }); }
+  });
+  bindEl("font","change",el=>{cfg.font=el.value;});
+  bindEl("stil","change",el=>{cfg.stil=el.value; renderBereiche();});
+  bindEl("zeige_kontaktform","change",el=>{cfg.zeige_kontaktform=el.checked;});
+
+  // Über uns: Vorlagen für Überschrift, Text und Vorteils-Punkte
+  const utVor=document.getElementById("ueberTitelVorlage");
+  if(utVor) utVor.addEventListener("change",()=>{
+    const i=parseInt(utVor.value,10);
+    if(!isNaN(i) && UEBER_TITEL_VORLAGEN[i]!=null){ cfg.ueber_titel=UEBER_TITEL_VORLAGEN[i];
+      const f=document.getElementById("ueber_titel"); if(f)f.value=cfg.ueber_titel; onChange(); }
+    utVor.value="";
+  });
+  const uxVor=document.getElementById("ueberTextVorlage");
+  if(uxVor) uxVor.addEventListener("change",()=>{
+    const i=parseInt(uxVor.value,10);
+    if(!isNaN(i) && UEBER_TEXT_VORLAGEN[i]!=null){ cfg.ueber=UEBER_TEXT_VORLAGEN[i];
+      const f=document.getElementById("ueber"); if(f)f.value=cfg.ueber; onChange(); }
+    uxVor.value="";
+  });
+  const upVor=document.getElementById("ueberPunkteVorlage");
+  if(upVor) upVor.addEventListener("change",()=>{
+    const i=parseInt(upVor.value,10);
+    if(!isNaN(i) && UEBER_PUNKTE_VORLAGEN[i]){ cfg.ueber_punkte=UEBER_PUNKTE_VORLAGEN[i].punkte.slice();
+      renderUeberPunkte(); onChange(); }
+    upVor.value="";
+  });
+  renderUeberPunkte();
+  const addUp=document.getElementById("addUeberPunkt");
+  if(addUp) addUp.onclick=()=>{ if(!Array.isArray(cfg.ueber_punkte)) cfg.ueber_punkte=[];
+    cfg.ueber_punkte.push(""); renderUeberPunkte(); onChange(); };
+
+  // Logo
+  if(cfg.logo){ const lp=document.getElementById("logoPrev"); lp.src=cfg.logo; lp.style.display="block"; }
+  document.getElementById("logoFile").addEventListener("change",e=>readImage(e,d=>{
+    cfg.logo=d; const lp=document.getElementById("logoPrev"); lp.src=d; lp.style.display="block"; onChange();
+  }));
+
+  // Hero-Bild
+  if(cfg.hero_bild){ const hp=document.getElementById("heroPrev"); hp.src=cfg.hero_bild; hp.style.display="block"; }
+  document.getElementById("heroFile").addEventListener("change",e=>readImage(e,d=>{
+    cfg.hero_bild=d; const hp=document.getElementById("heroPrev"); hp.src=d; hp.style.display="block"; onChange();
+  }));
+
+  // Trust-Badges
+  renderTrust();
+  document.getElementById("addTrust").onclick=()=>{ cfg.trust.push({gross:"Neu",klein:""}); renderTrust(); onChange(); };
+
+  // Öffnungszeiten: Modus-Umschalter (Freitext / Wochen-Tabelle) + Tages-Tabelle
+  renderOeffnung();
+  const oeffModus=document.getElementById("oeffnungModus");
+  const oeffTextWrap=document.getElementById("oeffnungTextWrap");
+  const oeffTabWrap=document.getElementById("oeffnungTabelleWrap");
+  const syncOeffModus=()=>{ const tab=cfg.oeffnung_modus==="tabelle";
+    if(oeffTextWrap)oeffTextWrap.style.display=tab?"none":"";
+    if(oeffTabWrap)oeffTabWrap.style.display=tab?"":"none"; };
+  if(oeffModus){ oeffModus.value=(cfg.oeffnung_modus==="tabelle")?"tabelle":"text"; syncOeffModus();
+    oeffModus.addEventListener("change",()=>{ cfg.oeffnung_modus=oeffModus.value; syncOeffModus(); onChange(); }); }
+
+  // Leistungen + Galerie
+  renderLeistungen();
+  document.getElementById("addLeistung").onclick=()=>{ cfg.leistungen.push({titel:"Neue Leistung",text:""}); renderLeistungen(); onChange(); };
+
+  // ── Karten-Stil ─────────────────────────────────────────────────
+  (function(){
+    const r=document.getElementById("cardRadius"), rv=document.getElementById("cardRadiusVal");
+    if(r){ r.value=cfg.card_radius; if(rv)rv.textContent=cfg.card_radius;
+      r.addEventListener("input",()=>{ cfg.card_radius=parseInt(r.value,10); if(rv)rv.textContent=r.value; onChange(); }); }
+    const bd=document.getElementById("cardBorder"), bv=document.getElementById("cardBorderVal");
+    if(bd){ bd.value=cfg.card_border; if(bv)bv.textContent=cfg.card_border;
+      bd.addEventListener("input",()=>{ cfg.card_border=parseInt(bd.value,10); if(bv)bv.textContent=bd.value; onChange(); }); }
+    const cc=document.getElementById("cardColor"), ccr=document.getElementById("cardColorReset");
+    if(cc){ const S=STILE[cfg.stil]||STILE.stahl; cc.value=cfg.card_color||S.line;
+      cc.addEventListener("input",()=>{ cfg.card_color=cc.value; onChange(); }); }
+    if(ccr){ ccr.onclick=()=>{ cfg.card_color=""; const S=STILE[cfg.stil]||STILE.stahl; if(cc)cc.value=S.line; onChange(); }; }
+    // Flächen-Farbe (Kartenhintergrund)
+    const cfl=document.getElementById("cardFill"), cflr=document.getElementById("cardFillReset");
+    if(cfl){ const S=STILE[cfg.stil]||STILE.stahl; cfl.value=cfg.card_fill||S.card;
+      cfl.addEventListener("input",()=>{ cfg.card_fill=cfl.value; onChange(); }); }
+    if(cflr){ cflr.onclick=()=>{ cfg.card_fill=""; const S=STILE[cfg.stil]||STILE.stahl; if(cfl)cfl.value=S.card; onChange(); }; }
+    // Schriftfarbe (Fließtext) + Überschriftfarbe
+    const txC=document.getElementById("textColor"), txCr=document.getElementById("textColorReset");
+    if(txC){ const S=STILE[cfg.stil]||STILE.stahl; txC.value=cfg.text_color||S.txt;
+      txC.addEventListener("input",()=>{ cfg.text_color=txC.value; onChange(); }); }
+    if(txCr){ txCr.onclick=()=>{ cfg.text_color=""; const S=STILE[cfg.stil]||STILE.stahl; if(txC)txC.value=S.txt; onChange(); }; }
+    const hdC=document.getElementById("headColor"), hdCr=document.getElementById("headColorReset");
+    if(hdC){ const S=STILE[cfg.stil]||STILE.stahl; hdC.value=cfg.head_color||cfg.text_color||S.txt;
+      hdC.addEventListener("input",()=>{ cfg.head_color=hdC.value; onChange(); }); }
+    if(hdCr){ hdCr.onclick=()=>{ cfg.head_color=""; const S=STILE[cfg.stil]||STILE.stahl; if(hdC)hdC.value=cfg.text_color||S.txt; onChange(); }; }
+    // Rahmen-Art (einfarbig / Verlauf) + 4 Verlauf-Farben + Winkel
+    if(!Array.isArray(cfg.card_grad)) cfg.card_grad=["#00FFAA","#00B4FF","#8C00FF",""];
+    const mode=document.getElementById("cardMode");
+    const colorField=document.getElementById("cardColorField"), gradField=document.getElementById("cardGradField");
+    const g0=document.getElementById("cardGrad0"),g1=document.getElementById("cardGrad1"),g2=document.getElementById("cardGrad2"),g3=document.getElementById("cardGrad3");
+    const g3clr=document.getElementById("cardGrad3Clear");
+    const gbar=document.getElementById("cardGradBar");
+    const ang=document.getElementById("cardAngle"), angv=document.getElementById("cardAngleVal");
+    const updGradBar=()=>{ if(!gbar)return; const v=(cfg.card_grad||[]).filter(x=>/^#[0-9a-fA-F]{3,8}$/.test(x));
+      gbar.style.background = v.length>=2 ? `linear-gradient(${cfg.card_angle||135}deg,${v.join(",")})` : (v[0]||"transparent"); };
+    const syncModeUI=()=>{ const grad=cfg.card_mode==="grad";
+      if(colorField)colorField.style.display=grad?"none":"";
+      if(gradField)gradField.style.display=grad?"":"none"; };
+    if(mode){ mode.value=cfg.card_mode||"solid"; syncModeUI();
+      mode.addEventListener("change",()=>{ cfg.card_mode=mode.value; syncModeUI(); onChange(); }); }
+    [g0,g1,g2,g3].forEach((g,i)=>{ if(!g)return; g.value=cfg.card_grad[i]||"#000000";
+      g.addEventListener("input",()=>{ cfg.card_grad[i]=g.value; updGradBar(); onChange(); }); });
+    if(g3clr){ g3clr.onclick=()=>{ cfg.card_grad[3]=""; if(g3)g3.value="#000000"; updGradBar(); onChange(); }; }
+    if(ang){ ang.value=cfg.card_angle==null?135:cfg.card_angle; if(angv)angv.textContent=ang.value;
+      ang.addEventListener("input",()=>{ cfg.card_angle=parseInt(ang.value,10); if(angv)angv.textContent=ang.value; updGradBar(); onChange(); }); }
+    updGradBar();
+    const sh=document.getElementById("cardShadow");
+    if(sh){ sh.value=String(cfg.card_shadow); sh.addEventListener("change",()=>{ cfg.card_shadow=parseInt(sh.value,10); onChange(); }); }
+    const ac=document.getElementById("cardAccent");
+    if(ac){ ac.value=cfg.card_accent; ac.addEventListener("change",()=>{ cfg.card_accent=ac.value; onChange(); }); }
+  })();
+  renderGalerie();
+  document.getElementById("galerieFile").addEventListener("change",e=>{
+    const files=[...e.target.files];
+    let pending=files.length;
+    files.forEach(f=>{
+      const r=new FileReader();
+      r.onload=()=>{ cfg.galerie.push(r.result); if(--pending===0){ renderGalerie(); onChange(); } };
+      r.readAsDataURL(f);
+    });
+    e.target.value="";
+  });
+
+  // Kundenstimmen / Bewertungen
+  renderBewertungen();
+  const addBw=document.getElementById("addBewertung");
+  if(addBw) addBw.onclick=()=>{ cfg.bewertungen.push({text:"",name:"",ort:"",sterne:5}); renderBewertungen(); onChange(); };
+  bindEl("zeige_bewertungen","change",el=>{cfg.zeige_bewertungen=el.checked;});
+
+  // Firmen-Vorstellung (Bild + Text, beliebig viele)
+  renderFirma();
+  const addFb=document.getElementById("addFirmaBlock");
+  if(addFb) addFb.onclick=()=>{ cfg.firma_bloecke.push({bild:"",titel:"",text:""}); renderFirma(); onChange(); };
+  bindEl("zeige_firma","change",el=>{cfg.zeige_firma=el.checked;});
+}
+
+function renderUeberPunkte(){
+  const c=document.getElementById("ueberPunkteList"); if(!c) return; c.innerHTML="";
+  if(!Array.isArray(cfg.ueber_punkte)) cfg.ueber_punkte=[];
+  cfg.ueber_punkte.forEach((p,i)=>{
+    const n=cfg.ueber_punkte.length;
+    const d=document.createElement("div");d.className="list-item";
+    d.style.display="flex";d.style.alignItems="center";d.style.gap="8px";
+    d.innerHTML=`<div class="li-order">
+        <button class="li-up" type="button" title="Nach oben"${i===0?" disabled":""} aria-label="Punkt nach oben">▲</button>
+        <button class="li-down" type="button" title="Nach unten"${i===n-1?" disabled":""} aria-label="Punkt nach unten">▼</button>
+      </div>
+      <input type="text" class="up-text" style="flex:1" aria-label="Vorteils-Punkt ${i+1}">
+      <button type="button" class="del" style="position:static" title="Löschen" aria-label="Punkt löschen">×</button>`;
+    const inp=d.querySelector(".up-text"); inp.value=p||"";
+    inp.addEventListener("input",()=>{ cfg.ueber_punkte[i]=inp.value; onChange(); });
+    d.querySelector(".del").onclick=()=>{ cfg.ueber_punkte.splice(i,1); renderUeberPunkte(); onChange(); };
+    d.querySelector(".li-up").onclick=()=>{ if(i>0){ const a=cfg.ueber_punkte; [a[i-1],a[i]]=[a[i],a[i-1]]; renderUeberPunkte(); onChange(); } };
+    d.querySelector(".li-down").onclick=()=>{ const a=cfg.ueber_punkte; if(i<a.length-1){ [a[i+1],a[i]]=[a[i],a[i+1]]; renderUeberPunkte(); onChange(); } };
+    c.appendChild(d);
+  });
+}
+
+function renderFirma(){
+  const c=document.getElementById("firmaList"); if(!c) return; c.innerHTML="";
+  if(!Array.isArray(cfg.firma_bloecke)) cfg.firma_bloecke=[];
+  cfg.firma_bloecke.forEach((bl,i)=>{
+    const d=document.createElement("div");d.className="list-item";
+    const n=cfg.firma_bloecke.length;
+    const prev = bl.bild
+      ? `<img src="${bl.bild}" style="width:64px;height:48px;object-fit:cover;border-radius:6px">`
+      : `<span style="width:64px;height:48px;border-radius:6px;background:var(--bg);border:1px dashed var(--line);display:grid;place-items:center;font-size:10px;color:var(--muted)">kein Bild</span>`;
+    d.innerHTML=`<div class="li-order">
+        <button class="li-up" type="button" title="Nach oben"${i===0?" disabled":""} aria-label="Block nach oben">▲</button>
+        <button class="li-down" type="button" title="Nach unten"${i===n-1?" disabled":""} aria-label="Block nach unten">▼</button>
+      </div>
+      <button type="button" class="del" title="Löschen" aria-label="Block löschen">×</button>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        ${prev}
+        <div style="flex:1"><label style="font-size:11px;color:var(--muted)">Bild</label>
+          <input type="file" class="fb-bild" accept="image/*"></div>
+      </div>
+      <div class="field"><label style="font-size:11px;color:var(--muted)">Überschrift</label><input type="text" class="fb-titel"></div>
+      <div class="field" style="margin-bottom:0"><label style="font-size:11px;color:var(--muted)">Text</label><textarea rows="3" class="fb-text"></textarea></div>`;
+    const ti=d.querySelector(".fb-titel"), tx=d.querySelector(".fb-text"), bf=d.querySelector(".fb-bild");
+    ti.value=bl.titel||""; tx.value=bl.text||"";
+    ti.addEventListener("input",()=>{bl.titel=ti.value;onChange();});
+    tx.addEventListener("input",()=>{bl.text=tx.value;onChange();});
+    bf.addEventListener("change",e=>{ readImage(e,data=>{ bl.bild=data; renderFirma(); onChange(); }); });
+    d.querySelector(".del").onclick=()=>{cfg.firma_bloecke.splice(i,1);renderFirma();onChange();};
+    d.querySelector(".li-up").onclick=()=>{ if(i>0){ const a=cfg.firma_bloecke; [a[i-1],a[i]]=[a[i],a[i-1]]; renderFirma(); onChange(); } };
+    d.querySelector(".li-down").onclick=()=>{ const a=cfg.firma_bloecke; if(i<a.length-1){ [a[i+1],a[i]]=[a[i],a[i+1]]; renderFirma(); onChange(); } };
+    c.appendChild(d);
+  });
+}
+
+function bindEl(id,evt,fn){const el=document.getElementById(id);if(el)el.addEventListener(evt,()=>{fn(el);onChange();});}
+function textField(k,label,type="text"){return `<div class="field"><label for="${k}">${label}</label><input id="${k}" type="${type}"></div>`;}
+function areaField(k,label){return `<div class="field"><label for="${k}">${label}</label><textarea id="${k}"></textarea></div>`;}
+
+function readImage(e,cb){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(f);}
+
+function renderLeistungen(){
+  const c=document.getElementById("leistungenList");c.innerHTML="";
+  cfg.leistungen.forEach((l,i)=>{
+    const d=document.createElement("div");d.className="list-item";
+    d.innerHTML=`<div class="li-order">
+        <button class="li-up" type="button" title="Nach oben"${i===0?" disabled":""} aria-label="Karte nach oben">▲</button>
+        <button class="li-down" type="button" title="Nach unten"${i===cfg.leistungen.length-1?" disabled":""} aria-label="Karte nach unten">▼</button>
+      </div>
+      <button class="del" title="Löschen" aria-label="Karte löschen">×</button>
+      <div class="field"><label>Titel</label><input type="text" value=""></div>
+      <div class="field" style="margin-bottom:0"><label>Beschreibung</label><textarea></textarea></div>`;
+    const [tIn,txt]=[d.querySelector('input'),d.querySelector('textarea')];
+    tIn.value=l.titel; txt.value=l.text;
+    tIn.addEventListener("input",()=>{l.titel=tIn.value;onChange();});
+    txt.addEventListener("input",()=>{l.text=txt.value;onChange();});
+    d.querySelector(".del").onclick=()=>{cfg.leistungen.splice(i,1);renderLeistungen();onChange();};
+    d.querySelector(".li-up").onclick=()=>{ if(i>0){ const a=cfg.leistungen; [a[i-1],a[i]]=[a[i],a[i-1]]; renderLeistungen(); onChange(); } };
+    d.querySelector(".li-down").onclick=()=>{ const a=cfg.leistungen; if(i<a.length-1){ [a[i+1],a[i]]=[a[i],a[i+1]]; renderLeistungen(); onChange(); } };
+    c.appendChild(d);
+  });
+}
+
+// ── WCAG-Kontrast-Helfer ─────────────────────────────────────────
+function hexToRgb(h){ h=(h||"").replace("#",""); if(h.length===3)h=h.split("").map(x=>x+x).join("");
+  const n=parseInt(h,16); if(isNaN(n)||h.length!==6)return null; return {r:(n>>16)&255,g:(n>>8)&255,b:n&255}; }
+function relLum(rgb){ const f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);};
+  return .2126*f(rgb.r)+.7152*f(rgb.g)+.0722*f(rgb.b); }
+function contrastRatio(fg,bg){ const a=hexToRgb(fg),b=hexToRgb(bg); if(!a||!b)return null;
+  const l1=relLum(a),l2=relLum(b); return (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05); }
+
+const BEREICH_LABELS = {
+  hero:"Startbereich (Hero)", leistungen:"Leistungen", galerie:"Galerie",
+  ueber:"Über uns", cta:"Aufruf-Banner (CTA)", kontakt:"Kontakt"
+};
+
+function renderBereiche(){
+  const root=document.getElementById("bereicheList"); if(!root) return; root.innerHTML="";
+  Object.keys(cfg.bereiche).forEach(key=>{
+    const b=cfg.bereiche[key]; const S=STILE[cfg.stil]||STILE.stahl;
+    const d=document.createElement("div"); d.className="bereich-card";
+    // Radius-/Rahmen-Optionen mit "Standard (erben)"-Eintrag (Wert "")
+    const radiusOpts = ['<option value="">Standard</option>']
+      .concat([0,4,8,12,14,18,22,28].map(v=>`<option value="${v}">${v} px</option>`)).join("");
+    const borderOpts = ['<option value="">Standard</option>']
+      .concat([0,1,2,3,4].map(v=>`<option value="${v}">${v} px</option>`)).join("");
+    d.innerHTML=`
+      <div class="bereich-title">${BEREICH_LABELS[key]||key}</div>
+      <div class="bereich-grid">
+        <div><span class="cpl">Hintergrund</span>
+          <div class="ci-wrap"><input type="color" data-f="bg"><button type="button" class="ci-reset" data-r="bg" title="Standard">↺</button></div></div>
+        <div><span class="cpl">Überschrift</span>
+          <div class="ci-wrap"><input type="color" data-f="head"><button type="button" class="ci-reset" data-r="head" title="Standard">↺</button></div></div>
+        <div><span class="cpl">Text</span>
+          <div class="ci-wrap"><input type="color" data-f="text"><button type="button" class="ci-reset" data-r="text" title="Standard">↺</button></div></div>
+      </div>
+      <details class="bereich-cardstyle" open><summary>Karten-Stil dieses Bereichs (Rahmen, Rundung, Schatten, Akzent)</summary>
+        <div class="bereich-grid" style="margin-top:8px">
+          <div><span class="cpl">Ecken-Rundung</span><select data-cf="cr">${radiusOpts}</select></div>
+          <div><span class="cpl">Rahmen-Dicke</span><select data-cf="cb">${borderOpts}</select></div>
+          <div><span class="cpl">Schatten</span><select data-cf="cs">
+            <option value="">Standard</option><option value="0">Kein</option><option value="1">Weich</option><option value="2">Stark</option></select></div>
+          <div><span class="cpl">Akzentbalken</span><select data-cf="ca">
+            <option value="">Standard</option><option value="top">Oben</option><option value="left">Links</option><option value="bottom">Unten</option><option value="none">Aus</option></select></div>
+          <div><span class="cpl">Rahmen-Art</span><select data-cm="1">
+            <option value="">Standard</option><option value="solid">Einfarbig</option><option value="grad">Verlauf</option></select></div>
+          <div data-cc-cell><span class="cpl">Rahmen-Farbe</span>
+            <div class="ci-wrap"><input type="color" data-cc="1"><button type="button" class="ci-reset" data-ccr="1" title="Standard">↺</button></div></div>
+          <div data-cfill-cell><span class="cpl">Flächen-Farbe</span>
+            <div class="ci-wrap"><input type="color" data-cfill="1"><button type="button" class="ci-reset" data-cfillr="1" title="Standard">↺</button></div></div>
+        </div>
+        <div data-grad-cell style="display:none;margin-top:8px">
+          <span class="cpl">Verlauf-Farben (2–4) + Winkel</span>
+          <div class="grad4" style="margin-top:4px">
+            <input type="color" data-cg="0" aria-label="Verlauf-Farbe 1">
+            <input type="color" data-cg="1" aria-label="Verlauf-Farbe 2">
+            <input type="color" data-cg="2" aria-label="Verlauf-Farbe 3">
+            <span class="g4-wrap"><input type="color" data-cg="3" aria-label="Verlauf-Farbe 4"><button type="button" class="ci-reset" data-cgclr="1" title="4. Farbe leeren">×</button></span>
+          </div>
+          <input type="range" data-cga="1" min="0" max="360" step="5" style="margin-top:6px" aria-label="Verlauf-Winkel">
+        </div>
+      </details>
+      <div class="bereich-warn" data-warn></div>`;
+    const setDefaults=()=>{
+      d.querySelectorAll("input[type=color][data-f]").forEach(inp=>{
+        const f=inp.dataset.f;
+        inp.value = b[f] || (f==="bg"?S.bg:(f==="head"?S.txt:S.txt));
+      });
+    };
+    setDefaults();
+    d.querySelectorAll("input[type=color][data-f]").forEach(inp=>{
+      inp.addEventListener("input",()=>{ b[inp.dataset.f]=inp.value; updateBereichWarn(d,b,key); onChange(); });
+    });
+    d.querySelectorAll(".ci-reset[data-r]").forEach(btn=>{
+      btn.onclick=()=>{ b[btn.dataset.r]=""; setDefaults(); updateBereichWarn(d,b,key); onChange(); };
+    });
+    // Rahmen-Farbe pro Bereich (b.cc): "" = globalen Standard / Stil-Standard erben.
+    const ccInp=d.querySelector("input[data-cc]"), ccBtn=d.querySelector(".ci-reset[data-ccr]");
+    const ccDefault = cfg.card_color || S.line;
+    if(ccInp){ ccInp.value = b.cc || ccDefault;
+      ccInp.addEventListener("input",()=>{ b.cc=ccInp.value; onChange(); }); }
+    if(ccBtn){ ccBtn.onclick=()=>{ b.cc=""; if(ccInp)ccInp.value=ccDefault; onChange(); }; }
+    // Flächen-Farbe pro Bereich (b.cf): "" = globalen Standard / Stil-Standard erben.
+    const cfInp=d.querySelector("input[data-cfill]"), cfBtn=d.querySelector(".ci-reset[data-cfillr]");
+    const cfDefault = cfg.card_fill || S.card;
+    if(cfInp){ cfInp.value = b.cf || cfDefault;
+      cfInp.addEventListener("input",()=>{ b.cf=cfInp.value; onChange(); }); }
+    if(cfBtn){ cfBtn.onclick=()=>{ b.cf=""; if(cfInp)cfInp.value=cfDefault; onChange(); }; }
+    // Karten-Stil pro Bereich: "" = erben (null im cfg), sonst Zahl bzw. String.
+    d.querySelectorAll("select[data-cf]").forEach(sel=>{
+      const f=sel.dataset.cf;
+      const cur = b[f];
+      sel.value = (cur==null) ? "" : String(cur);
+      sel.addEventListener("change",()=>{
+        if(sel.value===""){ b[f]=null; }
+        else if(f==="ca"){ b[f]=sel.value; }
+        else { b[f]=parseInt(sel.value,10); }
+        onChange();
+      });
+    });
+    // Rahmen-Art (b.cm) + Verlauf-Farben (b.cg) + Winkel (b.cgA) pro Bereich.
+    const cmSel=d.querySelector("select[data-cm]");
+    const ccCell=d.querySelector("[data-cc-cell]"), gradCell=d.querySelector("[data-grad-cell]");
+    if(!Array.isArray(b.cg)) b.cg=null;
+    const syncBer=()=>{ const m=(b.cm==="grad"||b.cm==="solid")?b.cm:(cfg.card_mode||"solid");
+      // Bei Verlauf: Verlauf-Felder zeigen, einzelne Rahmen-Farbe ausblenden.
+      if(gradCell)gradCell.style.display = (m==="grad")?"":"none";
+      if(ccCell)ccCell.style.display = (m==="grad")?"none":""; };
+    if(cmSel){ cmSel.value=(b.cm==null||b.cm==="")?"":b.cm; syncBer();
+      cmSel.addEventListener("change",()=>{ b.cm=cmSel.value||""; syncBer(); onChange(); }); }
+    const gradDefaults = (Array.isArray(cfg.card_grad)?cfg.card_grad:["#00FFAA","#00B4FF","#8C00FF",""]);
+    d.querySelectorAll("input[data-cg]").forEach(inp=>{
+      const i=parseInt(inp.dataset.cg,10);
+      const src = (b.cg && b.cg[i]) ? b.cg[i] : (gradDefaults[i]||"");
+      inp.value = src || "#000000";
+      inp.addEventListener("input",()=>{ if(!Array.isArray(b.cg)) b.cg=gradDefaults.slice(); b.cg[i]=inp.value; onChange(); });
+    });
+    const cgClr=d.querySelector(".ci-reset[data-cgclr]");
+    if(cgClr){ cgClr.onclick=()=>{ if(!Array.isArray(b.cg)) b.cg=gradDefaults.slice(); b.cg[3]=""; const i3=d.querySelector('input[data-cg="3"]'); if(i3)i3.value="#000000"; onChange(); }; }
+    const cgaInp=d.querySelector("input[data-cga]");
+    if(cgaInp){ cgaInp.value = (b.cgA==null) ? (cfg.card_angle==null?135:cfg.card_angle) : b.cgA;
+      cgaInp.addEventListener("input",()=>{ b.cgA=parseInt(cgaInp.value,10); onChange(); }); }
+    updateBereichWarn(d,b,key);
+    root.appendChild(d);
+  });
+}
+
+function updateBereichWarn(card,b,key){
+  const S=STILE[cfg.stil]||STILE.stahl;
+  const bg = b.bg || S.bg;
+  const head = b.head || S.txt;
+  const text = b.text || S.txt;
+  const warns=[];
+  const cH=contrastRatio(head,bg), cT=contrastRatio(text,bg);
+  if(cH!==null && cH<3)   warns.push("Überschrift kaum lesbar");
+  else if(cH!==null && cH<4.5) warns.push("Überschrift schwacher Kontrast");
+  if(cT!==null && cT<4.5) warns.push("Text schwacher Kontrast (WCAG AA: 4,5:1)");
+  const el=card.querySelector("[data-warn]"); if(!el)return;
+  if(warns.length){ el.textContent="⚠ "+warns.join(" · "); el.style.display="block"; }
+  else { el.textContent=""; el.style.display="none"; }
+}
+
+function renderTrust(){
+  const c=document.getElementById("trustList");c.innerHTML="";
+  cfg.trust.forEach((t,i)=>{
+    const d=document.createElement("div");d.className="list-item";
+    d.innerHTML=`<button type="button" class="del" title="Löschen">×</button>
+      <div class="row2"><div><label style="font-size:11px;color:var(--muted)">Stichwort</label><input type="text"></div>
+      <div><label style="font-size:11px;color:var(--muted)">Erklärung</label><input type="text"></div></div>`;
+    const ins=d.querySelectorAll("input");
+    ins[0].value=t.gross; ins[1].value=t.klein;
+    ins[0].addEventListener("input",()=>{t.gross=ins[0].value;onChange();});
+    ins[1].addEventListener("input",()=>{t.klein=ins[1].value;onChange();});
+    d.querySelector(".del").onclick=()=>{cfg.trust.splice(i,1);renderTrust();onChange();};
+    c.appendChild(d);
+  });
+}
+
+const TAG_NAMEN = ["Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag","Sonntag"];
+function renderOeffnung(){
+  const c=document.getElementById("oeffnungTage"); if(!c) return; c.innerHTML="";
+  if(!Array.isArray(cfg.oeffnung_tage) || cfg.oeffnung_tage.length!==7){
+    cfg.oeffnung_tage = TAG_NAMEN.map(()=>({auf:false,von:"",bis:""}));
+  }
+  cfg.oeffnung_tage.forEach((t,i)=>{
+    const d=document.createElement("div");d.className="oeff-tag";
+    d.innerHTML=`<label class="oeff-day"><input type="checkbox" class="oeff-auf"><span>${TAG_NAMEN[i]}</span></label>`+
+      `<input type="time" class="oeff-von" aria-label="${TAG_NAMEN[i]} von">`+
+      `<span class="oeff-bis-sep">–</span>`+
+      `<input type="time" class="oeff-bis" aria-label="${TAG_NAMEN[i]} bis">`;
+    const auf=d.querySelector(".oeff-auf"), von=d.querySelector(".oeff-von"), bis=d.querySelector(".oeff-bis");
+    auf.checked=!!t.auf; von.value=t.von||""; bis.value=t.bis||"";
+    const syncDisabled=()=>{ von.disabled=!auf.checked; bis.disabled=!auf.checked; };
+    syncDisabled();
+    auf.addEventListener("change",()=>{t.auf=auf.checked;syncDisabled();onChange();});
+    von.addEventListener("input",()=>{t.von=von.value;onChange();});
+    bis.addEventListener("input",()=>{t.bis=bis.value;onChange();});
+    c.appendChild(d);
+  });
+}
+
+function renderGalerie(){
+  const c=document.getElementById("galerieList");c.innerHTML="";
+  cfg.galerie.forEach((src,i)=>{
+    const d=document.createElement("div");d.className="list-item";d.style.display="flex";d.style.alignItems="center";d.style.gap="10px";
+    d.innerHTML=`<img src="${src}" style="width:54px;height:40px;object-fit:cover;border-radius:5px">
+      <span style="flex:1;font-size:12px;color:var(--muted)">Bild ${i+1}</span>
+      <button class="del" style="position:static" title="Entfernen">×</button>`;
+    d.querySelector(".del").onclick=()=>{cfg.galerie.splice(i,1);renderGalerie();onChange();};
+    c.appendChild(d);
+  });
+}
+
+function renderBewertungen(){
+  const c=document.getElementById("bewertungenList"); if(!c) return; c.innerHTML="";
+  if(!Array.isArray(cfg.bewertungen)) cfg.bewertungen=[];
+  cfg.bewertungen.forEach((b,i)=>{
+    const d=document.createElement("div");d.className="list-item";
+    d.innerHTML=`<button type="button" class="del" title="Löschen">×</button>
+      <div class="field"><label style="font-size:11px;color:var(--muted)">Zitat</label><textarea rows="2" class="bw-text"></textarea></div>
+      <div class="row2">
+        <div><label style="font-size:11px;color:var(--muted)">Name</label><input type="text" class="bw-name"></div>
+        <div><label style="font-size:11px;color:var(--muted)">Ort (optional)</label><input type="text" class="bw-ort"></div>
+      </div>
+      <div class="field"><label style="font-size:11px;color:var(--muted)">Sterne</label>
+        <select class="bw-sterne">${[5,4,3,2,1].map(n=>`<option value="${n}">${"★".repeat(n)+"☆".repeat(5-n)} (${n})</option>`).join("")}</select></div>`;
+    const txt=d.querySelector(".bw-text"), nm=d.querySelector(".bw-name"), ort=d.querySelector(".bw-ort"), st=d.querySelector(".bw-sterne");
+    txt.value=b.text||""; nm.value=b.name||""; ort.value=b.ort||""; st.value=String(b.sterne||5);
+    txt.addEventListener("input",()=>{b.text=txt.value;onChange();});
+    nm.addEventListener("input",()=>{b.name=nm.value;onChange();});
+    ort.addEventListener("input",()=>{b.ort=ort.value;onChange();});
+    st.addEventListener("change",()=>{b.sterne=parseInt(st.value,10);onChange();});
+    d.querySelector(".del").onclick=()=>{cfg.bewertungen.splice(i,1);renderBewertungen();onChange();};
+    c.appendChild(d);
+  });
+}
+
+/* =========================================================
+   5) LIVE-UPDATE + PREVIEW
+   ========================================================= */
+let saveTimer=null;
+function onChange(){
+  renderPreview();
+  document.getElementById("previewUrl").textContent = cfg.domain || "www.ihre-firma.de";
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>localStorage.setItem(LS_CFG, JSON.stringify(cfg)),400);
+}
+
+function renderPreview(){
+  const frame=document.getElementById("previewFrame");
+  // Scroll-Position der Vorschau merken, damit sie beim Neu-Aufbau nicht nach oben springt
+  let prevScroll=0;
+  try{ const w=frame.contentWindow; if(w) prevScroll=w.scrollY||w.pageYOffset||0; }catch(e){}
+  const restore=()=>{ try{ const w=frame.contentWindow; if(w&&prevScroll) w.scrollTo(0,prevScroll); }catch(e){} };
+  frame.addEventListener("load",restore,{once:true});
+  frame.srcdoc = generateSiteHTML(cfg, /*forExport*/false);
+}
+
+/* Viewport-Umschalter */
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".vp-btn"); if(!b)return;
+  document.querySelectorAll(".vp-btn").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  const f=document.getElementById("previewFrame");
+  f.style.maxWidth = b.dataset.vp==="mobile" ? "390px" : "100%";
+});
+
+/* =========================================================
+   6) TOPBAR-AKTIONEN (Sichern / Laden / Export)
+   ========================================================= */
+function wireTopbar(){
+  /* DEMO: btnExport ist ein <a>-Link zur Landingpage, andere Buttons sind versteckt.
+     Wir wiren NICHTS — die Demo soll keinen Export und keine JSON-Backups erlauben. */
+}
+
+function download(filename, content, mime){
+  const blob=new Blob([content],{type:mime+";charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;a.download=filename;a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2600);}
+
+/* =========================================================
+   7) WEBSITE-GENERATOR — dezent-serioese Handwerker-Seite
+   =========================================================
+   Erzeugt komplettes Standalone-HTML. forExport=true entfernt nichts
+   Konfigurator-spezifisches (die Site ist ohnehin eigenstaendig). */
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function nl2br(s){return esc(s).replace(/\n/g,"<br>");}
+
+function generateSiteHTML(c, forExport){
+  const isHex = (v)=> typeof v==="string" && /^#[0-9a-fA-F]{3,8}$/.test(v);
+  const S = STILE[c.stil] || STILE.stahl;
+  const fontDef = FONTS[c.font] || FONTS.sans;
+  const fontStack = fontDef.stack;
+  const fontHead = fontDef.head || fontDef.stack; // Schrift-Paar: eigene Überschrift, sonst = Text
+  const c1 = c.c1 || S.accentDefault;
+  const c2 = c.c2 || c1;
+  const c3 = c.c3 || c2;
+  const accent = c1; // Hauptakzent (Rahmen, Schatten, Fokus) = erste Verlauffarbe
+  const grad = `linear-gradient(90deg,${c1},${c2},${c3})`;
+  const gradDiag = `linear-gradient(135deg,${c1},${c2},${c3})`;
+  const { bg, bg2, card, line } = S;
+  // Globale Schriftfarben: Override > Stil-Standard.
+  const txt = isHex(c.text_color) ? c.text_color : S.txt;
+  const muted = S.muted;
+  const headCol = isHex(c.head_color) ? c.head_color : txt; // Überschriften: eigene Farbe, sonst = Fließtext
+  const dark = S.dark;
+  const accentInk = "#ffffff"; // Buttons tragen Verlauf -> heller Text, immer gut lesbar
+  const shadow = dark ? "0 10px 40px rgba(0,0,0,.45)" : "0 10px 36px rgba(20,30,45,.12)";
+  const shadowSm = dark ? "0 4px 18px rgba(0,0,0,.35)" : "0 4px 16px rgba(20,30,45,.08)";
+
+  // ── Karten-Stil: globaler Standard + Pro-Bereich-Overrides ──────────
+  // Globale Defaults (Fallback, wenn ein Bereich keinen eigenen Wert setzt).
+  const gRadius = Math.max(0, Math.min(28, c.card_radius==null?14:c.card_radius));
+  const gBorder = Math.max(0, Math.min(4, c.card_border==null?1:c.card_border));
+  const gShadow = c.card_shadow==null?1:c.card_shadow;
+  const gColor = c.card_color || "";  // "" = Stil-Standard (--line)
+  const gFill = c.card_fill || "";    // "" = Stil-Standard (--card)
+  const gAccent = ["top","left","bottom","none"].includes(c.card_accent) ? c.card_accent : "top";
+  const gMode = (c.card_mode==="grad") ? "grad" : "solid";
+  const gGrad = Array.isArray(c.card_grad) ? c.card_grad : [];
+  const gAngle = (typeof c.card_angle==="number") ? c.card_angle : 135;
+  // Verlauf-CSS aus bis zu 4 Farben; mind. 2 gueltige Farben noetig, sonst null.
+  function gradFromColors(cols, angle){
+    const valid = (cols||[]).filter(isHex);
+    if(valid.length < 2) return null;
+    const a = (typeof angle==="number" && isFinite(angle)) ? Math.round(((angle%360)+360)%360) : 135;
+    return `linear-gradient(${a}deg,${valid.join(",")})`;
+  }
+
+  // Effektive Karten-Werte fuer einen Bereich: Bereich-Override gewinnt, sonst global.
+  function cardStyleFor(key){
+    const b = (c.bereiche && c.bereiche[key]) || {};
+    const radius = Math.max(0, Math.min(28, b.cr==null?gRadius:b.cr));
+    const borderW = Math.max(0, Math.min(4, b.cb==null?gBorder:b.cb));
+    const shadowLvl = b.cs==null?gShadow:b.cs;
+    const shadowVal = shadowLvl===0 ? "none" : (shadowLvl===2 ? shadow : shadowSm);
+    const accentPos = ["top","left","bottom","none"].includes(b.ca) ? b.ca : gAccent;
+    const rawColor = b.cc || gColor;  // Bereich-Override > global > Stil-Standard
+    const borderColor = isHex(rawColor) ? rawColor : "var(--line)";
+    const rawFill = b.cf || gFill;    // Flächenfarbe: Bereich-Override > global > Stil-Standard
+    const fill = isHex(rawFill) ? rawFill : "var(--card)";
+    const fillSet = isHex(rawFill);   // true = eigene Farbe gewählt (nicht Stil-Standard)
+    // Modus: Bereich-Override > global. Bei "grad" Verlauf bauen.
+    const mode = (b.cm==="grad" || b.cm==="solid") ? b.cm : gMode;
+    let borderGrad = null;
+    if(mode==="grad"){
+      const cols = (b.cg && b.cg.some(isHex)) ? b.cg : gGrad;
+      const ang = (b.cgA==null) ? gAngle : b.cgA;
+      borderGrad = gradFromColors(cols, ang);  // null falls < 2 Farben -> faellt auf einfarbig zurueck
+    }
+    return { radius, borderW, shadowVal, accentPos, borderColor, borderGrad, fill, fillSet };
+  }
+  // Akzentbalken-CSS fuer einen Selektor mit gegebener Position.
+  function accentRules(sel, pos){
+    if(pos==="none") return "";
+    const inset = pos==="top" ? "0 0 auto 0" : pos==="bottom" ? "auto 0 0 0" : pos==="left" ? "0 auto 0 0" : "0 0 auto 0";
+    const isSide = pos==="left";
+    const sizeRule = isSide ? "width:3px;height:100%" : "height:3px;width:100%";
+    const origin = isSide ? "top" : "left";
+    const scale = isSide ? "scaleY" : "scaleX";
+    return `${sel}{position:relative}` +
+      `${sel}::after{content:"";position:absolute;inset:${inset};${sizeRule};background:var(--grad);transform:${scale}(0);transform-origin:${origin};transition:transform var(--t);z-index:2;pointer-events:none}` +
+      `${sel}:hover::after{transform:${scale}(1)}`;
+  }
+  // Box-Styling (Rahmen/Radius/Schatten/Fläche) als Deklarations-String fuer einen Bereich.
+  // padLayer = Fuellung der Innenflaeche fuer den Verlauf-Rahmen-Trick (padding-box).
+  //   Standard "var(--card)". Fuer Bild-Boxen "transparent" uebergeben.
+  // fillMode: "card" = Flaeche faerben (Karten/Boxen) | "image"/"none" = nicht faerben (Bilder),
+  //   die Innenflaeche bleibt transparent damit das Bild sichtbar ist.
+  function boxDecl(st, shadowFallback, padLayer, fillMode){
+    const sh = st.shadowVal==="none" ? (shadowFallback||"none") : st.shadowVal;
+    const base = `border-radius:${st.radius}px;box-shadow:${sh}`;
+    const fillBox = (fillMode!=="image" && fillMode!=="none");  // Karten/Boxen faerben
+    if(st.borderGrad && st.borderW>0){
+      // Doppel-Layer: Innenflaeche (padding-box) + Verlauf (border-box). Erhaelt runde Ecken.
+      // Wenn eine Flaechenfarbe gewaehlt wurde, ersetzt sie hier die padding-box-Fuellung.
+      const pad = (fillBox && st.fillSet) ? st.fill : (padLayer || "var(--card)");
+      return `${base};border:${st.borderW}px solid transparent;` +
+        `background:linear-gradient(${pad},${pad}) padding-box,${st.borderGrad} border-box`;
+    }
+    const fillDecl = (fillBox && st.fillSet) ? `;background:${st.fill}` : "";
+    return `${base};border:${st.borderW}px solid ${st.borderColor}${fillDecl}`;
+  }
+  // Pro-Bereich-CSS bauen: jeder Bereich scoped ueber seine Section-ID.
+  const sLeist = cardStyleFor("leistungen");
+  const sGal   = cardStyleFor("galerie");
+  const sHero  = cardStyleFor("hero");
+  const sUeber = cardStyleFor("ueber");
+  const sCta   = cardStyleFor("cta");
+  const sKont  = cardStyleFor("kontakt");
+  // Rahmen- + Flächen-Deklaration fuer Inputs (eigene Flächenfarbe oder Stil-Standard var(--card)).
+  function inputBorderDecl(st){
+    const innerFill = st.fillSet ? st.fill : "var(--card)";
+    if(st.borderGrad && st.borderW>0){
+      return `border-radius:${st.radius}px;border:${st.borderW}px solid transparent;` +
+        `background:linear-gradient(${innerFill},${innerFill}) padding-box,${st.borderGrad} border-box`;
+    }
+    const fillDecl = st.fillSet ? `;background:${st.fill}` : "";
+    return `border-radius:${st.radius}px;border:${st.borderW}px solid ${st.borderColor}${fillDecl}`;
+  }
+  const ctaGradPad = "linear-gradient(135deg,var(--bg2),var(--card))"; // CTA-Eigenhintergrund als padding-box
+  // Rechtstext-Boxen (Impressum/Datenschutz-Modals) tragen den globalen Karten-Stil.
+  // Synthetischer Schluessel -> kein Bereichs-Override, rein globale Defaults.
+  const sLegal = cardStyleFor("__legal");
+  const cardScopedCss =
+    // Leistungs-Karten (Hintergrund var(--card))
+    `#leistungen .card{${boxDecl(sLeist, undefined, "var(--card)")}}` +
+    accentRules("#leistungen .card", sLeist.accentPos) +
+    // Galerie-Bilder (Bild deckt Innenflaeche -> transparent, keine Flächenfarbe)
+    `#galerie .gal-item{${boxDecl(sGal, undefined, "transparent", "image")}}` +
+    accentRules("#galerie .gal-item", sGal.accentPos) +
+    // Hero-Bild / Platzhalter (Bild -> keine Flächenfarbe)
+    `#top .hero-visual img,#top .hero-ph{${boxDecl(sHero, shadow, "transparent", "image")}}` +
+    accentRules("#top .hero-visual", sHero.accentPos) +
+    // Ueber-uns-Bild / Platzhalter (Bild -> keine Flächenfarbe)
+    `#ueber .split-img,#ueber .split-ph{${boxDecl(sUeber, shadowSm, "transparent", "image")}}` +
+    accentRules("#ueber .split-media", sUeber.accentPos) +
+    // CTA-Banner (eigener Verlauf-Hintergrund als padding-box bewahren)
+    `#cta{${boxDecl(sCta, undefined, ctaGradPad)}}` +
+    accentRules("#cta", sCta.accentPos) +
+    // Kontakt-Eingabefelder
+    `#kontakt .cform input,#kontakt .cform textarea{${inputBorderDecl(sKont)}}` +
+    // Rechtstext-Modals (Impressum / Datenschutz) -> globaler Karten-Stil
+    `.modal-card{${boxDecl(sLegal, undefined, "var(--card)")}}` +
+    accentRules(".modal-card", sLegal.accentPos) +
+    // Kundenstimmen-Karten -> globaler Karten-Stil (Flächenfarbe inklusive)
+    `.bw-card{${boxDecl(sLegal, shadowSm, "var(--card)")}}` +
+    accentRules(".bw-card", sLegal.accentPos) +
+    // Firmen-Vorstellung-Bilder -> globaler Karten-Stil (Bild deckt Fläche -> transparent)
+    `#firma .firma-img img,#firma .firma-ph{${boxDecl(sLegal, shadowSm, "transparent", "image")}}`;
+
+  // ── Seiten-Hintergrundbild / Vorlage + Lesbarkeits-Schleier ──────
+  const bgPreset = (c.bg_preset && BG_PRESETS[c.bg_preset]) ? BG_PRESETS[c.bg_preset] : null;
+  let pageBgLayer = "", pageBgSize = "";
+  if (c.bg_image) {
+    pageBgLayer = `url("${c.bg_image}")`;
+    pageBgSize = "cover";
+  } else if (bgPreset) {
+    pageBgLayer = bgPreset.css;
+    pageBgSize = bgPreset.size || "auto";
+  }
+  const ov = Math.max(0, Math.min(95, c.bg_overlay==null?72:c.bg_overlay)) / 100;
+  // Schleierfarbe an Stil angepasst (dunkel -> schwarzer Schleier, hell -> weisser)
+  const overlayRgb = dark ? "8,11,16" : "255,255,255";
+  const hasPageBg = !!pageBgLayer;
+
+  // ── Pro-Bereich-Farben: baut inline-style mit Override-Variablen ──
+  const B = c.bereiche || {};
+  function secStyle(key, base){
+    const b = B[key] || {};
+    const parts = [];
+    if (b.bg)   parts.push(`background:${b.bg}`, `--sec-bg:${b.bg}`);
+    if (b.head) parts.push(`--sec-head:${b.head}`);
+    if (b.text) parts.push(`--sec-text:${b.text};color:${b.text}`);
+    const s = parts.join(";");
+    return (base ? base + ";" : "") + s;
+  }
+  function secAttr(key, base){ const s = secStyle(key, base); return s ? ` style="${s}"` : (base?` style="${base}"`:""); }
+
+  const logoHTML = c.logo
+    ? `<img src="${c.logo}" alt="${esc(c.firma)} Logo" class="brand-img">`
+    : `<span class="brand-mark">${esc(c.firma)}</span>`;
+
+  // Hero-Visual: Upload oder neutraler Platzhalter (KEINE fremden Bilder)
+  const heroVisual = c.hero_bild
+    ? `<img src="${c.hero_bild}" alt="Referenzarbeit von ${esc(c.firma)}" loading="eager">`
+    : `<div class="hero-ph" role="img" aria-label="Platzhalter für Ihr Hero-Bild"><span>Ihr bestes<br>Referenzfoto</span></div>`;
+
+  const trust = (c.trust||[]).map(t=>`
+        <div class="trust-item"><strong>${esc(t.gross)}</strong><span>${esc(t.klein)}</span></div>`).join("");
+
+  const leistungen = (c.leistungen||[]).map(l=>`
+        <article class="card">
+          <div class="ci" aria-hidden="true">${esc((l.titel||"").trim().charAt(0).toUpperCase()||"✓")}</div>
+          <h3>${esc(l.titel)}</h3>
+          <p>${esc(l.text)}</p>
+        </article>`).join("");
+
+  const hasGalerie = !!(c.galerie && c.galerie.length);
+  const galerie = hasGalerie
+    ? `<section class="section" id="galerie"${secAttr("galerie","padding-top:0")}><div class="wrap">
+        <div class="section-head"><p class="eyebrow">Referenzen</p><h2>Ausgewählte Arbeiten</h2>
+          <p class="lead">Ein Einblick in das, was unsere Werkstatt verlässt. Klicken Sie ein Bild für die Großansicht.</p></div>
+        <div class="gallery">${c.galerie.map((s,i)=>`
+          <figure class="gal-item" tabindex="0" role="button" aria-label="Großansicht Bild ${i+1}" data-src="${s}">
+            <img src="${s}" alt="Referenzbild ${i+1}" loading="lazy"></figure>`).join("")}</div>
+      </div></section>` : "";
+
+  const bewListe = (c.bewertungen||[]).filter(b=>(b.text||"").trim());
+  const hasBewertungen = !!(c.zeige_bewertungen && bewListe.length);
+  const sterneHtml = (n)=>{ const s=Math.max(0,Math.min(5,parseInt(n,10)||0));
+    return `<span class="bw-stars" aria-label="${s} von 5 Sternen">${"★".repeat(s)}<span class="bw-stars-off">${"★".repeat(5-s)}</span></span>`; };
+  const bewertungen = hasBewertungen
+    ? `<section class="section bewertungen" id="bewertungen"${secAttr("bewertungen","padding-top:0")}><div class="wrap">
+        <div class="section-head reveal"><p class="eyebrow">Kundenstimmen</p><h2>Das sagen unsere Kunden</h2></div>
+        <div class="bw-grid">${bewListe.map(b=>`
+          <figure class="bw-card reveal">
+            ${sterneHtml(b.sterne)}
+            <blockquote>${esc((b.text||"").trim())}</blockquote>
+            <figcaption>${esc(b.name||"")}${b.ort?` <span>· ${esc(b.ort)}</span>`:""}</figcaption>
+          </figure>`).join("")}</div>
+      </div></section>` : "";
+
+  // ── Firmen-Vorstellung: beliebig viele Bild+Text-Blöcke, abwechselnd L/R ──
+  const firmaBloecke = (c.firma_bloecke||[]).filter(b=>(b.titel||"").trim()||(b.text||"").trim()||b.bild);
+  const hasFirma = !!(c.zeige_firma && firmaBloecke.length);
+  const firma = hasFirma
+    ? `<section class="section firma" id="firma"${secAttr("firma","padding-top:0")}><div class="wrap">
+        <div class="section-head reveal"><p class="eyebrow">Unsere Firma</p><h2>${esc(c.firma_titel||"Unsere Firma")}</h2>
+          ${(c.firma_intro||"").trim()?`<p class="lead">${nl2br(c.firma_intro)}</p>`:""}</div>
+        <div class="firma-list">${firmaBloecke.map((b,i)=>`
+          <article class="firma-row${i%2?" alt":""} reveal">
+            ${b.bild
+              ? `<div class="firma-img"><img src="${b.bild}" alt="${esc((b.titel||"Firmen-Bild").trim())}" loading="lazy"></div>`
+              : `<div class="firma-img firma-ph" role="img" aria-label="Platzhalter für Bild"><span>Ihr Bild</span></div>`}
+            <div class="firma-txt">
+              ${(b.titel||"").trim()?`<h3>${esc(b.titel)}</h3>`:""}
+              ${(b.text||"").trim()?`<p>${nl2br(b.text)}</p>`:""}
+            </div>
+          </article>`).join("")}</div>
+      </div></section>` : "";
+
+  const kontaktform = c.zeige_kontaktform ? `
+          <form class="cform" onsubmit="return sendMail(event)">
+            <label>Ihr Name<input type="text" id="cf_name" required></label>
+            <label>Ihre E-Mail<input type="email" id="cf_mail" required></label>
+            <label>Ihre Nachricht<textarea id="cf_msg" rows="4" required></textarea></label>
+            <button type="submit" class="btn btn-primary">Nachricht senden</button>
+          </form>` : "";
+
+  const mapsBtn = c.maps_link
+    ? `<a class="btn btn-ghost" href="${esc(c.maps_link)}" target="_blank" rel="noopener">Auf Karte anzeigen</a>` : "";
+
+  const telClean = esc(c.tel).replace(/\s/g,'');
+
+  // ── Öffnungszeiten: Freitext ODER strukturierte Wochen-Tabelle + Live-Status ──
+  const tageNamen = ["Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag","Sonntag"];
+  const validTime = (v)=> typeof v==="string" && /^([01]?\d|2[0-3]):[0-5]\d$/.test(v);
+  const oeffTabelle = (c.oeffnung_modus==="tabelle") && Array.isArray(c.oeffnung_tage) && c.oeffnung_tage.length===7;
+  let oeffnungHtml, schemaOpening;
+  if(oeffTabelle){
+    // Tabellenzeilen + maschinenlesbare data-Attribute fuer den Live-Status (JS-frei zur Anzeige, JS nur fuer Schild).
+    const rows = c.oeffnung_tage.map((t,i)=>{
+      const auf = !!t.auf && validTime(t.von) && validTime(t.bis);
+      const txt = auf ? `${esc(t.von)} – ${esc(t.bis)} Uhr` : "Geschlossen";
+      const data = auf ? ` data-von="${esc(t.von)}" data-bis="${esc(t.bis)}"` : ` data-zu="1"`;
+      return `<tr data-tag="${i}"${data}><th scope="row">${tageNamen[i]}</th><td>${txt}</td></tr>`;
+    }).join("");
+    oeffnungHtml = `<div class="oeff-block"><strong>Öffnungszeiten</strong>`+
+      `<span class="oeff-status" id="oeffStatus" hidden aria-live="polite"></span>`+
+      `<table class="oeff-table"><tbody>${rows}</tbody></table></div>`;
+    // schema.org openingHoursSpecification
+    const map = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+    schemaOpening = c.oeffnung_tage.map((t,i)=>(!!t.auf && validTime(t.von) && validTime(t.bis)) ? {
+      "@type":"OpeningHoursSpecification","dayOfWeek":map[i],"opens":t.von,"closes":t.bis
+    } : null).filter(Boolean);
+  } else {
+    oeffnungHtml = `<p><strong>Öffnungszeiten</strong>${esc(c.oeffnung)}</p>`;
+    schemaOpening = c.oeffnung;
+  }
+
+  const schema = {
+    "@context":"https://schema.org","@type":"LocalBusiness",
+    "name":c.firma,"description":c.seo_desc,
+    "telephone":c.tel,"email":c.email,"address":c.adresse,"openingHours":schemaOpening
+  };
+
+  const sendMailScript = c.zeige_kontaktform ? `
+    function sendMail(e){e.preventDefault();
+      var n=document.getElementById('cf_name').value,m=document.getElementById('cf_mail').value,
+          t=document.getElementById('cf_msg').value;
+      var sub=encodeURIComponent('Anfrage über Website von '+n);
+      var body=encodeURIComponent(t+'\\n\\nAbsender: '+n+' ('+m+')');
+      window.location.href='mailto:${esc(c.email)}?subject='+sub+'&body='+body;
+      return false;}` : "";
+
+  const gridBg = S.grid ? `
+  body::after{content:"";position:fixed;inset:0;z-index:-1;opacity:.035;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.6) 1px,transparent 1px);
+    background-size:44px 44px}` : "";
+
+  const cutLine = S.glow ? `
+  .cut-line{height:2px;border:none;margin:0 auto;max-width:1180px;
+    background:linear-gradient(90deg,transparent,${accent},transparent);
+    box-shadow:0 0 14px ${accent}88;opacity:.8}` :
+  `.cut-line{height:1px;border:none;margin:0 auto;max-width:1180px;background:${line}}`;
+
+  return `<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${esc(c.seo_title||c.firma)}</title>
+<meta name="description" content="${esc(c.seo_desc)}">
+<meta name="keywords" content="${esc(c.seo_keywords)}">
+<meta name="theme-color" content="${bg}">
+<meta property="og:title" content="${esc(c.seo_title||c.firma)}">
+<meta property="og:description" content="${esc(c.seo_desc)}">
+<meta property="og:type" content="website">
+<script type="application/ld+json">${JSON.stringify(schema)}<\/script>
+<style>
+  :root{--accent:${accent};--c1:${c1};--c2:${c2};--c3:${c3};
+    --grad:${grad};--grad-diag:${gradDiag};
+    --bg:${bg};--bg2:${bg2};--card:${card};--line:${line};
+    --txt:${txt};--muted:${muted};--head:${headCol};--ink:${accentInk};--radius:14px;--maxw:1180px;
+    --shadow:${shadow};--shadow-sm:${shadowSm};--t:.28s cubic-bezier(.2,.7,.3,1);
+    --font:${fontStack};--font-head:${fontHead}}
+  .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);color:var(--txt);background:var(--bg);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  ${hasPageBg ? `
+  body::before{content:"";position:fixed;inset:0;z-index:-2;
+    background-image:${pageBgLayer};background-size:${pageBgSize};background-position:center;
+    background-attachment:fixed;background-repeat:${c.bg_image?"no-repeat":"repeat"}}
+  body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:rgba(${overlayRgb},${ov.toFixed(2)})}` : `
+  body::before{content:"";position:fixed;inset:0;z-index:-2;
+    background:radial-gradient(1200px 600px at 80% -10%,${accent}1a,transparent 60%),
+    radial-gradient(900px 500px at -10% 110%,${accent}12,transparent 55%),var(--bg)}
+  ${gridBg}`}
+  img{max-width:100%;display:block}
+  a{color:var(--accent);text-decoration:none;transition:color var(--t)}
+  a:hover{opacity:.85}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:4px}
+  .wrap,.container{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:clamp(18px,4vw,40px)}
+  .skip-link{position:absolute;left:-999px;top:0;background:var(--accent);color:var(--ink);padding:12px 20px;font-weight:700;z-index:1000;border-radius:0 0 8px 0}
+  .skip-link:focus{left:0}
+  h1,h2,h3{line-height:1.15;color:var(--head);font-weight:800;letter-spacing:-.01em;font-family:var(--font-head)}
+  h2{font-size:clamp(1.7rem,3.4vw,2.6rem)}
+  h3{font-size:1.25rem}
+  .lead{color:var(--muted);font-size:clamp(1.02rem,1.6vw,1.2rem)}
+  /* Pro-Bereich-Override: greift nur wenn Sektion eine eigene Farbe gesetzt hat */
+  [style*="--sec-head"] h1,[style*="--sec-head"] h2,[style*="--sec-head"] h3{color:var(--sec-head)}
+  [style*="--sec-head"] .glow{background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--sec-head)}
+  [style*="--sec-text"] p,[style*="--sec-text"] .lead,[style*="--sec-text"] li,
+  [style*="--sec-text"] .card p,[style*="--sec-text"] .bw-card blockquote,
+  [style*="--sec-text"] .bw-card figcaption,[style*="--sec-text"] .bw-card figcaption span,
+  [style*="--sec-text"] .cinfo a,[style*="--sec-text"] .oeff-table td,
+  [style*="--sec-text"] .trust-item span{color:var(--sec-text)}
+  .section{padding-block:clamp(56px,9vw,110px)}
+  /* Sprungziele: unter dem Sticky-Header starten, nicht zu tief springen */
+  section[id],[id="top"]{scroll-margin-top:84px}
+  .section-head{max-width:720px;margin:0 auto clamp(34px,5vw,56px);text-align:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;text-transform:uppercase;letter-spacing:.18em;
+    font-size:.78rem;font-weight:800;margin-bottom:14px;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:1rem;padding:14px 26px;
+    border-radius:10px;border:1px solid transparent;cursor:pointer;font-family:inherit;
+    transition:transform var(--t),box-shadow var(--t),filter var(--t),border-color var(--t)}
+  .btn-primary{background:var(--grad-diag);color:#fff;box-shadow:0 8px 24px ${c2}55}
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 34px ${c2}77;filter:brightness(1.08)}
+  .btn-ghost{background:transparent;color:var(--txt);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--c2);background:${c2}14;transform:translateY(-3px)}
+  /* Header */
+  .site-header{position:sticky;top:0;z-index:100;background:${bg}cc;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:74px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-img{height:44px;width:auto}
+  .brand-mark{font-size:1.3rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .brand-text{display:flex;flex-direction:column;line-height:1.05}
+  .brand-text strong{color:var(--txt);font-size:1.04rem}
+  .brand-text span{color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.12em}
+  .nav-links{display:flex;align-items:center;gap:6px;list-style:none}
+  .nav-links a{color:var(--txt);font-weight:600;font-size:.96rem;padding:10px 13px;border-radius:8px}
+  .nav-links a:hover{background:var(--card)}
+  .navphone{background:var(--accent);color:var(--ink)!important;padding:9px 16px;border-radius:9px;font-weight:700}
+  .nav-toggle{display:none;background:transparent;border:1px solid var(--line);border-radius:9px;width:46px;height:44px;cursor:pointer}
+  .nav-toggle span,.nav-toggle span::before,.nav-toggle span::after{content:"";display:block;width:22px;height:2px;background:var(--txt);margin-inline:auto;transition:var(--t);position:relative}
+  .nav-toggle span::before{position:absolute;top:-7px}.nav-toggle span::after{position:absolute;top:7px}
+  /* Hero */
+  .hero{position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,70px);align-items:center;padding-block:clamp(56px,8vw,100px)}
+  .hero h1{font-size:clamp(2.3rem,5.4vw,4rem);margin-bottom:18px}
+  .hero h1 .glow{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero .lead{margin-bottom:30px;max-width:540px}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:34px}
+  .hero-trust{display:flex;gap:28px;flex-wrap:wrap}
+  .trust-item strong{display:block;color:var(--txt);font-size:1.4rem}
+  .trust-item span{color:var(--muted);font-size:.85rem}
+  .hero-visual{position:relative}
+  .hero-visual img,.hero-ph{aspect-ratio:4/5;object-fit:cover;width:100%}
+  .hero-ph{display:grid;place-items:center;background:linear-gradient(135deg,${accent}22,var(--bg2));color:var(--muted);text-align:center;font-weight:700;font-size:1.1rem}
+  ${cutLine}
+  /* Cards */
+  .cards{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(265px,1fr))}
+  .card{background:var(--card);padding:28px 26px;
+    transition:transform var(--t),border-color var(--t),box-shadow var(--t);position:relative;overflow:hidden}
+  .card:hover{transform:translateY(-6px)}
+  .card .ci{width:54px;height:54px;border-radius:12px;display:grid;place-items:center;background:${accent}1f;color:var(--accent);
+    border:1px solid ${accent}44;font-size:1.5rem;font-weight:800;margin-bottom:18px}
+  .card h3{margin-bottom:8px}
+  .card p{color:var(--muted);font-size:.98rem}
+  /* Gallery */
+  .gallery{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .gal-item{position:relative;overflow:hidden;cursor:pointer;background:var(--bg2);aspect-ratio:4/3}
+  .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+  .gal-item:hover img{transform:scale(1.07)}
+  .lightbox{position:fixed;inset:0;z-index:200;display:none;background:rgba(5,7,10,.92);backdrop-filter:blur(6px);place-items:center;padding:24px}
+  .lightbox.open{display:grid}
+  .lightbox img{max-width:min(92vw,1000px);max-height:86vh;border-radius:10px;box-shadow:var(--shadow)}
+  .lightbox-close{position:absolute;top:20px;right:24px;width:52px;height:52px;border-radius:50%;background:var(--card);border:1px solid var(--line);color:var(--txt);font-size:1.5rem;cursor:pointer}
+  /* Split */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,64px);align-items:center}
+  .split-img{width:100%;object-fit:cover;aspect-ratio:4/3}
+  .split-ph{background:linear-gradient(135deg,${accent}1a,var(--bg2));aspect-ratio:4/3;display:grid;place-items:center;color:var(--muted);font-weight:700}
+  .firma-list{display:grid;gap:clamp(34px,5vw,64px);max-width:1040px;margin:0 auto}
+  .firma-row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(26px,4vw,52px);align-items:center}
+  .firma-row.alt .firma-img{order:2}
+  .firma-img{width:100%}
+  .firma-img img{width:100%;display:block;object-fit:cover;aspect-ratio:4/3}
+  .firma-ph{aspect-ratio:4/3;display:grid;place-items:center;background:linear-gradient(135deg,${accent}1a,var(--bg2));color:var(--muted);font-weight:700;border-radius:var(--radius)}
+  .firma-txt h3{font-size:clamp(1.3rem,2.4vw,1.7rem);margin-bottom:12px}
+  .firma-txt p{color:var(--muted);line-height:1.7}
+  .feature-list{list-style:none;display:grid;gap:14px;margin-top:22px}
+  .feature-list li{display:flex;gap:12px;align-items:flex-start;color:var(--txt)}
+  .feature-list li::before{content:"✓";flex:0 0 auto;width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-weight:800;background:${accent}1f;color:var(--accent);border:1px solid ${accent}44}
+  /* CTA */
+  .cta-band{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--bg2),var(--card));padding:clamp(34px,5vw,60px);text-align:center}
+  .cta-band h2{margin-bottom:14px}
+  .cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+  /* Contact */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;max-width:920px;margin:0 auto}
+  .cinfo p{margin-bottom:14px;font-size:1rem}
+  .cinfo strong{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+  .oeff-block{margin-bottom:14px}
+  .oeff-status{display:inline-block;margin:6px 0 4px;padding:3px 10px;border-radius:999px;font-size:.74rem;font-weight:700;letter-spacing:.3px}
+  .oeff-status.is-open{background:rgba(43,138,62,.16);color:#2fb24d;border:1px solid rgba(43,138,62,.4)}
+  .oeff-status.is-closed{background:rgba(201,42,42,.14);color:#e5484d;border:1px solid rgba(201,42,42,.38)}
+  .oeff-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:.92rem}
+  .oeff-table th,.oeff-table td{text-align:left;padding:5px 0;border-bottom:1px solid var(--line)}
+  .oeff-table th{font-weight:600;color:var(--txt);text-transform:none;letter-spacing:0;font-size:.92rem}
+  .oeff-table td{text-align:right;color:var(--muted)}
+  .oeff-table tr.oeff-heute th,.oeff-table tr.oeff-heute td{color:var(--txt);font-weight:700}
+  .cform{display:flex;flex-direction:column;gap:14px}
+  .cform label{display:flex;flex-direction:column;font-size:.9rem;font-weight:600;gap:6px}
+  .cform input,.cform textarea{padding:12px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--txt);font-size:1rem;font-family:inherit}
+  /* Kundenstimmen */
+  .bw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;max-width:980px;margin:0 auto}
+  .bw-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px 26px 22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:12px}
+  .bw-stars{color:var(--accent);font-size:1.05rem;letter-spacing:2px;line-height:1}
+  .bw-stars-off{color:var(--line)}
+  .bw-card blockquote{font-size:1.02rem;line-height:1.6;color:var(--txt);font-style:italic;quotes:"„" "“"}
+  .bw-card blockquote::before{content:open-quote}.bw-card blockquote::after{content:close-quote}
+  .bw-card figcaption{font-weight:700;color:var(--txt);font-size:.92rem}
+  .bw-card figcaption span{font-weight:500;color:var(--muted)}
+  /* Footer */
+  footer{background:${dark?bg2:'#1d2733'};color:${dark?'#cdd8e3':'#cdd8e3'};padding:54px 0 30px;margin-top:20px}
+  footer .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:30px}
+  footer h4{color:#fff;margin-bottom:12px;font-size:1rem}
+  footer a{color:#9fb8d0}footer a:hover{color:#fff}
+  .footer-bottom{border-top:1px solid rgba(255,255,255,.12);margin-top:30px;padding-top:18px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;color:#7a8b9c;font-size:.82rem}
+  /* Modal */
+  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;padding:30px;overflow:auto}
+  .modal.open{display:block}
+  .modal-card{max-width:760px;margin:20px auto;background:var(--card);color:var(--txt);padding:34px}
+  .modal-card h2{text-align:left;margin-bottom:18px}
+  .modal-card p{margin-bottom:12px}
+  .modal-close{float:right;background:none;border:none;font-size:26px;color:var(--muted);cursor:pointer;line-height:1}
+  /* Reveal */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+  @media(max-width:860px){.hero-grid,.split,.contact-grid,.firma-row{grid-template-columns:1fr}
+    .firma-row.alt .firma-img{order:0}
+    .nav-links{display:none}.nav-toggle{display:block}
+    .nav-links.open{display:flex;position:absolute;top:74px;left:0;right:0;flex-direction:column;background:${bg};border-bottom:1px solid var(--line);padding:14px}}
+  /* Karten-Stil pro Bereich (Eckenradius / Rahmen / Schatten / Akzentbalken) */
+  ${cardScopedCss}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<header class="site-header"><div class="container nav">
+  <a class="brand" href="#top" aria-label="Startseite">
+    ${logoHTML}
+    <span class="brand-text"><strong>${esc(c.firma)}</strong><span>${esc(c.branche)}</span></span>
+  </a>
+  <nav aria-label="Hauptnavigation"><ul class="nav-links" id="navLinks">
+    <li><a href="#top">${esc(c.nav_home||"Home")}</a></li>
+    <li><a href="#leistungen">${esc(c.nav_leistungen||"Leistungen")}</a></li>
+    ${hasGalerie?`<li><a href="#galerie">${esc(c.nav_galerie||"Referenzen")}</a></li>`:""}
+    <li><a href="#ueber">${esc(c.nav_ueber||"Über uns")}</a></li>
+    ${hasFirma?`<li><a href="#firma">${esc(c.firma_titel||"Unsere Firma")}</a></li>`:""}
+    <li><a href="#kontakt">${esc(c.nav_kontakt||"Kontakt")}</a></li>
+    <li><a class="navphone" href="tel:${telClean}">${esc(c.tel)}</a></li>
+  </ul></nav>
+  <button class="nav-toggle" id="navToggle" aria-label="Menü" aria-expanded="false"><span></span></button>
+</div></header>
+
+<main id="main">
+<section class="hero" id="top"${secAttr("hero")}><div class="container hero-grid">
+  <div class="hero-copy reveal">
+    <p class="eyebrow">${esc(c.hero_eyebrow)}</p>
+    <h1>${esc(c.firma)}<br><span class="glow">${esc(c.slogan)}</span></h1>
+    <p class="lead">${esc(c.ueber)}</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#kontakt">Projekt anfragen →</a>
+      <a class="btn btn-ghost" href="#leistungen">Unsere Leistungen</a>
+    </div>
+    <div class="hero-trust">${trust}</div>
+  </div>
+  <figure class="hero-visual reveal">${heroVisual}</figure>
+</div></section>
+
+<hr class="cut-line">
+
+<section class="section" id="leistungen"${secAttr("leistungen")}><div class="container">
+  <div class="section-head reveal"><p class="eyebrow">Was wir können</p><h2>Unsere Leistungen</h2>
+    <p class="lead">Ein breites Spektrum aus gewachsenem Können — für Privat und Gewerbe.</p></div>
+  <div class="cards reveal">${leistungen}</div>
+</div></section>
+
+${galerie}
+
+<section class="section" id="ueber"${secAttr("ueber","padding-top:0")}><div class="container split">
+  <div class="split-copy reveal"><p class="eyebrow">Über uns</p><h2>${esc(c.ueber_titel||"Ihr Handwerksbetrieb in der Region")}</h2>
+    <p class="lead">${nl2br(c.ueber)}</p>
+    ${(() => { const pts=(c.ueber_punkte||[]).filter(p=>(p||"").trim());
+      return pts.length ? `<ul class="feature-list">${pts.map(p=>`
+      <li>${esc(p)}</li>`).join("")}
+    </ul>` : ""; })()}
+    <div class="hero-actions" style="margin-top:28px"><a class="btn btn-primary" href="#kontakt">Jetzt Kontakt aufnehmen</a></div>
+  </div>
+  <div class="split-media reveal">${c.hero_bild ? `<img class="split-img" src="${c.hero_bild}" alt="Eindruck von ${esc(c.firma)}">` : `<div class="split-ph">Ihr Werkstatt- oder Team-Foto</div>`}</div>
+</div></section>
+
+${firma}
+
+${bewertungen}
+
+<section class="section" style="padding-top:0"><div class="container">
+  <div class="cta-band reveal" id="cta"${secAttr("cta")}>
+    <h2>Haben Sie ein Projekt im Kopf?</h2>
+    <p class="lead">Rufen Sie uns an — wir beraten Sie gerne und setzen Ihre Wünsche um.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="tel:${telClean}">📞 ${esc(c.tel)}</a>
+      <a class="btn btn-ghost" href="mailto:${esc(c.email)}">✉️ E-Mail schreiben</a>
+    </div>
+  </div>
+</div></section>
+
+<section class="section contact" id="kontakt"${secAttr("kontakt","padding-top:0")}><div class="container">
+  <div class="section-head reveal"><p class="eyebrow">Kontakt</p><h2>Kontakt & Anfrage</h2></div>
+  <div class="contact-grid reveal">
+    <div class="cinfo">
+      <p><strong>Telefon</strong><a href="tel:${telClean}">${esc(c.tel)}</a></p>
+      <p><strong>E-Mail</strong><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></p>
+      <p><strong>Adresse</strong>${esc(c.adresse)}</p>
+      ${oeffnungHtml}
+      ${mapsBtn}
+    </div>
+    <div>${kontaktform}</div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="container">
+  <div class="fgrid">
+    <div><h4>${esc(c.firma)}</h4><p style="color:#9fb8d0">${esc(c.slogan)}</p></div>
+    <div><h4>Navigation</h4>
+      <p><a href="#leistungen">Leistungen</a><br>${hasGalerie?`<a href="#galerie">Referenzen</a><br>`:""}<a href="#kontakt">Kontakt</a></p></div>
+    <div><h4>Kontakt</h4><p style="color:#9fb8d0">${esc(c.tel)}<br>${esc(c.email)}<br>${esc(c.adresse)}</p></div>
+    <div><h4>Rechtliches</h4>
+      <p><a href="#" onclick="openModal('imp');return false">Impressum</a><br><a href="#" onclick="openModal('dat');return false">Datenschutz</a></p></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© ${new Date().getFullYear()} ${esc(c.firma)}</span>
+    <span>Erstellt mit GZ Handwerker-Web</span>
+  </div>
+</div></footer>
+
+<div class="modal" id="modal-imp"><div class="modal-card">
+  <button class="modal-close" onclick="closeModal('imp')" aria-label="Schließen">×</button>
+  <h2>Impressum</h2>
+  <p><strong>Angaben gemäß § 5 DDG</strong></p>
+  <p>${esc(c.impressum_firma)}<br>${nl2br(c.impressum_adresse)}</p>
+  <p><strong>Vertreten durch:</strong> ${esc(c.impressum_name)}</p>
+  <p><strong>Kontakt:</strong><br>Telefon: ${esc(c.impressum_tel)}<br>E-Mail: ${esc(c.impressum_email)}</p>
+  ${c.impressum_ustid?`<p><strong>USt-IdNr.:</strong> ${esc(c.impressum_ustid)}</p>`:""}
+  <p style="color:var(--muted);font-size:.82rem">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV: ${esc(c.impressum_name)}, ${esc(c.impressum_firma)}.</p>
+</div></div>
+
+<div class="modal" id="modal-dat"><div class="modal-card">
+  <button class="modal-close" onclick="closeModal('dat')" aria-label="Schließen">×</button>
+  <h2>Datenschutzerklärung</h2>
+  <p><strong>1. Verantwortlicher</strong><br>Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br>${nl2br(c.datenschutz_verantwortlich)}</p>
+  <p><strong>2. Allgemeines zur Datenverarbeitung</strong><br>Diese Website wird statisch ausgeliefert. Wir verarbeiten personenbezogene Daten unserer Nutzer grundsätzlich nur, soweit dies zur Bereitstellung der Website sowie zur Bearbeitung Ihrer Anfragen erforderlich ist. Eine Weitergabe Ihrer Daten an Dritte erfolgt nicht, sofern wir hierzu nicht gesetzlich verpflichtet sind oder Sie ausdrücklich eingewilligt haben.</p>
+  <p><strong>3. Hosting und Server-Logfiles</strong><br>Beim Aufruf dieser Website können durch den von Ihnen beauftragten Browser bzw. durch den Hosting-Anbieter automatisch Informationen (z. B. IP-Adresse, Datum und Uhrzeit des Zugriffs, aufgerufene Seite, übertragene Datenmenge) in sogenannten Server-Logfiles gespeichert werden. Diese Daten dienen ausschließlich der technischen Bereitstellung und Sicherheit der Website. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem sicheren und stabilen Betrieb). Die genauen Speicherfristen richten sich nach den Vorgaben Ihres Hosting-Anbieters.</p>
+  <p><strong>4. Kontaktaufnahme per E-Mail und Kontaktformular</strong><br>Das Kontaktformular dieser Website öffnet Ihr lokales E-Mail-Programm; es werden keine Eingaben an einen Server dieser Website übertragen. Wenn Sie uns per E-Mail kontaktieren, verarbeiten wir die von Ihnen mitgeteilten Daten (insbesondere Name, E-Mail-Adresse, Inhalt der Nachricht) ausschließlich zur Bearbeitung Ihrer Anfrage. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche bzw. vertragliche Maßnahmen) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung Ihrer Anfrage).</p>
+  <p><strong>5. Speicherdauer</strong><br>Wir speichern personenbezogene Daten nur so lange, wie es für die Erreichung des jeweiligen Zwecks erforderlich ist oder gesetzliche Aufbewahrungsfristen (z. B. handels- und steuerrechtliche Fristen) dies vorschreiben. Anschließend werden die Daten gelöscht.</p>
+  <p><strong>6. Ihre Rechte</strong><br>Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO), Löschung (Art. 17 DSGVO), Einschränkung der Verarbeitung (Art. 18 DSGVO), Datenübertragbarkeit (Art. 20 DSGVO) sowie ein Widerspruchsrecht (Art. 21 DSGVO). Soweit die Verarbeitung auf einer Einwilligung beruht, können Sie diese jederzeit mit Wirkung für die Zukunft widerrufen.</p>
+  <p><strong>7. Beschwerderecht bei der Aufsichtsbehörde</strong><br>Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde über die Verarbeitung Ihrer personenbezogenen Daten zu beschweren (Art. 77 DSGVO). Zuständig ist in der Regel die Aufsichtsbehörde Ihres Wohnsitz-Bundeslandes oder des Sitzes des Verantwortlichen.</p>
+  <p style="color:var(--muted);font-size:.82rem">Dies ist ein Muster und ersetzt keine individuelle Rechtsberatung. Bitte passen Sie die Angaben an Ihre tatsächliche Datenverarbeitung (z. B. eingesetztes Hosting, Analyse-Tools, Schriftarten) an.</p>
+</div></div>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Bildansicht">
+  <button class="lightbox-close" id="lbClose" aria-label="Schließen">✕</button>
+  <img id="lbImg" src="" alt="">
+</div>
+
+<script>
+  function openModal(id){document.getElementById('modal-'+id).classList.add('open')}
+  function closeModal(id){document.getElementById('modal-'+id).classList.remove('open')}
+  // Anker-Links: sanftes Scrollen im Dokument (auch in der Vorschau, kein Fenster-Wechsel)
+  (function(){document.addEventListener('click',function(e){
+    var a=e.target.closest('a[href^="#"]'); if(!a)return;
+    var id=a.getAttribute('href').slice(1); if(!id)return;
+    if(id==='top'){ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); return; }
+    var el=document.getElementById(id); if(!el)return;
+    e.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'});
+  });})();
+  // Mobile-Nav
+  (function(){var t=document.getElementById('navToggle'),n=document.getElementById('navLinks');
+    if(t)t.addEventListener('click',function(){var o=n.classList.toggle('open');t.setAttribute('aria-expanded',o)});
+    if(n)n.addEventListener('click',function(e){if(e.target.tagName==='A')n.classList.remove('open')});})();
+  // Lightbox
+  (function(){var lb=document.getElementById('lightbox'),im=document.getElementById('lbImg');
+    document.querySelectorAll('.gal-item').forEach(function(g){
+      function open(){im.src=g.dataset.src;lb.classList.add('open')}
+      g.addEventListener('click',open);
+      g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});});
+    function close(){lb.classList.remove('open')}
+    document.getElementById('lbClose').addEventListener('click',close);
+    lb.addEventListener('click',function(e){if(e.target===lb)close()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});})();
+  // Reveal on scroll
+  (function(){var els=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver'in window)){els.forEach(function(e){e.classList.add('in')});return;}
+    var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.12});
+    els.forEach(function(e){io.observe(e)});})();
+  // Öffnungszeiten Live-Status (lokal im Browser, kein Server)
+  (function(){
+    var badge=document.getElementById('oeffStatus'); if(!badge)return;
+    var rows=document.querySelectorAll('.oeff-table tr[data-tag]');
+    function toMin(s){var p=(s||'').split(':');return (+p[0])*60+(+p[1]);}
+    function tick(){
+      var now=new Date();
+      var tag=(now.getDay()+6)%7; // 0=Montag
+      var nm=now.getHours()*60+now.getMinutes();
+      var offen=false, naechsteAuf=null;
+      rows.forEach(function(r){
+        r.classList.remove('oeff-heute');
+        if(+r.getAttribute('data-tag')===tag){
+          r.classList.add('oeff-heute');
+          if(!r.getAttribute('data-zu')){
+            var v=toMin(r.getAttribute('data-von')), b=toMin(r.getAttribute('data-bis'));
+            if(b>v && nm>=v && nm<b){ offen=true; }
+            else if(b>v && nm<v){ naechsteAuf=r.getAttribute('data-von'); }
+          }
+        }
+      });
+      badge.hidden=false;
+      badge.textContent=offen?'Jetzt geöffnet':(naechsteAuf?('Geschlossen · öffnet heute '+naechsteAuf+' Uhr'):'Geschlossen');
+      badge.className='oeff-status '+(offen?'is-open':'is-closed');
+    }
+    tick(); setInterval(tick,60000);
+  })();
+  ${sendMailScript}
+<\/script>
+</body>
+</html>`;
+}
+</script>
+</body>
+</html>
