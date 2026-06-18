@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark" data-style="sparbuch">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Haushaltsbuch — dein digitales Sparbuch. Kein Abo, kein Tracking, 100 Prozent offline. Einmal kaufen, für immer dein.">
+<meta name="theme-color" content="#1B4332">
+<title>Haushaltsbuch — Dein digitales Sparbuch</title>
+<style>
+/* ============================================================
+   GRUND-LAYOUT (alle Stile teilen sich Struktur)
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;scroll-behavior:smooth}
+html[data-zoom="90"]{font-size:14.4px}
+html[data-zoom="100"]{font-size:16px}
+html[data-zoom="110"]{font-size:17.6px}
+html[data-zoom="120"]{font-size:19.2px}
+body{
+  font-family:var(--font-text);
+  background:var(--bg);color:var(--text);
+  line-height:1.65;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  transition:background .4s,color .4s;
+  overflow-x:hidden;
+}
+a{color:var(--akzent);text-decoration:none}
+a:hover{text-decoration:underline}
+a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid var(--akzent);outline-offset:3px;border-radius:.3rem}
+
+.skip-link{position:absolute;left:.6rem;top:-3rem;z-index:200;
+  background:var(--akzent);color:var(--akzent-text);font-weight:700;
+  padding:.65rem 1.1rem;border-radius:.6rem;transition:top .15s}
+.skip-link:focus{top:.6rem}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ============================================================
+   HEADER / NAV
+   ============================================================ */
+header.top{
+  position:sticky;top:0;z-index:100;
+  background:var(--top-bg);
+  border-bottom:1px solid var(--linie);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+}
+.top-inner{
+  max-width:1180px;margin:0 auto;padding:.85rem 1.4rem;
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+}
+.marke{display:flex;align-items:center;gap:.7rem;font-family:var(--font-titel);font-size:1.25rem;font-weight:700;color:var(--text)}
+.marke .em{font-size:1.5rem;line-height:1}
+.marke .akz{color:var(--akzent)}
+.top-spacer{flex:1}
+.top-nav{display:flex;gap:.4rem;flex-wrap:wrap}
+.top-nav a{font-size:.92rem;color:var(--text-leise);padding:.45rem .8rem;border-radius:.45rem;text-decoration:none;transition:background .15s,color .15s}
+.top-nav a:hover{background:var(--glas);color:var(--text)}
+
+.tools{display:flex;gap:.3rem;align-items:center}
+.tools button{
+  width:36px;height:36px;border-radius:.6rem;border:1px solid var(--linie);
+  background:var(--glas);color:var(--text);cursor:pointer;
+  font-size:.95rem;display:grid;place-items:center;
+  transition:background .15s,border-color .15s,transform .1s;
+}
+.tools button:hover{background:var(--glas-hover);border-color:var(--akzent)}
+.tools button:active{transform:scale(.95)}
+.tools .stil-wahl{
+  height:36px;padding:0 .6rem;border-radius:.6rem;border:1px solid var(--linie);
+  background:var(--glas);color:var(--text);font-size:.85rem;cursor:pointer;
+  font-family:inherit;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  position:relative;padding:5rem 1.4rem 3.5rem;text-align:center;
+  background:var(--hero-bg);overflow:hidden;
+}
+.hero::before{content:"";position:absolute;inset:0;background:var(--hero-deko);pointer-events:none;opacity:.7}
+.hero-inner{max-width:880px;margin:0 auto;position:relative;z-index:1}
+.hero .vor{
+  display:inline-block;font-size:.78rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--akzent);font-weight:700;margin-bottom:1.3rem;
+  padding:.4rem .9rem;border:1px solid var(--akzent);border-radius:99px;
+}
+.hero h1{
+  font-family:var(--font-titel);font-size:clamp(2.3rem,5.5vw,3.8rem);
+  line-height:1.08;font-weight:700;letter-spacing:-.5px;margin-bottom:1.2rem;color:var(--text);
+}
+.hero h1 .akz{color:var(--akzent)}
+.hero .lead{
+  font-size:clamp(1rem,1.7vw,1.2rem);color:var(--text-leise);
+  max-width:620px;margin:0 auto 2.2rem;line-height:1.6;
+}
+.hero-bild{
+  margin:2.5rem auto 0;max-width:620px;border-radius:var(--radius);overflow:hidden;
+  border:1px solid var(--linie);box-shadow:var(--schatten);
+  background:var(--karte);
+  aspect-ratio:16/10;display:grid;place-items:center;color:var(--text-leise);font-size:.9rem;
+}
+.hero-bild img{display:block;width:100%;height:100%;object-fit:cover}
+
+.cta-leiste{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem}
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.95rem 1.7rem;border-radius:.7rem;font-weight:600;
+  text-decoration:none;cursor:pointer;border:1px solid transparent;
+  font-family:inherit;font-size:1rem;
+  transition:transform .12s,box-shadow .2s,background .2s,border-color .2s;
+}
+.btn:hover{transform:translateY(-2px);text-decoration:none}
+.btn.haupt{background:var(--akzent);color:var(--akzent-text);border-color:var(--akzent);box-shadow:0 6px 20px var(--akzent-schatten)}
+.btn.haupt:hover{box-shadow:0 10px 28px var(--akzent-schatten)}
+.btn.sek{background:transparent;color:var(--text);border-color:var(--linie-stark)}
+.btn.sek:hover{background:var(--glas)}
+.preis-tag{font-size:.85rem;color:var(--text-leise);margin-top:1.4rem}
+.preis-tag strong{color:var(--text)}
+
+.erwartung-chips{
+  list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem .9rem;
+  margin:1.6rem auto 0;max-width:640px;
+}
+.erwartung-chips li{
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.42rem .85rem;border:1px solid var(--linie);
+  background:var(--glas);border-radius:99px;
+  font-size:.83rem;color:var(--text);
+}
+.erwartung-chips .chk{color:var(--akzent);font-weight:700}
+
+/* ============================================================
+   3 ARGUMENTE
+   ============================================================ */
+.argumente{padding:4rem 1.4rem;background:var(--bg)}
+.argumente-grid{
+  max-width:1080px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.6rem;
+}
+.argument{
+  padding:2rem 1.6rem;border:1px solid var(--linie);border-radius:var(--radius);
+  background:var(--karte);position:relative;overflow:hidden;
+}
+.argument::before{
+  content:"";position:absolute;top:0;left:0;width:4px;height:100%;background:var(--akzent);
+}
+.argument .num{
+  font-family:var(--font-titel);font-size:2.3rem;color:var(--akzent);font-weight:700;line-height:1;
+  display:block;margin-bottom:.7rem;letter-spacing:-1px;
+}
+.argument h3{font-family:var(--font-titel);font-size:1.3rem;margin-bottom:.7rem;color:var(--text)}
+.argument p{color:var(--text-leise);font-size:.96rem}
+
+/* ============================================================
+   ABSCHNITT-KOPF
+   ============================================================ */
+.absch-kopf{text-align:center;max-width:680px;margin:0 auto 3rem}
+.absch-kopf .label{
+  display:inline-block;font-size:.74rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--akzent);font-weight:700;margin-bottom:1rem;
+}
+.absch-kopf h2{
+  font-family:var(--font-titel);font-size:clamp(1.9rem,3.4vw,2.6rem);
+  line-height:1.15;margin-bottom:.9rem;color:var(--text);font-weight:700;letter-spacing:-.4px;
+}
+.absch-kopf p{color:var(--text-leise);font-size:1.05rem}
+
+/* ============================================================
+   FEATURES
+   ============================================================ */
+.features{padding:5rem 1.4rem;background:var(--bg-alt)}
+.features-grid{
+  max-width:1080px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.4rem;
+}
+.feature{
+  padding:1.7rem 1.4rem;border:1px solid var(--linie);border-radius:var(--radius);
+  background:var(--karte);transition:transform .15s,border-color .2s,box-shadow .2s;
+}
+.feature:hover{transform:translateY(-3px);border-color:var(--akzent);box-shadow:var(--schatten)}
+.feature .ic{
+  width:48px;height:48px;border-radius:.7rem;
+  background:var(--akzent-schwach);
+  display:grid;place-items:center;font-size:1.4rem;margin-bottom:1rem;
+  color:var(--akzent);
+}
+.feature h3{font-family:var(--font-titel);font-size:1.15rem;margin-bottom:.55rem;color:var(--text)}
+.feature p{color:var(--text-leise);font-size:.93rem;line-height:1.55}
+
+/* ============================================================
+   VERGLEICHSTABELLE
+   ============================================================ */
+.vergleich{padding:5rem 1.4rem;background:var(--bg)}
+.tab-wrap{max-width:920px;margin:0 auto;overflow-x:auto;border-radius:var(--radius);border:1px solid var(--linie)}
+table.vergleichs-tabelle{
+  width:100%;border-collapse:collapse;background:var(--karte);
+  font-size:.95rem;
+}
+table.vergleichs-tabelle th,
+table.vergleichs-tabelle td{
+  padding:1rem 1.2rem;text-align:left;border-bottom:1px solid var(--linie);
+  vertical-align:middle;
+}
+table.vergleichs-tabelle thead th{
+  font-family:var(--font-titel);font-size:.95rem;
+  background:var(--bg-alt);color:var(--text);
+  border-bottom:2px solid var(--akzent);
+}
+table.vergleichs-tabelle thead th.eigen{color:var(--akzent)}
+table.vergleichs-tabelle tbody tr:last-child td{border-bottom:none}
+table.vergleichs-tabelle td.col-eigen{background:var(--akzent-schwach);color:var(--text);font-weight:600}
+table.vergleichs-tabelle td.col-and{color:var(--text-leise)}
+.ja{color:var(--ja)}
+.nein{color:var(--nein)}
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+.faq{padding:5rem 1.4rem;background:var(--bg-alt)}
+.faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:.8rem}
+details.frage{
+  border:1px solid var(--linie);border-radius:var(--radius);
+  background:var(--karte);overflow:hidden;
+  transition:border-color .15s;
+}
+details.frage[open]{border-color:var(--akzent)}
+details.frage summary{
+  padding:1.2rem 1.4rem;cursor:pointer;list-style:none;
+  font-family:var(--font-titel);font-size:1.05rem;font-weight:600;
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  color:var(--text);
+}
+details.frage summary::-webkit-details-marker{display:none}
+details.frage summary::after{
+  content:"+";font-size:1.6rem;color:var(--akzent);transition:transform .2s;flex:0 0 auto;
+  font-family:Georgia,serif;line-height:1;
+}
+details.frage[open] summary::after{content:"−"}
+details.frage .ant{padding:0 1.4rem 1.4rem;color:var(--text-leise);font-size:.96rem;line-height:1.6}
+
+/* ============================================================
+   KAUF / CTA-FINAL
+   ============================================================ */
+.kauf{padding:5rem 1.4rem;background:var(--bg)}
+.kauf-karte{
+  max-width:720px;margin:0 auto;padding:3rem 2.4rem;
+  border:2px solid var(--akzent);border-radius:var(--radius);
+  background:var(--karte);text-align:center;position:relative;
+  box-shadow:var(--schatten);
+}
+.kauf-karte .vor{
+  display:inline-block;font-size:.72rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--akzent);font-weight:700;margin-bottom:1.2rem;
+}
+.kauf-karte h2{font-family:var(--font-titel);font-size:clamp(1.7rem,3vw,2.3rem);margin-bottom:1rem;color:var(--text);letter-spacing:-.3px}
+.kauf-karte .untertitel{color:var(--text-leise);margin-bottom:2rem;font-size:1.02rem}
+.preis-zeile{
+  display:flex;justify-content:center;align-items:baseline;gap:.5rem;margin-bottom:2rem;
+}
+.preis-wert{font-family:var(--font-titel);font-size:3rem;font-weight:700;color:var(--text);letter-spacing:-1px}
+.preis-einheit{color:var(--text-leise);font-size:1rem}
+.bullets{
+  text-align:left;max-width:380px;margin:0 auto 2rem;list-style:none;
+  display:flex;flex-direction:column;gap:.55rem;
+}
+.bullets li{display:flex;gap:.7rem;align-items:flex-start;color:var(--text);font-size:.95rem}
+.bullets li::before{content:"✓";color:var(--akzent);font-weight:700;flex:0 0 auto}
+.kauf-hinweis{font-size:.82rem;color:var(--text-leise);margin-top:1.4rem}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer.fuss{
+  padding:3rem 1.4rem 2rem;background:var(--bg-alt);
+  border-top:1px solid var(--linie);text-align:center;
+}
+footer.fuss .fuss-inner{max-width:1080px;margin:0 auto;color:var(--text-leise);font-size:.88rem}
+footer.fuss nav{margin:1rem 0;display:flex;justify-content:center;gap:.3rem;flex-wrap:wrap}
+footer.fuss nav a{color:var(--text-leise);padding:.3rem .7rem;border-radius:.4rem}
+footer.fuss nav a:hover{background:var(--glas);color:var(--akzent);text-decoration:none}
+footer.fuss .copy{margin-top:.8rem;font-size:.8rem;color:var(--text-leise);opacity:.7}
+
+/* ============================================================
+   STIL 1 — SPARBUCH (Standard)
+   Klassisch Gold/Tannengrün, Georgia-Serif
+   ============================================================ */
+html[data-style="sparbuch"][data-theme="dark"]{
+  --bg:#070D0A; --bg-alt:#0B1410; --karte:rgba(255,255,255,.04);
+  --top-bg:rgba(7,13,10,.82);
+  --text:#EDF2EE; --text-leise:#93A29A;
+  --akzent:#E3B23C; --akzent-text:#1A2620; --akzent-schwach:rgba(227,178,60,.1); --akzent-schatten:rgba(227,178,60,.25);
+  --linie:rgba(255,255,255,.09); --linie-stark:rgba(255,255,255,.18);
+  --glas:rgba(255,255,255,.05); --glas-hover:rgba(255,255,255,.08);
+  --hero-bg:linear-gradient(160deg,#0B1410 0%,#0E1D17 70%,#1B4332 130%);
+  --hero-deko:radial-gradient(900px 600px at 15% 0%, rgba(27,67,50,.55), transparent 60%),
+              radial-gradient(700px 500px at 95% 30%, rgba(212,160,23,.08), transparent 55%);
+  --ja:#4ADE80; --nein:#F87171;
+  --schatten:0 12px 40px rgba(0,0,0,.5);
+  --radius:14px;
+  --font-text:Georgia,"Iowan Old Style",serif;
+  --font-titel:Georgia,"Iowan Old Style",serif;
+}
+html[data-style="sparbuch"][data-theme="light"]{
+  --bg:#F8F5EC; --bg-alt:#F2EDE0; --karte:#FFFCF5;
+  --top-bg:rgba(248,245,236,.9);
+  --text:#1A2620; --text-leise:#5F6F66;
+  --akzent:#B8860B; --akzent-text:#FFFCF5; --akzent-schwach:rgba(184,134,11,.1); --akzent-schatten:rgba(184,134,11,.25);
+  --linie:rgba(27,38,32,.12); --linie-stark:rgba(27,38,32,.25);
+  --glas:rgba(27,38,32,.04); --glas-hover:rgba(27,38,32,.08);
+  --hero-bg:linear-gradient(160deg,#F2EDE0 0%,#E8E0CA 100%);
+  --hero-deko:radial-gradient(900px 600px at 15% 0%, rgba(184,134,11,.12), transparent 60%);
+  --ja:#2D6A4F; --nein:#B03A3A;
+  --schatten:0 12px 40px rgba(27,38,32,.15);
+  --radius:14px;
+  --font-text:Georgia,"Iowan Old Style",serif;
+  --font-titel:Georgia,"Iowan Old Style",serif;
+}
+
+/* ============================================================
+   STIL 2 — COUTURE (Edel-Magazin)
+   Sand/Schwarz/Cognac, Display-Serif
+   ============================================================ */
+html[data-style="couture"][data-theme="dark"]{
+  --bg:#0F0D0B; --bg-alt:#1A1612; --karte:#181410;
+  --top-bg:rgba(15,13,11,.86);
+  --text:#F2EBE0; --text-leise:#A89A85;
+  --akzent:#C97B3C; --akzent-text:#0F0D0B; --akzent-schwach:rgba(201,123,60,.12); --akzent-schatten:rgba(201,123,60,.3);
+  --linie:rgba(242,235,224,.1); --linie-stark:rgba(242,235,224,.22);
+  --glas:rgba(242,235,224,.04); --glas-hover:rgba(242,235,224,.08);
+  --hero-bg:radial-gradient(900px 700px at 50% 0%, #2A1F15 0%, #0F0D0B 70%);
+  --hero-deko:radial-gradient(600px 400px at 80% 20%, rgba(201,123,60,.15), transparent 60%);
+  --ja:#A8BF8C; --nein:#D9685B;
+  --schatten:0 14px 50px rgba(0,0,0,.6);
+  --radius:0;
+  --font-text:"Cormorant Garamond","EB Garamond",Georgia,serif;
+  --font-titel:"Playfair Display","Cormorant Garamond",Georgia,serif;
+}
+html[data-style="couture"][data-theme="light"]{
+  --bg:#F4EFE6; --bg-alt:#E9E1D2; --karte:#FAF6ED;
+  --top-bg:rgba(244,239,230,.9);
+  --text:#1A1410; --text-leise:#6B5D4C;
+  --akzent:#A8501E; --akzent-text:#FAF6ED; --akzent-schwach:rgba(168,80,30,.1); --akzent-schatten:rgba(168,80,30,.3);
+  --linie:rgba(26,20,16,.13); --linie-stark:rgba(26,20,16,.28);
+  --glas:rgba(26,20,16,.04); --glas-hover:rgba(26,20,16,.08);
+  --hero-bg:linear-gradient(170deg,#F4EFE6 0%,#E9E1D2 100%);
+  --hero-deko:radial-gradient(700px 500px at 70% 10%, rgba(168,80,30,.13), transparent 60%);
+  --ja:#3D6B47; --nein:#B23A2A;
+  --schatten:0 14px 50px rgba(26,20,16,.13);
+  --radius:0;
+  --font-text:"Cormorant Garamond","EB Garamond",Georgia,serif;
+  --font-titel:"Playfair Display","Cormorant Garamond",Georgia,serif;
+}
+html[data-style="couture"] .hero .vor,
+html[data-style="couture"] .kauf-karte .vor,
+html[data-style="couture"] .absch-kopf .label{letter-spacing:5px;border-radius:0;border-width:1px}
+html[data-style="couture"] .btn{border-radius:0;letter-spacing:1.5px;text-transform:uppercase;font-size:.85rem;font-weight:500}
+
+/* ============================================================
+   STIL 3 — BAUHAUS (Geometrisch-minimal)
+   Cremeweiß/Tiefblau/Senf, Sans-Geometrie
+   ============================================================ */
+html[data-style="bauhaus"][data-theme="dark"]{
+  --bg:#0A0E1A; --bg-alt:#101627; --karte:#0E1422;
+  --top-bg:rgba(10,14,26,.86);
+  --text:#E8ECF5; --text-leise:#8A95AE;
+  --akzent:#E8B84B; --akzent-text:#0A0E1A; --akzent-schwach:rgba(232,184,75,.1); --akzent-schatten:rgba(232,184,75,.3);
+  --linie:rgba(232,236,245,.1); --linie-stark:rgba(232,236,245,.2);
+  --glas:rgba(232,236,245,.04); --glas-hover:rgba(232,236,245,.08);
+  --hero-bg:#0A0E1A;
+  --hero-deko:
+    linear-gradient(45deg,transparent 48%,rgba(232,184,75,.04) 48%,rgba(232,184,75,.04) 52%,transparent 52%),
+    radial-gradient(circle at 80% 30%, rgba(74,111,165,.18), transparent 50%);
+  --ja:#7DD3A0; --nein:#E5736B;
+  --schatten:0 10px 30px rgba(0,0,0,.5);
+  --radius:2px;
+  --font-text:"Inter","Helvetica Neue",system-ui,sans-serif;
+  --font-titel:"Inter","Helvetica Neue",system-ui,sans-serif;
+}
+html[data-style="bauhaus"][data-theme="light"]{
+  --bg:#FAF8F2; --bg-alt:#F0EDE3; --karte:#FFFEF8;
+  --top-bg:rgba(250,248,242,.92);
+  --text:#1A2440; --text-leise:#5E6680;
+  --akzent:#D4A017; --akzent-text:#FFFEF8; --akzent-schwach:rgba(212,160,23,.1); --akzent-schatten:rgba(212,160,23,.3);
+  --linie:rgba(26,36,64,.12); --linie-stark:rgba(26,36,64,.25);
+  --glas:rgba(26,36,64,.04); --glas-hover:rgba(26,36,64,.08);
+  --hero-bg:#F0EDE3;
+  --hero-deko:
+    linear-gradient(45deg,transparent 48%,rgba(212,160,23,.06) 48%,rgba(212,160,23,.06) 52%,transparent 52%),
+    radial-gradient(circle at 80% 30%, rgba(74,111,165,.12), transparent 50%);
+  --ja:#2D6A4F; --nein:#B03A3A;
+  --schatten:0 10px 30px rgba(26,36,64,.1);
+  --radius:2px;
+  --font-text:"Inter","Helvetica Neue",system-ui,sans-serif;
+  --font-titel:"Inter","Helvetica Neue",system-ui,sans-serif;
+}
+html[data-style="bauhaus"] h1,
+html[data-style="bauhaus"] h2,
+html[data-style="bauhaus"] h3{font-weight:800;letter-spacing:-.8px}
+html[data-style="bauhaus"] .btn{font-weight:700;letter-spacing:.3px}
+html[data-style="bauhaus"] .argument .num{font-weight:900}
+html[data-style="bauhaus"] .marke{font-weight:800;letter-spacing:-.3px}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:680px){
+  .top-nav{display:none}
+  .hero{padding:3rem 1.2rem 2.5rem}
+  .argumente,.features,.vergleich,.faq,.kauf{padding:3.5rem 1.2rem}
+  .kauf-karte{padding:2rem 1.4rem}
+  .preis-wert{font-size:2.4rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
+
+<header class="top" role="banner">
+  <div class="top-inner">
+    <div class="marke" aria-label="Haushaltsbuch — Logo">
+      <span class="em" aria-hidden="true">📖</span>
+      <span>Haushalts<span class="akz">buch</span></span>
+    </div>
+    <div class="top-spacer"></div>
+    <nav class="top-nav" aria-label="Hauptnavigation">
+      <a href="#was">Über</a>
+      <a href="#features">Funktionen</a>
+      <a href="#vergleich">Vergleich</a>
+      <a href="#faq">FAQ</a>
+      <a href="demo/index.html">Demo</a>
+      <a href="#kauf">Kaufen</a>
+    </nav>
+    <div class="tools" role="toolbar" aria-label="Darstellung anpassen">
+      <select class="stil-wahl" id="stilWahl" aria-label="Design-Stil wählen">
+        <option value="sparbuch">Sparbuch</option>
+        <option value="couture">Couture</option>
+        <option value="bauhaus">Bauhaus</option>
+      </select>
+      <button type="button" id="btnZoomMinus" aria-label="Schrift verkleinern" title="Verkleinern">−</button>
+      <button type="button" id="btnZoomPlus" aria-label="Schrift vergrößern" title="Vergrößern">+</button>
+      <button type="button" id="btnTheme" aria-label="Hell- / Dunkelmodus umschalten" title="Hell / Dunkel">☾</button>
+    </div>
+  </div>
+</header>
+
+<main id="inhalt" role="main">
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-titel">
+    <div class="hero-inner">
+      <span class="vor" aria-hidden="true">Privat · Einmalig · Offline</span>
+      <h1 id="hero-titel">Dein <span class="akz">digitales Sparbuch</span> — endlich Klarheit über dein Geld.</h1>
+      <p class="lead">Einnahmen, Ausgaben, Sparziele, Anlässe und Auswertungen in einer einzigen Datei. Kein Abo. Kein Tracking. Kein fremder Server. Einmal kaufen, für immer dein.</p>
+      <div class="cta-leiste">
+        <a href="demo/index.html" class="btn sek" aria-label="Demo kostenlos ausprobieren">🧪 Kostenlos testen</a>
+        <a href="#kauf" class="btn haupt" aria-label="Jetzt für 12,90 Euro kaufen">Jetzt sichern — 12,90 €</a>
+      </div>
+      <ul class="erwartung-chips" aria-label="Was dich in der Demo erwartet">
+        <li><span class="chk" aria-hidden="true">✓</span> Beispieldaten startklar</li>
+        <li><span class="chk" aria-hidden="true">✓</span> Alle Features anschaubar</li>
+        <li><span class="chk" aria-hidden="true">✓</span> 5 eigene Buchungen testen</li>
+        <li><span class="chk" aria-hidden="true">✓</span> Backup &amp; Import nur in Vollversion</li>
+      </ul>
+      <p class="preis-tag"><strong>Einmaliger Kauf</strong> · keine wiederkehrenden Kosten · sofortige Auslieferung per E-Mail</p>
+      <div class="hero-bild">
+        <img src="Bilder/Haushaltsbuch.png" alt="Smartphone zeigt die Haushaltsbuch-App auf einem Holztisch, daneben Spar-Gläser mit Münzen und Pflanzen — Sparen mit Stil." loading="eager" decoding="async">
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 ARGUMENTE -->
+  <section class="argumente" id="was" aria-labelledby="arg-titel">
+    <div class="absch-kopf">
+      <span class="label">Warum Haushaltsbuch</span>
+      <h2 id="arg-titel">Drei Gründe, die alles ändern.</h2>
+      <p>Weil dein Finanzleben dir gehört — nicht einem Tech-Konzern in San Francisco.</p>
+    </div>
+    <div class="argumente-grid">
+      <article class="argument">
+        <span class="num">01</span>
+        <h3>Deine Daten bleiben bei dir.</h3>
+        <p>Alles wird ausschließlich in deinem Browser gespeichert. Keine Cloud, kein Tracking, keine Telemetrie. Du kannst die App auch ohne Internet nutzen — überall, jederzeit.</p>
+      </article>
+      <article class="argument">
+        <span class="num">02</span>
+        <h3>Einmal kaufen — kein Abo, nie wieder.</h3>
+        <p>12,90 € einmalig statt 4,99 €/Monat in alle Ewigkeit. Nach 3 Monaten hast du dich bereits amortisiert. Keine Preiserhöhungen, keine versteckten Upgrades, keine Konten-Sperrung.</p>
+      </article>
+      <article class="argument">
+        <span class="num">03</span>
+        <h3>Vollwertig wie ein Banken-Tool.</h3>
+        <p>Budgets, Sparziele, Aufrunden-Sparen, Abo-Radar, Teuerungs-Radar, Notgroschen-Ampel, Was-Wäre-Wenn-Rechner und Tresor-Modus mit AES-256-Verschlüsselung — kompromisslos.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features" aria-labelledby="features-titel">
+    <div class="absch-kopf">
+      <span class="label">Was drin ist</span>
+      <h2 id="features-titel">Alles was du je gebraucht hättest — in einer Datei.</h2>
+      <p>Mehr als 30 Funktionen, durchdacht für den Alltag — nicht für Marketing-Folien.</p>
+    </div>
+    <div class="features-grid">
+      <article class="feature"><div class="ic" aria-hidden="true">💸</div><h3>Buchungen &amp; Konten</h3><p>Einnahmen und Ausgaben mit Kategorien, mehreren Konten, Umbuchungen, Kassensturz und Münz-Zählhilfe.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">⚡</div><h3>Schnellbuchungen</h3><p>Chips für deine Stamm-Ausgaben — ein Klick, gebucht. Bäcker, Kaffee, Bus.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">🛒</div><h3>Einkaufszettel</h3><p>Trag ein, häk ab, buche mit einem Klick — die App schätzt Preise aus deiner Vergangenheit.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">🎯</div><h3>Sparziele</h3><p>Konkrete Ziele wie „Urlaub 1.200 €" mit Fortschritt — visuell, motivierend.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">🐷</div><h3>Aufrunden-Sparen</h3><p>Jede Ausgabe wird virtuell aufgerundet — die Differenz wandert ins Sparschwein.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">🏆</div><h3>Challenges</h3><p>52-Wochen-Challenge, No-Spend-Days und mehr — spielerisch sparen lernen.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">🎂</div><h3>Anlässe &amp; Leih-Liste</h3><p>Geburtstage mit Budget, Verleih mit Teilrückzahlungen, Jahres-Planer.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">📊</div><h3>Auswertung</h3><p>Tortendiagramm, 6-Monats-Balken, Prognose, Spar-Simulator und Was-Wäre-Wenn-Rechner.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">📡</div><h3>Abo-Radar</h3><p>Erkennt wiederkehrende Zahlungen automatisch und zeigt dir die Jahressumme.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">📈</div><h3>Teuerungs-Radar</h3><p>Vergleicht heutige Preise mit deinen früheren Buchungen — Inflation sichtbar gemacht.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">🚦</div><h3>Notgroschen-Ampel</h3><p>Reicht dein Polster wie lange? Grün, gelb, rot — auf einen Blick.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">🛡</div><h3>Tresor-Modus</h3><p>AES-256-Verschlüsselung. Optional mit Decoy-PIN — eine zweite PIN zeigt einen leeren Stand.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">💾</div><h3>Backup</h3><p>JSON-Klartext oder verschlüsseltes Backup mit eigenem Passwort.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">🏦</div><h3>Kontoauszug-Import</h3><p>CSV-Datei oder PDF-Text — mit Vorschau und Kategorie-Zuordnung.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">💊</div><h3>Zuzahlungs-Rechner</h3><p>Berechnet deine 2-%-Grenze (chronisch krank: 1 %) für die Krankenkassen-Erstattung.</p></article>
+      <article class="feature"><div class="ic" aria-hidden="true">🆘</div><h3>Notfall-Mappe</h3><p>Druckbare Übersicht für Angehörige — Konten, Daueraufträge, Termine auf einem Blatt.</p></article>
+    </div>
+  </section>
+
+  <!-- VERGLEICHSTABELLE -->
+  <section class="vergleich" id="vergleich" aria-labelledby="vergleich-titel">
+    <div class="absch-kopf">
+      <span class="label">Vergleich</span>
+      <h2 id="vergleich-titel">Warum nicht einfach Excel oder eine Abo-App?</h2>
+      <p>Eine ehrliche Gegenüberstellung — du entscheidest.</p>
+    </div>
+    <div class="tab-wrap">
+      <table class="vergleichs-tabelle" aria-label="Vergleich: Haushaltsbuch, Excel-Tabelle, Abo-App">
+        <thead>
+          <tr>
+            <th scope="col">Funktion</th>
+            <th scope="col" class="eigen">Haushaltsbuch</th>
+            <th scope="col">Excel-Tabelle</th>
+            <th scope="col">Abo-App (4,99 €/Mo)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Einmaliger Preis</td><td class="col-eigen"><span class="ja">✓</span> 12,90 €</td><td class="col-and">— (Office-Lizenz)</td><td class="col-and"><span class="nein">✗</span> 60 €/Jahr</td></tr>
+          <tr><td>Vollständig offline</td><td class="col-eigen"><span class="ja">✓</span></td><td class="col-and"><span class="ja">✓</span></td><td class="col-and"><span class="nein">✗</span> Cloud-Zwang</td></tr>
+          <tr><td>Kein Tracking</td><td class="col-eigen"><span class="ja">✓</span></td><td class="col-and"><span class="ja">✓</span></td><td class="col-and"><span class="nein">✗</span> Telemetrie</td></tr>
+          <tr><td>Auswertung &amp; Diagramme</td><td class="col-eigen"><span class="ja">✓</span> 8 Module</td><td class="col-and">manuell</td><td class="col-and"><span class="ja">✓</span></td></tr>
+          <tr><td>Abo-Radar</td><td class="col-eigen"><span class="ja">✓</span></td><td class="col-and"><span class="nein">✗</span></td><td class="col-and">teilweise</td></tr>
+          <tr><td>Tresor-Verschlüsselung</td><td class="col-eigen"><span class="ja">✓</span> AES-256 + Decoy-PIN</td><td class="col-and">Passwort-Datei</td><td class="col-and"><span class="nein">✗</span></td></tr>
+          <tr><td>Sparziele &amp; Aufrunden</td><td class="col-eigen"><span class="ja">✓</span></td><td class="col-and"><span class="nein">✗</span></td><td class="col-and"><span class="ja">✓</span></td></tr>
+          <tr><td>Was-Wäre-Wenn-Rechner</td><td class="col-eigen"><span class="ja">✓</span></td><td class="col-and">Formeln</td><td class="col-and"><span class="nein">✗</span></td></tr>
+          <tr><td>Notfall-Mappe für Angehörige</td><td class="col-eigen"><span class="ja">✓</span></td><td class="col-and"><span class="nein">✗</span></td><td class="col-and"><span class="nein">✗</span></td></tr>
+          <tr><td>Updates &amp; Support</td><td class="col-eigen"><span class="ja">✓</span> per E-Mail</td><td class="col-and">selbst</td><td class="col-and"><span class="ja">✓</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq" aria-labelledby="faq-titel">
+    <div class="absch-kopf">
+      <span class="label">Häufige Fragen</span>
+      <h2 id="faq-titel">Was du wissen solltest, bevor du kaufst.</h2>
+    </div>
+    <div class="faq-list">
+      <details class="frage"><summary>Wo werden meine Daten gespeichert?</summary><div class="ant">Ausschließlich lokal in deinem Browser (LocalStorage und IndexedDB). Es geht nichts in die Cloud, nichts an einen Server. Du hast jederzeit die volle Kontrolle und kannst über die Backup-Funktion eine Datei exportieren.</div></details>
+      <details class="frage"><summary>Funktioniert das Haushaltsbuch auch ohne Internet?</summary><div class="ant">Ja, vollständig. Nach dem ersten Laden brauchst du kein Internet mehr. Du kannst die Datei sogar als App auf dem Smartphone oder Desktop installieren — ohne Browser-Leiste, mit eigenem Icon.</div></details>
+      <details class="frage"><summary>Was passiert wenn ich den Browser oder das Gerät wechsle?</summary><div class="ant">Über Einstellungen → Daten und Backup erstellst du eine Sicherungsdatei. Diese öffnest du auf dem neuen Gerät und alles ist wieder da — Buchungen, Konten, Budgets, Einstellungen.</div></details>
+      <details class="frage"><summary>Wie sicher sind meine Daten?</summary><div class="ant">Du kannst eine PIN setzen und zusätzlich den Tresor-Modus aktivieren — dann werden alle Daten mit AES-256 verschlüsselt. Eine optionale Decoy-PIN zeigt einen leeren „frisch installierten" Stand, falls dich jemand zur PIN-Eingabe zwingt.</div></details>
+      <details class="frage"><summary>Bekomme ich Updates?</summary><div class="ant">Ja, Updates werden über die Bezugsquelle (Digistore24) bereitgestellt. Ein Rechtsanspruch auf bestimmte zukünftige Funktionen besteht nicht, aber wir entwickeln das Haushaltsbuch laufend weiter.</div></details>
+      <details class="frage"><summary>Ist das Haushaltsbuch eine Buchhaltungssoftware für Firmen?</summary><div class="ant">Nein. Es ist eine private Spar- und Übersichts-App. Für Firmen-Buchhaltung brauchst du eine GoBD-konforme Software oder einen Steuerberater. Das Haushaltsbuch ersetzt keine Steuerberatung.</div></details>
+      <details class="frage"><summary>Wie läuft der Kauf ab?</summary><div class="ant">Du kaufst über Digistore24 (sicherer Zahlungsanbieter). Direkt nach Zahlung erhältst du eine E-Mail mit dem Download-Link und deinem persönlichen Freischaltcode. Datei öffnen, Code eingeben — fertig.</div></details>
+      <details class="frage"><summary>Was ist mit dem Widerrufsrecht?</summary><div class="ant">Du hast das gesetzliche 14-Tage-Widerrufsrecht. Hinweis: Bei digitalen Inhalten erlischt es, sobald du der sofortigen Ausführung zugestimmt und den Freischaltcode genutzt hast (§ 356 Abs. 5 BGB).</div></details>
+    </div>
+  </section>
+
+  <!-- KAUF -->
+  <section class="kauf" id="kauf" aria-labelledby="kauf-titel">
+    <div class="kauf-karte">
+      <span class="vor" aria-hidden="true">Vollversion · sofortige Auslieferung</span>
+      <h2 id="kauf-titel">Bereit, dein Geld endlich zu verstehen?</h2>
+      <p class="untertitel">Einmaliger Kauf. Keine Abo-Falle. Kein Konto. Keine Cloud.</p>
+      <div class="preis-zeile">
+        <span class="preis-wert">12,90&nbsp;€</span>
+        <span class="preis-einheit">einmalig</span>
+      </div>
+      <ul class="bullets">
+        <li>Sofortige Auslieferung per E-Mail (Digistore24)</li>
+        <li>Persönlicher Freischaltcode &amp; Download-Link</li>
+        <li>Premium-Handbuch im HTML-Format</li>
+        <li>Unbegrenzt eigene Buchungen — kein 5er-Limit der Demo</li>
+        <li>Verschlüsseltes Backup &amp; Kontoauszug-Import freigeschaltet</li>
+        <li>Lebenslange Nutzung — keine versteckten Kosten</li>
+        <li>14-Tage-Widerrufsrecht nach gesetzlichen Bestimmungen</li>
+      </ul>
+      <a href="https://www.digistore24.com/product/PLATZHALTER_HAUSHALTSBUCH" class="btn haupt" id="kaufBtn" aria-label="Jetzt kaufen über Digistore24">Jetzt sichern — 12,90 €</a>
+      <p class="kauf-hinweis">Sichere Zahlung über Digistore24 GmbH (St.-Godehard-Straße 32, 31139 Hildesheim). Akzeptiert PayPal, Lastschrift, Kreditkarte, Sofort-Überweisung.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="fuss" role="contentinfo">
+  <div class="fuss-inner">
+    <div>Haushaltsbuch · Ein Produkt von Gerd Zimmermann GZ-AI.-Stacks</div>
+    <nav aria-label="Rechtliches">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="agb.html">AGB</a>
+      <a href="widerruf.html">Widerruf</a>
+      <a href="https://www.gz-ai-stacks.de" target="_blank" rel="noopener">Anbieter-Website</a>
+    </nav>
+    <div class="copy">© <span id="jahr"></span> Gerd Zimmermann GZ-AI.-Stacks · Görlitzer Straße 10 · 91315 Höchstadt a.d. Aisch</div>
+  </div>
+</footer>
+
+<script>
+"use strict";
+const html = document.documentElement;
+const LS = { stil:'hb-lp-stil', theme:'hb-lp-theme', zoom:'hb-lp-zoom' };
+
+/* Stil-Wahl */
+const stilWahl = document.getElementById('stilWahl');
+const stilGespeichert = localStorage.getItem(LS.stil) || 'sparbuch';
+html.setAttribute('data-style', stilGespeichert);
+stilWahl.value = stilGespeichert;
+stilWahl.addEventListener('change', () => {
+  html.setAttribute('data-style', stilWahl.value);
+  localStorage.setItem(LS.stil, stilWahl.value);
+});
+
+/* Theme */
+const btnTheme = document.getElementById('btnTheme');
+const themeGespeichert = localStorage.getItem(LS.theme) ||
+  (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+html.setAttribute('data-theme', themeGespeichert);
+btnTheme.textContent = themeGespeichert === 'dark' ? '☾' : '☀';
+btnTheme.setAttribute('aria-pressed', themeGespeichert === 'light' ? 'true' : 'false');
+btnTheme.addEventListener('click', () => {
+  const neu = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', neu);
+  localStorage.setItem(LS.theme, neu);
+  btnTheme.textContent = neu === 'dark' ? '☾' : '☀';
+  btnTheme.setAttribute('aria-pressed', neu === 'light' ? 'true' : 'false');
+});
+
+/* Zoom */
+const zoomStufen = ['90','100','110','120'];
+let zoomIndex = zoomStufen.indexOf(localStorage.getItem(LS.zoom) || '100');
+if(zoomIndex < 0) zoomIndex = 1;
+function wendeZoom(){
+  html.setAttribute('data-zoom', zoomStufen[zoomIndex]);
+  localStorage.setItem(LS.zoom, zoomStufen[zoomIndex]);
+}
+wendeZoom();
+document.getElementById('btnZoomPlus').addEventListener('click', () => {
+  if(zoomIndex < zoomStufen.length - 1){ zoomIndex++; wendeZoom(); }
+});
+document.getElementById('btnZoomMinus').addEventListener('click', () => {
+  if(zoomIndex > 0){ zoomIndex--; wendeZoom(); }
+});
+
+/* Jahr im Footer */
+document.getElementById('jahr').textContent = new Date().getFullYear();
+
+/* Tastatur: +/- für Zoom (wie in der App) */
+document.addEventListener('keydown', e => {
+  if(e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+  if(e.key === '+' || e.key === '='){ if(zoomIndex < zoomStufen.length-1){ zoomIndex++; wendeZoom(); } }
+  if(e.key === '-' || e.key === '_'){ if(zoomIndex > 0){ zoomIndex--; wendeZoom(); } }
+});
+</script>
+</body>
+</html>
