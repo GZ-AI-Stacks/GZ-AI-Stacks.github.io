@@ -223,7 +223,7 @@ body.demo-mode .topbar{top:42px}
 
 <div id="demoBanner" role="note" aria-label="Demo-Hinweis">
   🔧 <strong>DEMO-VERSION</strong> · Hero &amp; Leistungen frei testbar · Galerie, Über uns, CTA, Kontakt &amp; Export nur in der Vollversion
-  <a href="../landingpage/index.html#preis">Vollversion holen →</a>
+  <a href="../index.html#preis">Vollversion holen →</a>
 </div>
 
 <canvas id="matrix" aria-hidden="true"></canvas>
@@ -238,7 +238,7 @@ body.demo-mode .topbar{top:42px}
     <span class="lic" id="licBadge">Demo-Modus</span>
     <span class="spacer"></span>
     <a class="tb-btn" href="../HANDBUCH.html" target="_blank" rel="noopener" title="Handbuch öffnen">Handbuch</a>
-    <a class="tb-btn demo-cta" id="btnExport" href="../landingpage/index.html#preis" title="Vollversion freischalten">🔓 Vollversion freischalten</a>
+    <a class="tb-btn demo-cta" id="btnExport" href="../index.html#preis" title="Vollversion freischalten">🔓 Vollversion freischalten</a>
     <!-- versteckte Stubs damit Topbar-JS nicht crasht -->
     <button type="button" id="btnSaveCfg" style="display:none"></button>
     <button type="button" id="btnLoadCfg" style="display:none"></button>
@@ -374,7 +374,7 @@ function applyDemoLock(){
         e.preventDefault();
         e.stopPropagation();
         toast("🔒 Dieser Bereich ist in der Vollversion freigeschaltet");
-        setTimeout(()=>{ location.href = "../landingpage/index.html#preis"; }, 1300);
+        setTimeout(()=>{ location.href = "../index.html#preis"; }, 1300);
       }, true);
     }
   });
