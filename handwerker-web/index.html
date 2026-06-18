@@ -264,6 +264,70 @@ body.theme-atelier .edition.full{color:#0a0a0a}
 .price-card{min-width:0;overflow:hidden}
 .price{word-break:break-word}
 
+/* ─── 3er-Grid für Preis-Karten ─── */
+.price-grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;max-width:1080px;margin:0 auto}
+
+/* ─── EARLYBIRD-Karte ─── */
+.price-card.earlybird{
+  border-color:var(--green);
+  box-shadow:0 0 40px rgba(127,176,105,.18),var(--card-shadow);
+  position:relative;
+}
+body.theme-atelier .price-card.earlybird{border-color:var(--gold);box-shadow:0 0 45px rgba(212,175,55,.18),var(--card-shadow)}
+body.theme-blueprint .price-card.earlybird{border-color:var(--green);box-shadow:0 0 45px rgba(127,255,212,.16),var(--card-shadow)}
+.edition.earlybird-tag{
+  background:linear-gradient(90deg,var(--green),var(--accent));color:#0a0a0a;
+  letter-spacing:2px;font-weight:800;
+}
+.earlybird-note{
+  margin-top:14px;font-size:.78rem;color:var(--muted);text-align:center;
+  font-style:italic;line-height:1.5;
+}
+
+/* ─── VERGLEICHS-TABELLE ─── */
+.vergleich{max-width:1080px;margin:0 auto 48px;overflow-x:auto;border-radius:var(--card-radius);box-shadow:var(--card-shadow)}
+.vergleich table{
+  width:100%;border-collapse:collapse;
+  background:var(--raised);
+  font-size:.92rem;
+  min-width:680px;
+}
+.vergleich caption.visually-hidden{position:absolute;left:-9999px}
+.vergleich th,.vergleich td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.vergleich thead th{
+  background:var(--panel);color:var(--muted);
+  font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;
+  border-bottom:2px solid var(--line-strong);
+}
+.vergleich thead th.hl{
+  background:linear-gradient(180deg,var(--accent),var(--accent2));color:#1a1410;
+  letter-spacing:1.2px;
+}
+body.theme-blueprint .vergleich thead th.hl{color:#050d18}
+body.theme-atelier .vergleich thead th.hl{color:#0a0a0a;background:linear-gradient(180deg,#f0c860,#d4af37)}
+.vergleich tbody th{
+  background:var(--panel);color:var(--txt);font-weight:700;
+  font-size:.88rem;width:160px;
+}
+.vergleich tbody td{color:var(--muted)}
+.vergleich tbody td.hl{
+  background:linear-gradient(180deg,rgba(255,106,0,.08),transparent);
+  color:var(--txt);font-weight:600;
+  border-left:2px solid var(--accent);border-right:2px solid var(--accent);
+}
+body.theme-blueprint .vergleich tbody td.hl{background:linear-gradient(180deg,rgba(0,212,255,.08),transparent);border-color:var(--accent)}
+body.theme-atelier .vergleich tbody td.hl{background:linear-gradient(180deg,rgba(212,175,55,.08),transparent);border-color:var(--gold)}
+.vergleich tbody tr:last-child td,.vergleich tbody tr:last-child th{border-bottom:none}
+.vergleich-foot{
+  text-align:center;color:var(--dim);font-size:.78rem;margin:18px auto 0;
+  max-width:780px;line-height:1.6;font-style:italic;
+}
+@media(max-width:680px){
+  .vergleich table{font-size:.85rem}
+  .vergleich th,.vergleich td{padding:10px 12px}
+  .vergleich tbody th{width:auto;font-size:.82rem}
+}
+
 .datenblatt{margin-top:16px;border-top:1px dashed var(--line);padding-top:12px}
 .datenblatt summary{cursor:pointer;color:var(--muted);font-size:.88rem;list-style:none;padding:6px 0}
 .datenblatt summary::-webkit-details-marker{display:none}
@@ -443,13 +507,63 @@ footer p{color:var(--dim);font-size:.85rem;line-height:1.7}
   <div class="wrap">
     <h2 id="h-preis">Einmal zahlen. Lebenslang besitzen.</h2>
     <div class="accent-bar" aria-hidden="true"></div>
-    <p class="lead">Vergleichen Sie: Agentur 2.500 – 8.000 €, Wordpress-Hosting 15 €/Monat × 5 Jahre = 900 €. GZ Handwerker-Web ist einmalig — und Sie behalten die fertige Website für immer.</p>
-    <div class="price-grid">
+    <p class="lead">Andere Wege kosten Sie über 5 Jahre <strong>vier- bis fünfstellig</strong> — und sind nie wirklich „bezahlt". GZ Handwerker-Web kaufen Sie einmal.</p>
+
+    <!-- Vergleichstabelle (Variante B, ohne Markennennung) -->
+    <div class="vergleich" aria-label="Kosten-Vergleich über 5 Jahre">
+      <table>
+        <caption class="visually-hidden">Vergleich der typischen Kosten verschiedener Lösungen für eine Handwerker-Website über 5 Jahre</caption>
+        <thead>
+          <tr>
+            <th scope="col">Über 5 Jahre</th>
+            <th scope="col">Web-Agentur + Wartung</th>
+            <th scope="col">Baukasten-Abo</th>
+            <th scope="col">Konfigurator-Abo</th>
+            <th scope="col" class="hl">GZ Handwerker-Web</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Kosten gesamt</th>
+            <td>~ 4.000 €</td>
+            <td>~ 1.200 – 1.500 €</td>
+            <td>~ 600 – 900 €</td>
+            <td class="hl"><strong>einmalig 79,90 €</strong></td>
+          </tr>
+          <tr><th scope="row">Folgekosten</th>
+            <td>50–200 €/Monat</td>
+            <td>10–25 €/Monat</td>
+            <td>jährliche Lizenz</td>
+            <td class="hl">keine</td>
+          </tr>
+          <tr><th scope="row">Website gehört Ihnen</th>
+            <td>Nur solange Vertrag läuft</td>
+            <td>Nur im Anbieter-Konto</td>
+            <td>Nur mit aktiver Lizenz</td>
+            <td class="hl">Ja, dauerhaft (HTML-Datei)</td>
+          </tr>
+          <tr><th scope="row">Bei jedem Hoster lauffähig</th>
+            <td>Nein</td>
+            <td>Nein</td>
+            <td>Teilweise</td>
+            <td class="hl">Ja, ab 2 €/Monat</td>
+          </tr>
+          <tr><th scope="row">DSGVO ohne Aufwand</th>
+            <td>individuell</td>
+            <td>Tracking, Cookies</td>
+            <td>Tracking, Cookies</td>
+            <td class="hl">By Design</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="vergleich-foot">Typische Marktpreise per Juni 2026. Eigene Recherche, keine Markennennung — die genannten Kategorien sind frei verfügbar im Internet zu prüfen.</p>
+    </div>
+
+    <div class="price-grid price-grid-3">
       <div class="price-card">
         <span class="edition demo">DEMO</span>
         <div class="price">0 € <small>kostenlos zum Ausprobieren</small></div>
         <ul>
-          <li class="yes">Konfigurator komplett bedienbar (Hero &amp; Leistungen)</li>
+          <li class="yes">Konfigurator bedienbar (Hero &amp; Leistungen)</li>
           <li class="yes">Live-Vorschau aller Eingaben</li>
           <li class="yes">Alle 6 Grundstile testen</li>
           <li class="yes">Farben, Schriften, Hintergründe ändern</li>
@@ -459,9 +573,10 @@ footer p{color:var(--dim);font-size:.85rem;line-height:1.7}
         </ul>
         <a class="btn btn-ghost" href="demo/index.html">▶ Demo öffnen</a>
       </div>
-      <div class="price-card full">
-        <span class="edition full">VOLLVERSION · PRO</span>
-        <div class="price">— &euro; <small>Preis in Kürze · einmalig · kein Abo</small></div>
+
+      <div class="price-card earlybird">
+        <span class="edition earlybird-tag">EARLYBIRD · NUR 30×</span>
+        <div class="price">49,90 € <small>einmalig · die ersten 30 Käufer</small></div>
         <ul>
           <li class="yes">Alle 6 Bereiche freigeschaltet</li>
           <li class="yes">Beliebig viele Websites erstellen &amp; exportieren</li>
@@ -469,7 +584,23 @@ footer p{color:var(--dim);font-size:.85rem;line-height:1.7}
           <li class="yes">Muster-Impressum &amp; Datenschutz eingebaut</li>
           <li class="yes">Live-Vorschau Desktop &amp; Mobil</li>
           <li class="yes">Ausführliches Handbuch</li>
-          <li class="yes">Sicherheits-Updates mind. 2 Jahre</li>
+          <li class="yes">Sicherheits-Updates mind. 3 Jahre</li>
+        </ul>
+        <a class="btn btn-primary disabled" href="#preis" aria-disabled="true" onclick="event.preventDefault()">Bald verfügbar</a>
+        <p class="earlybird-note">Limitiert auf die ersten 30 Käufer. Danach gilt der reguläre Preis.</p>
+      </div>
+
+      <div class="price-card full">
+        <span class="edition full">VOLLVERSION · PRO</span>
+        <div class="price">79,90 € <small>einmalig · Endpreis · kein Abo</small></div>
+        <ul>
+          <li class="yes">Alle 6 Bereiche freigeschaltet</li>
+          <li class="yes">Beliebig viele Websites erstellen &amp; exportieren</li>
+          <li class="yes">Konfiguration als JSON speichern/laden</li>
+          <li class="yes">Muster-Impressum &amp; Datenschutz eingebaut</li>
+          <li class="yes">Live-Vorschau Desktop &amp; Mobil</li>
+          <li class="yes">Ausführliches Handbuch</li>
+          <li class="yes">Sicherheits-Updates mind. 3 Jahre</li>
         </ul>
         <a class="btn btn-primary disabled" href="#preis" aria-disabled="true" onclick="event.preventDefault()">Bald verfügbar</a>
         <details class="datenblatt">
@@ -481,7 +612,7 @@ footer p{color:var(--dim);font-size:.85rem;line-height:1.7}
               <dt>Internet</dt><dd>Nur einmaliger Download nötig, danach komplett offline</dd>
               <dt>Lizenz</dt><dd>Einmalkauf, Nutzung für eigenen Handwerksbetrieb</dd>
               <dt>Schlüssel</dt><dd>Ed25519-signierter Lizenzschlüssel, fälschungssicher</dd>
-              <dt>Updates</dt><dd>Sicherheits- und Fehlerbehebungs-Updates mind. 2 Jahre</dd>
+              <dt>Updates</dt><dd>Sicherheits- und Fehlerbehebungs-Updates mind. 3 Jahre</dd>
               <dt>Speicherbedarf</dt><dd>ca. 200 KB Programmdatei + Ihre Bilder</dd>
               <dt>Datenschutz</dt><dd>Keine Server, keine Konten, keine Cookies — DSGVO by Design</dd>
             </dl>
@@ -543,7 +674,7 @@ footer p{color:var(--dim);font-size:.85rem;line-height:1.7}
     </details>
     <details>
       <summary>Was passiert, wenn meine Lizenz ausläuft?</summary>
-      <div class="a">Es gibt keinen Ablauf. Die Lizenz ist unbefristet. Sicherheits- und Fehlerbehebungs-Updates sind für mindestens 2 Jahre garantiert; die Software bleibt natürlich auch danach nutzbar.</div>
+      <div class="a">Es gibt keinen Ablauf. Die Lizenz ist unbefristet. Sicherheits- und Fehlerbehebungs-Updates sind für mindestens 3 Jahre garantiert; die Software bleibt natürlich auch danach nutzbar.</div>
     </details>
   </div>
 </section>
