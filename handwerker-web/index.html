@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GZ Handwerker-Web — Ihre Handwerker-Website in 30 Minuten · ohne Programmierer</title>
+<meta name="description" content="Konfigurator für Handwerksbetriebe: Hero, Leistungen, Galerie, Über uns, Kontakt — Live-Vorschau, einmal kaufen, Website als HTML exportieren. Kein Abo, kein Server, keine Programmierkenntnisse.">
+<meta name="theme-color" content="#ff6a00">
+<link rel="icon" type="image/svg+xml" href="../icon.svg">
+<style>
+/* ============================================================
+   GZ HANDWERKER-WEB · Landingpage mit 3 Themes (Switcher)
+   Themes: workshop (Werkstatt-Industrial), blueprint (Tech),
+           atelier (Premium-Schwarzgold)
+   ============================================================ */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',Tahoma,system-ui,-apple-system,sans-serif;line-height:1.65;font-size:16px;transition:background .3s,color .3s}
+
+/* ─── THEME: WORKSHOP (Werkstatt-Industrial) ─── */
+body.theme-workshop{
+  --bg:#1a1410;        --bg-deep:#0d0907;     --panel:#231a14;
+  --raised:#2d2118;    --card:#352718;        --line:#4a3826;
+  --line-strong:#6b5238;
+  --txt:#f0e6dc;       --muted:#a08e7c;       --dim:#7a6a5a;
+  --accent:#ff6a00;    --accent2:#ffa040;     --warn:#e85d04;
+  --green:#7fb069;     --gold:#d4a04a;
+  --head-font:'Segoe UI Semibold','Segoe UI',Tahoma,sans-serif;
+  --body-font:'Segoe UI',Tahoma,sans-serif;
+  --bg-gradient:radial-gradient(ellipse at top,#3d2411 0%,#1a1410 55%,#0d0907 100%);
+  --texture:repeating-linear-gradient(45deg,transparent 0 12px,rgba(255,106,0,.025) 12px 13px);
+  --hero-pattern:radial-gradient(circle at 80% 20%,rgba(255,106,0,.18),transparent 50%),radial-gradient(circle at 15% 80%,rgba(232,93,4,.12),transparent 45%);
+  --card-radius:6px;
+  --card-shadow:0 10px 28px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04);
+  --btn-radius:4px;
+  --btn-grad:linear-gradient(180deg,#ff8530 0%,#ff6a00 50%,#cc4a00 100%);
+  --btn-shadow:0 4px 0 #8a3300,0 6px 16px rgba(255,106,0,.4);
+}
+body.theme-workshop::before{
+  content:"";position:fixed;inset:0;z-index:-1;background:var(--bg-gradient),var(--texture);pointer-events:none;
+}
+
+/* ─── THEME: BLUEPRINT (Technische Zeichnung) ─── */
+body.theme-blueprint{
+  --bg:#0a1929;        --bg-deep:#050d18;     --panel:#0f2238;
+  --raised:#142b44;    --card:#162e48;        --line:#1f4060;
+  --line-strong:#2d5a82;
+  --txt:#dce8f5;       --muted:#7a9bbc;       --dim:#5a7790;
+  --accent:#00d4ff;    --accent2:#5ee5ff;     --warn:#ffb347;
+  --green:#7fffd4;     --gold:#ffd700;
+  --head-font:'Consolas','Monaco',monospace;
+  --body-font:'Segoe UI',system-ui,sans-serif;
+  --bg-gradient:linear-gradient(180deg,#0f2238 0%,#0a1929 50%,#050d18 100%);
+  --texture:linear-gradient(rgba(0,212,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.05) 1px,transparent 1px);
+  --hero-pattern:linear-gradient(90deg,rgba(0,212,255,.08) 0,transparent 1px) 0 0/40px 40px,linear-gradient(rgba(0,212,255,.08) 0,transparent 1px) 0 0/40px 40px;
+  --card-radius:2px;
+  --card-shadow:0 0 0 1px rgba(0,212,255,.15),0 8px 24px rgba(0,0,0,.4);
+  --btn-radius:2px;
+  --btn-grad:linear-gradient(180deg,#00e8ff 0%,#00b4d8 100%);
+  --btn-shadow:0 0 0 2px rgba(0,212,255,.2),0 4px 18px rgba(0,212,255,.35);
+}
+body.theme-blueprint::before{
+  content:"";position:fixed;inset:0;z-index:-1;background:var(--bg-gradient);pointer-events:none;
+}
+body.theme-blueprint::after{
+  content:"";position:fixed;inset:0;z-index:-1;background:var(--texture);background-size:40px 40px;opacity:.6;pointer-events:none;
+}
+
+/* ─── THEME: ATELIER (Premium-Schwarzgold) ─── */
+body.theme-atelier{
+  --bg:#0a0a0a;        --bg-deep:#000;        --panel:#141414;
+  --raised:#1c1c1c;    --card:#222;           --line:#2a2418;
+  --line-strong:#3d3520;
+  --txt:#f5ebd4;       --muted:#9a8f72;       --dim:#6a6248;
+  --accent:#d4af37;    --accent2:#f5d870;     --warn:#c89858;
+  --green:#a3b18a;     --gold:#d4af37;
+  --head-font:'Georgia','Times New Roman',serif;
+  --body-font:'Georgia','Times New Roman',serif;
+  --bg-gradient:radial-gradient(ellipse at top,#1a1408 0%,#0a0a0a 60%,#000 100%);
+  --texture:none;
+  --hero-pattern:radial-gradient(ellipse at center,rgba(212,175,55,.12),transparent 60%);
+  --card-radius:0px;
+  --card-shadow:0 0 0 1px rgba(212,175,55,.18),0 18px 42px rgba(0,0,0,.65);
+  --btn-radius:0px;
+  --btn-grad:linear-gradient(180deg,#f0c860 0%,#d4af37 50%,#a8862a 100%);
+  --btn-shadow:0 0 0 1px rgba(212,175,55,.4),0 6px 22px rgba(212,175,55,.25);
+}
+body.theme-atelier::before{
+  content:"";position:fixed;inset:0;z-index:-1;background:var(--bg-gradient);pointer-events:none;
+}
+
+/* ─── GEMEINSAMES LAYOUT ─── */
+body{background:var(--bg);color:var(--txt);font-family:var(--body-font)}
+h1,h2,h3,h4{font-family:var(--head-font);color:var(--txt);letter-spacing:.3px}
+body.theme-workshop h1,body.theme-workshop h2{font-weight:600;letter-spacing:.5px}
+body.theme-workshop h3,body.theme-workshop h4{font-weight:600}
+body.theme-workshop .eyebrow{font-weight:700}
+body.theme-blueprint h1,body.theme-blueprint h2{letter-spacing:2px}
+body.theme-atelier h1,body.theme-atelier h2{font-weight:400;letter-spacing:.5px;font-style:italic}
+a{color:var(--accent2);text-decoration:none}
+a:hover{color:var(--accent)}
+a:focus,button:focus,.btn:focus{outline:2px solid var(--accent);outline-offset:3px}
+
+.skip{position:absolute;left:-9999px}
+.skip:focus{position:fixed;left:8px;top:8px;background:var(--accent);color:#000;padding:8px 14px;z-index:9999;font-weight:bold}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* ─── THEME-SWITCHER (oben fix) ─── */
+.theme-switch{
+  position:fixed;top:14px;right:14px;z-index:1000;
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--card-radius);padding:6px;display:flex;gap:4px;
+  box-shadow:var(--card-shadow);
+}
+.theme-switch button{
+  background:transparent;border:none;color:var(--muted);
+  padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;
+  border-radius:calc(var(--card-radius) - 2px);font-family:var(--body-font);
+  transition:.15s;letter-spacing:.5px;
+}
+.theme-switch button:hover{color:var(--accent2)}
+.theme-switch button.active{background:var(--btn-grad);color:#1a1410}
+body.theme-blueprint .theme-switch button.active{color:#050d18}
+body.theme-atelier .theme-switch button.active{color:#0a0a0a}
+
+/* ─── HERO ─── */
+.hero{
+  position:relative;text-align:center;padding:110px 24px 70px;
+  background:var(--hero-pattern);background-size:cover;
+}
+.hero .eyebrow{
+  display:inline-block;color:var(--accent);font-weight:800;letter-spacing:3px;
+  font-size:11px;border:1px solid var(--accent);padding:6px 16px;border-radius:999px;
+  margin-bottom:22px;text-transform:uppercase;
+}
+body.theme-blueprint .hero .eyebrow{border-radius:2px;font-family:'Consolas',monospace}
+body.theme-atelier .hero .eyebrow{border-radius:0;letter-spacing:5px;border-color:var(--gold);color:var(--gold)}
+.hero h1{font-size:clamp(2.4rem,6.5vw,4rem);margin:14px 0 18px;line-height:1.1}
+.hero h1 .ac{color:var(--accent)}
+.hero .claim{font-size:clamp(1.05rem,2.4vw,1.3rem);color:var(--muted);max-width:680px;margin:0 auto 32px;line-height:1.55}
+.cta-row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:8px}
+
+.btn{
+  display:inline-block;padding:15px 32px;font-size:1.05rem;font-weight:800;
+  text-decoration:none;border-radius:var(--btn-radius);border:none;cursor:pointer;
+  transition:.18s;letter-spacing:.5px;text-transform:uppercase;font-family:var(--body-font);
+}
+.btn-primary{background:var(--btn-grad);color:#1a1410;box-shadow:var(--btn-shadow)}
+body.theme-blueprint .btn-primary{color:#050d18}
+body.theme-atelier .btn-primary{color:#0a0a0a;text-transform:none;font-style:italic;letter-spacing:1px}
+.btn-primary:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn-ghost{background:transparent;color:var(--txt);border:2px solid var(--line-strong)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+body.theme-atelier .btn-ghost{text-transform:none;font-style:italic;border-color:var(--gold);color:var(--gold)}
+
+.hero-trust{display:flex;flex-wrap:wrap;gap:18px 28px;justify-content:center;margin-top:42px;font-size:13px;color:var(--muted)}
+.hero-trust span{display:inline-flex;align-items:center;gap:7px}
+.hero-trust span::before{content:"✓";color:var(--accent);font-weight:800}
+
+/* ─── SECTIONS ─── */
+section{padding:72px 0;position:relative}
+section.alt{background:var(--panel)}
+section h2{font-size:clamp(1.7rem,4vw,2.4rem);text-align:center;margin-bottom:14px}
+section .lead{text-align:center;color:var(--muted);max-width:680px;margin:0 auto 48px;font-size:1.05rem}
+.accent-bar{width:72px;height:4px;background:var(--accent);margin:14px auto 32px;border-radius:0}
+body.theme-workshop .accent-bar{height:6px;border-radius:0;box-shadow:0 0 16px var(--accent)}
+body.theme-blueprint .accent-bar{height:2px;width:120px}
+body.theme-atelier .accent-bar{background:var(--gold);height:1px;width:120px}
+
+/* ─── PROBLEM/LOESUNG ─── */
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch}
+@media(max-width:720px){.problem-grid{grid-template-columns:1fr}}
+.p-card{background:var(--raised);border:1px solid var(--line);border-radius:var(--card-radius);padding:30px 28px;box-shadow:var(--card-shadow)}
+.p-card.bad{border-left:4px solid var(--warn)}
+.p-card.good{border-left:4px solid var(--green)}
+body.theme-blueprint .p-card.bad{border-left-width:2px;border-top:2px dashed var(--warn);border-left:none}
+body.theme-blueprint .p-card.good{border-left-width:2px;border-top:2px dashed var(--green);border-left:none}
+body.theme-atelier .p-card.bad,body.theme-atelier .p-card.good{border-left:none;border-top:2px solid var(--gold)}
+.p-card h3{font-size:1.2rem;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.p-card ul{list-style:none;padding:0}
+.p-card li{padding:8px 0 8px 28px;position:relative;color:var(--txt);font-size:.97rem;border-bottom:1px dashed var(--line)}
+.p-card li:last-child{border-bottom:none}
+.p-card.bad li::before{content:"✗";position:absolute;left:0;color:var(--warn);font-weight:800}
+.p-card.good li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:800}
+
+/* ─── FEATURES ─── */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.feature{
+  background:var(--raised);border:1px solid var(--line);border-radius:var(--card-radius);
+  padding:24px 22px;box-shadow:var(--card-shadow);transition:.18s;
+}
+.feature:hover{transform:translateY(-3px);border-color:var(--accent)}
+.feature .ico{font-size:1.8rem;display:block;margin-bottom:10px}
+.feature h3{font-size:1.05rem;margin-bottom:8px}
+.feature p{color:var(--muted);font-size:.92rem;line-height:1.55}
+body.theme-blueprint .feature{border-top:2px solid var(--accent)}
+body.theme-atelier .feature{border:none;border-top:1px solid var(--gold);background:linear-gradient(180deg,rgba(212,175,55,.05),transparent)}
+
+/* ─── STEPS (So funktioniert es) ─── */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;counter-reset:step}
+.step{
+  background:var(--raised);border:1px solid var(--line);border-radius:var(--card-radius);
+  padding:30px 22px 24px;text-align:center;position:relative;counter-increment:step;
+  box-shadow:var(--card-shadow);
+}
+.step::before{
+  content:counter(step,decimal-leading-zero);
+  position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+  background:var(--btn-grad);color:#1a1410;
+  width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  font-weight:800;font-size:1.05rem;box-shadow:var(--btn-shadow);font-family:var(--body-font);
+}
+body.theme-blueprint .step::before{border-radius:2px;color:#050d18}
+body.theme-atelier .step::before{border-radius:0;color:#0a0a0a;width:60px;height:32px;font-style:italic}
+.step h3{margin:18px 0 10px;font-size:1.1rem}
+.step p{color:var(--muted);font-size:.92rem}
+
+/* ─── PRIVACY ─── */
+.privacy{
+  background:linear-gradient(135deg,rgba(127,176,105,.1),transparent);
+  border:1px solid var(--green);border-radius:var(--card-radius);
+  padding:42px 30px;text-align:center;
+}
+body.theme-blueprint .privacy{border-radius:2px}
+body.theme-atelier .privacy{border-color:var(--gold);background:linear-gradient(135deg,rgba(212,175,55,.06),transparent)}
+.privacy h2{color:var(--green);margin-bottom:6px}
+body.theme-atelier .privacy h2{color:var(--gold)}
+.privacy ul{list-style:none;display:flex;flex-wrap:wrap;gap:14px 30px;justify-content:center;margin-top:22px;padding:0}
+.privacy li{color:var(--txt);font-size:.97rem;font-weight:600}
+.privacy li::before{content:"✓ ";color:var(--green);font-weight:800}
+body.theme-atelier .privacy li::before{color:var(--gold)}
+
+/* ─── PRICING ─── */
+.price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:840px;margin:0 auto}
+.price-card{
+  background:var(--raised);border:1px solid var(--line);border-radius:var(--card-radius);
+  padding:32px 28px;display:flex;flex-direction:column;box-shadow:var(--card-shadow);
+  position:relative;
+}
+.price-card.full{border-color:var(--accent);box-shadow:0 0 40px rgba(255,106,0,.12),var(--card-shadow)}
+body.theme-blueprint .price-card.full{box-shadow:0 0 40px rgba(0,212,255,.18),var(--card-shadow)}
+body.theme-atelier .price-card.full{border-color:var(--gold);box-shadow:0 0 50px rgba(212,175,55,.15),var(--card-shadow)}
+.edition{
+  display:inline-block;align-self:flex-start;font-size:.7rem;letter-spacing:2px;font-weight:800;
+  padding:5px 14px;border-radius:999px;margin-bottom:18px;text-transform:uppercase;
+}
+body.theme-blueprint .edition{border-radius:2px}
+body.theme-atelier .edition{border-radius:0;font-style:italic;letter-spacing:3px}
+.edition.demo{background:var(--card);color:var(--muted);border:1px solid var(--line-strong)}
+.edition.full{background:var(--btn-grad);color:#1a1410}
+body.theme-blueprint .edition.full{color:#050d18}
+body.theme-atelier .edition.full{color:#0a0a0a}
+.price{font-size:2.6rem;font-weight:800;margin:8px 0 4px;font-family:var(--head-font)}
+.price small{font-size:.85rem;color:var(--muted);font-weight:400;display:block;margin-top:2px}
+.price-card ul{list-style:none;padding:0;margin:22px 0;flex:1}
+.price-card li{padding:7px 0 7px 26px;position:relative;font-size:.94rem;border-bottom:1px dashed var(--line)}
+.price-card li:last-child{border-bottom:none}
+.price-card li.yes::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:800}
+.price-card li.no::before{content:"—";position:absolute;left:0;color:var(--dim);font-weight:800}
+.price-card li.no{color:var(--dim)}
+
+.datenblatt{margin-top:16px;border-top:1px dashed var(--line);padding-top:12px}
+.datenblatt summary{cursor:pointer;color:var(--muted);font-size:.88rem;list-style:none;padding:6px 0}
+.datenblatt summary::-webkit-details-marker{display:none}
+.datenblatt summary::before{content:"▸ ";color:var(--accent)}
+.datenblatt[open] summary::before{content:"▾ "}
+.datenblatt dl{margin-top:10px;font-size:.88rem;display:grid;grid-template-columns:auto 1fr;gap:8px 14px}
+.datenblatt dt{color:var(--muted);font-weight:700}
+.datenblatt dd{color:var(--txt)}
+.legal-note{text-align:center;color:var(--muted);font-size:.82rem;margin-top:24px;max-width:680px;margin-left:auto;margin-right:auto;line-height:1.6}
+.legal-note a{color:var(--accent2)}
+
+/* ─── FAQ ─── */
+.faq details{
+  background:var(--raised);border:1px solid var(--line);border-radius:var(--card-radius);
+  margin-bottom:10px;box-shadow:var(--card-shadow);
+}
+.faq summary{cursor:pointer;padding:18px 22px;font-weight:700;list-style:none;color:var(--txt);font-size:1.02rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";float:right;color:var(--accent);font-weight:800;font-size:1.3rem;line-height:1}
+.faq details[open] summary::after{content:"–"}
+.faq .a{padding:0 22px 18px;color:var(--muted);line-height:1.6}
+
+/* ─── FOOTER ─── */
+footer{padding:42px 24px 28px;text-align:center;border-top:1px solid var(--line);margin-top:42px}
+footer nav{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin-bottom:14px}
+footer nav a{color:var(--muted);font-size:.92rem}
+footer nav a:hover{color:var(--accent)}
+footer p{color:var(--dim);font-size:.85rem;line-height:1.7}
+
+/* ─── REDUCED MOTION ─── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none !important;animation:none !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body class="theme-atelier">
+
+<a href="#content" class="skip">Zum Inhalt springen</a>
+
+<div class="theme-switch" role="group" aria-label="Design-Stil auswählen">
+  <button type="button" data-theme="atelier" class="active" aria-pressed="true">✦ Atelier</button>
+  <button type="button" data-theme="blueprint" aria-pressed="false">▦ Blueprint</button>
+  <button type="button" data-theme="workshop" aria-pressed="false">⚒ Werkstatt</button>
+</div>
+
+<main id="content">
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero" aria-labelledby="h-hero">
+  <div class="wrap">
+    <span class="eyebrow">Website-Konfigurator für Handwerksbetriebe</span>
+    <h1 id="h-hero">Ihre Handwerker-Website<br><span class="ac">in 30 Minuten</span> — ohne Programmierer</h1>
+    <p class="claim">Eingeben, sehen, exportieren. Keine Vorlage von der Stange — Sie konfigurieren Hero, Leistungen, Galerie, Über uns und Kontakt mit eigenen Farben, Fotos und Texten. Live-Vorschau immer dabei. Am Ende: eine fertige HTML-Datei, die Sie überall hochladen können.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="demo/index.html">▶ Demo starten — kostenlos</a>
+      <a class="btn btn-ghost" href="#preis">Vollversion ansehen</a>
+    </div>
+    <div class="hero-trust" aria-label="Vorteile">
+      <span>Einmalkauf, kein Abo</span>
+      <span>Kein Server, keine Konten</span>
+      <span>Offline, eine Datei</span>
+      <span>DSGVO-konform</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PROBLEM/LÖSUNG ═══════════ -->
+<section class="alt" aria-labelledby="h-prob">
+  <div class="wrap">
+    <h2 id="h-prob">Warum Handwerker keine Website haben</h2>
+    <div class="accent-bar" aria-hidden="true"></div>
+    <p class="lead">Wordpress-Updates, monatliche Hosting-Pakete, Agenturen mit Sicherheitsabstand zur Werkstatt. Oder eine Visitenkarte mit "Coming Soon" seit 2019. So muss das nicht sein.</p>
+    <div class="problem-grid">
+      <div class="p-card bad">
+        <h3>⚠ Ohne GZ Handwerker-Web</h3>
+        <ul>
+          <li>Agentur: 2.500 – 8.000 € einmalig + Wartung</li>
+          <li>Wordpress: monatliches Hosting, Plugin-Updates, Sicherheitslücken</li>
+          <li>Baukasten-Abo: 15 – 30 € jeden Monat, ewig</li>
+          <li>Eigenbau: HTML/CSS lernen, statt Aufträge erledigen</li>
+          <li>Resultat: Sie haben keine Website. Auftraggeber finden Sie nicht.</li>
+        </ul>
+      </div>
+      <div class="p-card good">
+        <h3>✓ Mit GZ Handwerker-Web</h3>
+        <ul>
+          <li>Einmalig kaufen — keine Folgekosten</li>
+          <li>30 Minuten Konfigurator klicken — Website fertig</li>
+          <li>Bei jedem Hoster für 2 €/Monat lauffähig (statisches HTML)</li>
+          <li>Sie sehen jede Änderung live in der Vorschau</li>
+          <li>Resultat: Heute gekauft, morgen online.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SO FUNKTIONIERT'S ═══════════ -->
+<section aria-labelledby="h-steps">
+  <div class="wrap">
+    <h2 id="h-steps">In 4 Schritten zur eigenen Website</h2>
+    <div class="accent-bar" aria-hidden="true"></div>
+    <p class="lead">Keine Software installieren, keine Datenbank, kein Konto. Sie öffnen die HTML-Datei in Ihrem Browser — und legen los.</p>
+    <div class="steps">
+      <div class="step">
+        <h3>Firma eingeben</h3>
+        <p>Name, Slogan, Branche, Kontakt, Öffnungszeiten — alles in Formularfeldern. Logo und Galeriefotos einfach hochladen.</p>
+      </div>
+      <div class="step">
+        <h3>Stil wählen</h3>
+        <p>6 Stile, freie Farbpaletten, Karten-Rahmen pro Bereich, 15 Hintergrund-Presets. Live-Vorschau zeigt jede Änderung sofort.</p>
+      </div>
+      <div class="step">
+        <h3>Inhalte füllen</h3>
+        <p>Leistungen, Galerie, Über uns, Kundenstimmen, Call-to-Action. Beliebig viele Einträge, mit Drag-Reihenfolge.</p>
+      </div>
+      <div class="step">
+        <h3>Exportieren</h3>
+        <p>Ein Klick — fertige HTML-Datei landet auf Ihrem PC. Bei jedem Hoster hochladen. Fertig.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FEATURES ═══════════ -->
+<section class="alt" aria-labelledby="h-feat">
+  <div class="wrap">
+    <h2 id="h-feat">Alles, was Ihre Handwerker-Site braucht</h2>
+    <div class="accent-bar" aria-hidden="true"></div>
+    <p class="lead">Sechs konfigurierbare Bereiche, ein Konfigurator, keine Limits bei Farben, Bildern oder Inhalten.</p>
+    <div class="features">
+      <div class="feature"><span class="ico" aria-hidden="true">🎯</span><h3>Startbereich (Hero)</h3><p>Logo, Slogan, Eyebrow-Zeile, Vertrauens-Karten ("Meister", "Region", "Eigene Fertigung"), Hero-Foto.</p></div>
+      <div class="feature"><span class="ico" aria-hidden="true">🛠</span><h3>Leistungen</h3><p>Beliebig viele Karten mit Icon, Titel und Beschreibung. Eigene Reihenfolge, eigene Farben.</p></div>
+      <div class="feature"><span class="ico" aria-hidden="true">🖼</span><h3>Referenzen-Galerie</h3><p>Bilder hochladen, Lightbox eingebaut, optionale Bildunterschriften. Bis ins kleinste Detail Ihre Arbeit zeigen.</p></div>
+      <div class="feature"><span class="ico" aria-hidden="true">👥</span><h3>Über uns</h3><p>Mehrere Bild+Text-Blöcke (Team, Werkstatt, Geschichte, Maschinen) plus Vorteils-Liste.</p></div>
+      <div class="feature"><span class="ico" aria-hidden="true">⭐</span><h3>Kundenstimmen</h3><p>Bewertungen mit Sternen, Name und Ort. Beliebig viele, frei sortierbar.</p></div>
+      <div class="feature"><span class="ico" aria-hidden="true">📞</span><h3>Kontakt &amp; Öffnungszeiten</h3><p>Adresse, Telefon, E-Mail, optionales Kontaktformular (mailto), Wochen-Tabelle mit Live-Status "Jetzt geöffnet / Geschlossen".</p></div>
+      <div class="feature"><span class="ico" aria-hidden="true">🎨</span><h3>Vollständig anpassbar</h3><p>6 Grundstile, eigene Farbpaletten pro Bereich, Karten-Rahmen, Hintergrund-Bilder, eigene Schriften. Kein "sieht aus wie alle anderen".</p></div>
+      <div class="feature"><span class="ico" aria-hidden="true">📜</span><h3>Rechtstexte inklusive</h3><p>Muster-Impressum und Muster-Datenschutz nach § 5 DDG / DSGVO werden automatisch mit eingebaut. Felder ausfüllen — fertig.</p></div>
+      <div class="feature"><span class="ico" aria-hidden="true">📱</span><h3>Mobil &amp; barrierefrei</h3><p>Responsive Design, ARIA-Labels, WCAG-konforme Kontraste, Tastatur-bedienbar. Sieht auf jedem Gerät gut aus.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PRIVACY ═══════════ -->
+<section aria-labelledby="h-priv">
+  <div class="wrap">
+    <div class="privacy">
+      <h2 id="h-priv">🛡 Keine Cloud. Kein Konto. Kein Tracking.</h2>
+      <p style="margin-top:10px;max-width:580px;margin-left:auto;margin-right:auto;color:var(--muted)">GZ Handwerker-Web läuft komplett in Ihrem Browser. Konfiguration, Bilder, Texte — bleibt alles bei Ihnen.</p>
+      <ul aria-label="Datenschutz-Fakten">
+        <li>Kein Server, kein Konto</li>
+        <li>Keine Tracking-Cookies</li>
+        <li>Offline lauffähig</li>
+        <li>DSGVO-freundlich by Design</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PREIS ═══════════ -->
+<section id="preis" class="alt" aria-labelledby="h-preis">
+  <div class="wrap">
+    <h2 id="h-preis">Einmal zahlen. Lebenslang besitzen.</h2>
+    <div class="accent-bar" aria-hidden="true"></div>
+    <p class="lead">Vergleichen Sie: Agentur 2.500 – 8.000 €, Wordpress-Hosting 15 €/Monat × 5 Jahre = 900 €. GZ Handwerker-Web ist einmalig — und Sie behalten die fertige Website für immer.</p>
+    <div class="price-grid">
+      <div class="price-card">
+        <span class="edition demo">DEMO</span>
+        <div class="price">0 € <small>kostenlos zum Ausprobieren</small></div>
+        <ul>
+          <li class="yes">Konfigurator komplett bedienbar (Hero &amp; Leistungen)</li>
+          <li class="yes">Live-Vorschau aller Eingaben</li>
+          <li class="yes">Alle 6 Grundstile testen</li>
+          <li class="yes">Farben, Schriften, Hintergründe ändern</li>
+          <li class="no">Galerie, Über uns, CTA, Kontakt</li>
+          <li class="no">Website exportieren</li>
+          <li class="no">Konfiguration speichern</li>
+        </ul>
+        <a class="btn btn-ghost" href="demo/index.html">▶ Demo öffnen</a>
+      </div>
+      <div class="price-card full">
+        <span class="edition full">VOLLVERSION · PRO</span>
+        <div class="price">PREIS_PLATZHALTER &euro; <small>einmalig · Endpreis · kein Abo</small></div>
+        <ul>
+          <li class="yes">Alle 6 Bereiche freigeschaltet</li>
+          <li class="yes">Beliebig viele Websites erstellen &amp; exportieren</li>
+          <li class="yes">Konfiguration als JSON speichern/laden</li>
+          <li class="yes">Muster-Impressum &amp; Datenschutz eingebaut</li>
+          <li class="yes">Live-Vorschau Desktop &amp; Mobil</li>
+          <li class="yes">Ausführliches Handbuch</li>
+          <li class="yes">Sicherheits-Updates mind. 2 Jahre</li>
+        </ul>
+        <a class="btn btn-primary" href="https://www.checkout-ds24.com/product/PRODUKTNUMMER_PLATZHALTER/">Jetzt kaufen</a>
+        <details class="datenblatt">
+          <summary>Datenblatt anzeigen</summary>
+          <div>
+            <dl>
+              <dt>Typ</dt><dd>Single-File Web-Anwendung, läuft im Browser</dd>
+              <dt>Plattformen</dt><dd>Windows, macOS, Linux, Android, iOS — jeder moderne Browser</dd>
+              <dt>Internet</dt><dd>Nur einmaliger Download nötig, danach komplett offline</dd>
+              <dt>Lizenz</dt><dd>Einmalkauf, Nutzung für eigenen Handwerksbetrieb</dd>
+              <dt>Schlüssel</dt><dd>Ed25519-signierter Lizenzschlüssel, fälschungssicher</dd>
+              <dt>Updates</dt><dd>Sicherheits- und Fehlerbehebungs-Updates mind. 2 Jahre</dd>
+              <dt>Speicherbedarf</dt><dd>ca. 200 KB Programmdatei + Ihre Bilder</dd>
+              <dt>Datenschutz</dt><dd>Keine Server, keine Konten, keine Cookies — DSGVO by Design</dd>
+            </dl>
+          </div>
+        </details>
+      </div>
+    </div>
+    <p class="legal-note">Endpreis — gemäß § 19 UStG wird keine Umsatzsteuer ausgewiesen. Verkauf durch Gerd Zimmermann GZ-AI.-Stacks. Für Verbraucher gilt das gesetzliche Widerrufsrecht; Details in der <a href="widerruf.html">Widerrufsbelehrung</a> und den <a href="agb.html">AGB</a>.</p>
+  </div>
+</section>
+
+<!-- ═══════════ INSTALL ═══════════ -->
+<section aria-labelledby="h-install">
+  <div class="wrap">
+    <h2 id="h-install">So bekommen Sie die fertige Website online</h2>
+    <div class="accent-bar" aria-hidden="true"></div>
+    <p class="lead">Nach dem Export haben Sie eine einzige HTML-Datei. Diese laden Sie bei einem beliebigen Hoster hoch — auch ohne Datenbank, auch ohne PHP.</p>
+    <div class="steps">
+      <div class="step"><h3>Website exportieren</h3><p>Im Konfigurator auf „Website exportieren" klicken — Sie bekommen eine HTML-Datei.</p></div>
+      <div class="step"><h3>Hoster wählen</h3><p>Reicht: Statisches Hosting für 2 – 5 €/Monat (z.B. Strato, IONOS, All-Inkl. Webhosting Basis).</p></div>
+      <div class="step"><h3>Hochladen</h3><p>Per FTP oder über die Hoster-Oberfläche die HTML-Datei auf den Server kopieren. Datei umbenennen in <code>index.html</code>.</p></div>
+      <div class="step"><h3>Domain verbinden</h3><p>Ihre Wunsch-Domain (z.B. ihrname-metallbau.de) auf den Hoster zeigen lassen. Fertig — online.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FAQ ═══════════ -->
+<section class="alt faq" aria-labelledby="h-faq">
+  <div class="wrap">
+    <h2 id="h-faq">Häufige Fragen</h2>
+    <div class="accent-bar" aria-hidden="true"></div>
+    <details>
+      <summary>Brauche ich Programmierkenntnisse?</summary>
+      <div class="a">Nein. Sie tippen in Formularfelder (wie bei einem Bestellformular) und sehen rechts daneben live, wie die Website aussieht. Kein HTML, kein CSS, kein JavaScript zu lernen.</div>
+    </details>
+    <details>
+      <summary>Wer hostet die fertige Website?</summary>
+      <div class="a">Sie selbst — bei einem beliebigen Anbieter Ihrer Wahl. Da es nur eine HTML-Datei ist, reicht das günstigste Webhosting-Paket. Wir empfehlen Anbieter wie Strato, IONOS, All-Inkl. oder Netcup ab ca. 2 €/Monat.</div>
+    </details>
+    <details>
+      <summary>Was, wenn ich später etwas ändern will?</summary>
+      <div class="a">Konfigurator wieder öffnen, Konfiguration laden (als JSON gesichert), ändern, neu exportieren, neue HTML-Datei hochladen. Dauert 5 Minuten.</div>
+    </details>
+    <details>
+      <summary>Darf ich die Software für mehrere Kunden nutzen?</summary>
+      <div class="a">Die Standard-Lizenz erlaubt die Nutzung für Ihren eigenen Handwerksbetrieb. Für die Nutzung als Dienstleistung für mehrere Kunden (Web-Agentur-Modell) bitte separat anfragen — wir machen dafür gerne ein faires Angebot.</div>
+    </details>
+    <details>
+      <summary>Was kostet das Hosting wirklich?</summary>
+      <div class="a">Statische HTML-Pakete starten bei 2 – 3 € pro Monat. Domain (z.B. .de) zusätzlich ca. 0,50 – 1 € pro Monat. Summa: ca. 30 – 50 € pro Jahr — Ihre einzige Folgekostentaste.</div>
+    </details>
+    <details>
+      <summary>Was ist mit Google-Auffindbarkeit (SEO)?</summary>
+      <div class="a">GZ Handwerker-Web schreibt sauberen HTML-Code mit Meta-Tags, semantischen Überschriften, Title- und Description-Feldern. Sie tragen Branche, Region und Öffnungszeiten ein — Google findet das.</div>
+    </details>
+    <details>
+      <summary>Gibt es ein Kontaktformular?</summary>
+      <div class="a">Ja, optional. Es öffnet beim Klick die E-Mail-Anwendung des Besuchers (mailto-Verfahren) — DSGVO-freundlich, da keine Daten auf Ihrem Server ankommen. Wenn Sie ein Formular mit Server-Versand brauchen, lässt sich das nachträglich ergänzen.</div>
+    </details>
+    <details>
+      <summary>Was passiert, wenn meine Lizenz ausläuft?</summary>
+      <div class="a">Es gibt keinen Ablauf. Die Lizenz ist unbefristet. Sicherheits- und Fehlerbehebungs-Updates sind für mindestens 2 Jahre garantiert; die Software bleibt natürlich auch danach nutzbar.</div>
+    </details>
+  </div>
+</section>
+
+<!-- ═══════════ FINAL CTA ═══════════ -->
+<section aria-labelledby="h-final" style="text-align:center;padding:90px 24px">
+  <div class="wrap">
+    <h2 id="h-final">Heute eingerichtet. Morgen online.</h2>
+    <div class="accent-bar" aria-hidden="true"></div>
+    <p class="lead">Probieren Sie die Demo aus — kostenlos, direkt im Browser, keine Anmeldung.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="demo/index.html">▶ Demo starten</a>
+      <a class="btn btn-ghost" href="#preis">Zur Vollversion</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer role="contentinfo">
+  <nav aria-label="Rechtliches">
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+    <a href="agb.html">AGB</a>
+    <a href="widerruf.html">Widerruf</a>
+    <a href="HANDBUCH.html">Handbuch</a>
+  </nav>
+  <p>© Gerd Zimmermann GZ-AI.-Stacks · Görlitzer Straße 10 · 91315 Höchstadt a.d. Aisch</p>
+  <p><a href="https://www.gz-ai-stacks.de">www.gz-ai-stacks.de</a> · <a href="mailto:gz.ai.stacks@gmail.com">gz.ai.stacks@gmail.com</a> · 0151 177 37 336</p>
+</footer>
+
+<script>
+/* Theme-Switcher mit localStorage */
+(function(){
+  const LS_KEY = "gzhw-landing-theme";
+  const buttons = document.querySelectorAll(".theme-switch button");
+  const body = document.body;
+  function setTheme(name){
+    body.classList.remove("theme-workshop","theme-blueprint","theme-atelier");
+    body.classList.add("theme-"+name);
+    buttons.forEach(b=>{
+      const active = b.dataset.theme===name;
+      b.classList.toggle("active",active);
+      b.setAttribute("aria-pressed",active);
+    });
+    try{ localStorage.setItem(LS_KEY,name); }catch(e){}
+  }
+  buttons.forEach(b=>b.addEventListener("click",()=>setTheme(b.dataset.theme)));
+  try{
+    const saved = localStorage.getItem(LS_KEY);
+    if(saved && ["workshop","blueprint","atelier"].includes(saved)) setTheme(saved);
+  }catch(e){}
+})();
+</script>
+
+</body>
+</html>
