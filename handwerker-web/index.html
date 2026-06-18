@@ -289,6 +289,20 @@ footer nav a{color:var(--muted);font-size:.92rem}
 footer nav a:hover{color:var(--accent)}
 footer p{color:var(--dim);font-size:.85rem;line-height:1.7}
 
+/* ─── MOBILE THEME-SWITCHER ─── */
+@media (max-width:760px){
+  .theme-switch{top:8px;right:8px;padding:4px;gap:2px}
+  .theme-switch button{padding:6px 8px;font-size:10px;letter-spacing:0}
+}
+@media (max-width:480px){
+  .theme-switch{padding:3px;gap:1px}
+  .theme-switch button{padding:6px 7px;font-size:0;min-width:32px}
+  .theme-switch button::before{font-size:14px;line-height:1}
+  .theme-switch button[data-theme="atelier"]::before{content:"\2726"}
+  .theme-switch button[data-theme="blueprint"]::before{content:"\25A6"}
+  .theme-switch button[data-theme="workshop"]::before{content:"\2692"}
+}
+
 /* ─── REDUCED MOTION ─── */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition:none !important;animation:none !important;scroll-behavior:auto !important}

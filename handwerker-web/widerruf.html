@@ -106,7 +106,20 @@ body.theme-atelier footer{letter-spacing:3px;font-style:italic;text-transform:no
 
 .form-muster{background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);border:1px solid var(--line-strong);padding:22px 26px;margin:24px 0;font-family:var(--body-font);border-radius:var(--radius)}
 
-@media (max-width:760px){main{padding:32px 24px}header{padding:48px 20px 28px}.theme-switch{top:8px;right:8px}.theme-switch button{padding:6px 9px;font-size:10px}}
+@media (max-width:760px){
+  main{padding:32px 24px}
+  header{padding:48px 20px 28px}
+  .theme-switch{top:8px;right:8px;padding:4px;gap:2px}
+  .theme-switch button{padding:6px 8px;font-size:10px;letter-spacing:0}
+}
+@media (max-width:480px){
+  .theme-switch{padding:3px;gap:1px}
+  .theme-switch button{padding:6px 7px;font-size:0;min-width:32px}
+  .theme-switch button::before{font-size:14px;line-height:1}
+  .theme-switch button[data-theme="atelier"]::before{content:"º6"}
+  .theme-switch button[data-theme="blueprint"]::before{content:"A6"}
+  .theme-switch button[data-theme="workshop"]::before{content:"92"}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
 @media (prefers-contrast:more){body{color:#fff} .box{border-width:2px}}
 </style>
