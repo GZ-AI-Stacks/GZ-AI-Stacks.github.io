@@ -259,6 +259,10 @@ body.theme-atelier .edition.full{color:#0a0a0a}
 .price-card li.yes::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:800}
 .price-card li.no::before{content:"—";position:absolute;left:0;color:var(--dim);font-weight:800}
 .price-card li.no{color:var(--dim)}
+.btn.disabled{opacity:.55;cursor:not-allowed;filter:grayscale(.3)}
+.btn.disabled:hover{transform:none}
+.price-card{min-width:0;overflow:hidden}
+.price{word-break:break-word}
 
 .datenblatt{margin-top:16px;border-top:1px dashed var(--line);padding-top:12px}
 .datenblatt summary{cursor:pointer;color:var(--muted);font-size:.88rem;list-style:none;padding:6px 0}
@@ -457,7 +461,7 @@ footer p{color:var(--dim);font-size:.85rem;line-height:1.7}
       </div>
       <div class="price-card full">
         <span class="edition full">VOLLVERSION · PRO</span>
-        <div class="price">PREIS_PLATZHALTER &euro; <small>einmalig · Endpreis · kein Abo</small></div>
+        <div class="price">— &euro; <small>Preis in Kürze · einmalig · kein Abo</small></div>
         <ul>
           <li class="yes">Alle 6 Bereiche freigeschaltet</li>
           <li class="yes">Beliebig viele Websites erstellen &amp; exportieren</li>
@@ -467,7 +471,7 @@ footer p{color:var(--dim);font-size:.85rem;line-height:1.7}
           <li class="yes">Ausführliches Handbuch</li>
           <li class="yes">Sicherheits-Updates mind. 2 Jahre</li>
         </ul>
-        <a class="btn btn-primary" href="https://www.checkout-ds24.com/product/PRODUKTNUMMER_PLATZHALTER/">Jetzt kaufen</a>
+        <a class="btn btn-primary disabled" href="#preis" aria-disabled="true" onclick="event.preventDefault()">Bald verfügbar</a>
         <details class="datenblatt">
           <summary>Datenblatt anzeigen</summary>
           <div>
