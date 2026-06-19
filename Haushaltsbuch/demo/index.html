@@ -57,7 +57,7 @@
       radial-gradient(800px 700px at 50% 110%, var(--bg-glow-1), transparent 60%);
   }
   .zahl{font-variant-numeric:tabular-nums}
-  .wrap{max-width:780px;margin:0 auto;padding:18px 18px 110px}
+  .wrap{max-width:780px;margin:0 auto;padding:18px 18px 24px}
 
   /* ===== Kopf ===== */
   header.app-kopf{display:flex;align-items:center;justify-content:space-between;padding:12px 2px 20px;gap:10px}
@@ -410,18 +410,24 @@
     box-shadow:var(--schatten);display:flex;align-items:center;gap:12px;}
   .toast.zeigen{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
   .toast button{background:none;border:none;color:var(--gold);font-weight:700;cursor:pointer;font-size:.88rem;text-decoration:underline}
-  .fuss{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);
-    color:var(--text-leise);font-size:.7rem;letter-spacing:.5px;z-index:5;
-    text-align:center;max-width:calc(100vw - 32px);line-height:1.6;
-    background:rgba(7,13,10,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-    padding:6px 14px;border-radius:20px;border:1px solid var(--linie)}
+  .fuss{
+    margin:36px auto 0;padding:18px 16px 24px;max-width:780px;
+    color:var(--text-leise);font-size:.78rem;letter-spacing:.3px;
+    text-align:center;line-height:1.9;
+    border-top:1px solid var(--linie);
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+    gap:6px 10px;
+  }
   .fuss-link{background:none;border:none;color:var(--text-leise);font:inherit;
-    cursor:pointer;padding:0;text-decoration:underline;text-decoration-color:transparent;
-    transition:color .15s, text-decoration-color .15s}
-  .fuss-link:hover{color:var(--gold);text-decoration-color:var(--gold)}
-  .fuss-link:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:3px}
+    cursor:pointer;padding:6px 10px;text-decoration:none;border-radius:8px;
+    transition:color .15s, background .15s;min-height:32px;
+    display:inline-flex;align-items:center;}
+  .fuss-link:hover{color:var(--gold);background:rgba(227,178,60,.08)}
+  .fuss-link:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .fuss-trenner{opacity:.4;user-select:none}
   @media (max-width:520px){
-    .fuss{font-size:.65rem;padding:5px 10px}
+    .fuss{font-size:.74rem;padding:16px 12px 20px;gap:4px 6px}
+    .fuss-link{padding:5px 8px}
   }
 
   /* ===== Emoji-Picker ===== */
@@ -1691,12 +1697,17 @@
 </dialog>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<div class="fuss">
-  Haushaltsbuch · GZ-AI.-Stacks ·
-  <button type="button" class="fuss-link" data-rechtstext="impressum" aria-label="Impressum öffnen">Impressum</button> ·
-  <button type="button" class="fuss-link" data-rechtstext="datenschutz" aria-label="Datenschutz öffnen">Datenschutz</button> ·
-  <button type="button" class="fuss-link" data-rechtstext="agb" aria-label="AGB öffnen">AGB</button> ·
-  <button type="button" class="fuss-link" data-rechtstext="widerruf" aria-label="Widerruf öffnen">Widerruf</button> ·
+<div class="fuss" role="contentinfo">
+  <span>Haushaltsbuch · GZ-AI.-Stacks</span>
+  <span class="fuss-trenner" aria-hidden="true">·</span>
+  <button type="button" class="fuss-link" data-rechtstext="impressum" aria-label="Impressum öffnen">Impressum</button>
+  <span class="fuss-trenner" aria-hidden="true">·</span>
+  <button type="button" class="fuss-link" data-rechtstext="datenschutz" aria-label="Datenschutz öffnen">Datenschutz</button>
+  <span class="fuss-trenner" aria-hidden="true">·</span>
+  <button type="button" class="fuss-link" data-rechtstext="agb" aria-label="AGB öffnen">AGB</button>
+  <span class="fuss-trenner" aria-hidden="true">·</span>
+  <button type="button" class="fuss-link" data-rechtstext="widerruf" aria-label="Widerruf öffnen">Widerruf</button>
+  <span class="fuss-trenner" aria-hidden="true">·</span>
   <button type="button" class="fuss-link" data-rechtstext="haftung" aria-label="Haftungsausschluss öffnen">Haftung</button>
 </div>
 
