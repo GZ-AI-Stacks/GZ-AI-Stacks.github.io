@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" data-theme="light">
+<html lang="de" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -893,6 +893,7 @@
       <button class="tool-btn hilfe-btn" id="btnTourenAuswahl" aria-label="App-Tour starten" title="App-Tour starten">📚 Tour</button>
       <button class="tool-btn zahl" id="btnZoomMinus" aria-label="Schrift verkleinern (Taste Minus)" title="Verkleinern (−)">−</button>
       <button class="tool-btn zahl" id="btnZoomPlus" aria-label="Schrift vergrößern (Taste Plus)" title="Vergrößern (+)">+</button>
+      <button class="tool-btn" id="btnTheme" aria-label="Hell- / Dunkelmodus umschalten" title="Hell / Dunkel">☀</button>
       <button class="tool-btn" id="btnEinstellungen" aria-label="Einstellungen öffnen" title="Einstellungen">⚙</button>
     </div>
   </header>
@@ -1944,18 +1945,15 @@ function zeigeToast(text, undoFn){
 }
 
 /* ============ Theme & Zoom ============ */
-/* DEMO: nur Hellmodus, kein Toggle, kein btnTheme */
 const htmlEl = document.documentElement;
-const btnTheme = $('btnTheme'); /* in Demo nicht vorhanden */
+const btnTheme = $('btnTheme');
 function setzeTheme(t, still){
-  /* Demo erzwingt Hellmodus unabhaengig vom State */
-  state.einstellungen.theme = 'light';
-  htmlEl.setAttribute('data-theme', 'light');
-  if(btnTheme) btnTheme.textContent = '🌙';
+  state.einstellungen.theme = t;
+  htmlEl.setAttribute('data-theme', t);
+  btnTheme.textContent = t === 'dark' ? '☀' : '🌙';
+  if(!still){ speichern(); zeigeToast(t === 'dark' ? 'Dunkelmodus aktiv' : 'Hellmodus aktiv'); }
 }
-if(btnTheme){
-  btnTheme.addEventListener('click', () => setzeTheme('light'));
-}
+btnTheme.addEventListener('click', () => setzeTheme(state.einstellungen.theme === 'dark' ? 'light' : 'dark'));
 
 function setzeZoom(z, still){
   z = Math.min(160, Math.max(70, z));
