@@ -12,6 +12,42 @@
   --pink:#FF0080; --purple:#8C00FF; --warn:#ffcc44; --err:#ff5577;
   --radius:14px; --shadow:0 8px 30px rgba(0,0,0,.45);
 }
+
+/* ===== App-Theme: HELL ===== */
+html[data-theme="hell"]:root, html[data-theme="hell"]{
+  --bg:#f4f7fa; --panel:#ffffff; --panel2:#eef3f8; --line:#d0dae5;
+  --txt:#1a2330; --muted:#5e6e80; --accent:#00a878; --accent2:#0094d4;
+  --shadow:0 8px 30px rgba(15,30,50,.12);
+}
+html[data-theme="hell"] #matrix{opacity:.05}
+
+/* ===== App-Theme: ATELIER ===== */
+html[data-theme="atelier"]:root, html[data-theme="atelier"]{
+  --bg:#0a0a0a; --panel:#141414; --panel2:#1c1c1c; --line:#2a2418;
+  --txt:#f5ebd4; --muted:#9a8f72; --accent:#d4af37; --accent2:#f5d870;
+}
+html[data-theme="atelier"] body{font-family:'Georgia','Times New Roman',serif}
+html[data-theme="atelier"] #matrix{opacity:.06}
+
+/* ===== App-Theme: BLUEPRINT ===== */
+html[data-theme="blueprint"]:root, html[data-theme="blueprint"]{
+  --bg:#0a1929; --panel:#0f2238; --panel2:#142b44; --line:#1f4060;
+  --txt:#dce8f5; --muted:#7a9bbc; --accent:#00d4ff; --accent2:#5ee5ff;
+}
+html[data-theme="blueprint"] body{font-family:'Consolas','Monaco',monospace}
+html[data-theme="blueprint"] #matrix{opacity:.08}
+html[data-theme="blueprint"] body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+
+/* ===== App-Theme: WERKSTATT ===== */
+html[data-theme="werkstatt"]:root, html[data-theme="werkstatt"]{
+  --bg:#1a1410; --panel:#231a14; --panel2:#2d2118; --line:#4a3826;
+  --txt:#f0e6dc; --muted:#a08e7c; --accent:#ff6a00; --accent2:#ffa040;
+}
+html[data-theme="werkstatt"] #matrix{opacity:.06}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%}
 body{
@@ -215,6 +251,13 @@ input,textarea,select{font-family:inherit}
 @media (max-width:480px){.wt-tooltip{max-width:none;left:16px!important;right:16px!important;width:auto}}
 .tb-btn.tour-btn{background:linear-gradient(90deg,var(--purple),var(--pink));color:#fff;border:none;font-weight:700}
 .tb-btn.tour-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(140,0,255,.4);color:#fff}
+.theme-switch{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--panel2);margin-right:4px}
+.tw-btn{background:transparent;color:var(--muted);border:none;padding:7px 10px;font-size:.95rem;cursor:pointer;transition:.15s;border-right:1px solid var(--line);min-width:32px}
+.tw-btn:last-child{border-right:none}
+.tw-btn:hover{background:rgba(0,255,170,.08);color:var(--accent)}
+.tw-btn.aktiv{background:var(--accent);color:#04111a;font-weight:700}
+.tw-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:900px){.theme-switch{display:none}}
 .tour-modal{position:fixed;inset:0;z-index:1001;display:none;align-items:center;justify-content:center;background:rgba(4,11,16,.75);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .tour-modal.aktiv{display:flex}
 .tour-modal-box{width:min(560px,92vw);max-height:88vh;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px 26px;box-shadow:var(--shadow)}
@@ -278,6 +321,13 @@ body.demo-mode .topbar{top:42px}
     <span class="brand">GZ Handwerker-Web · DEMO</span>
     <span class="lic" id="licBadge">Demo-Modus</span>
     <span class="spacer"></span>
+    <div class="theme-switch" role="group" aria-label="App-Design wählen">
+      <button type="button" class="tw-btn" data-theme-set="dunkel" title="Dunkel (Standard)" aria-label="Dunkles Theme">🌙</button>
+      <button type="button" class="tw-btn" data-theme-set="hell" title="Hell" aria-label="Helles Theme">☀</button>
+      <button type="button" class="tw-btn" data-theme-set="atelier" title="Atelier (Schwarzgold-edel)" aria-label="Atelier-Theme">✦</button>
+      <button type="button" class="tw-btn" data-theme-set="blueprint" title="Blueprint (Tech)" aria-label="Blueprint-Theme">▦</button>
+      <button type="button" class="tw-btn" data-theme-set="werkstatt" title="Werkstatt (Industrie)" aria-label="Werkstatt-Theme">⚒</button>
+    </div>
     <button type="button" class="tb-btn tour-btn" id="btnTour" title="App-Tour starten">📚 Tour</button>
     <a class="tb-btn" href="../HANDBUCH.html" target="_blank" rel="noopener" title="Handbuch öffnen">Handbuch</a>
     <a class="tb-btn demo-cta" id="btnExport" href="../landingpage/index.html#preis" title="Vollversion freischalten">🔓 Vollversion freischalten</a>
@@ -2256,6 +2306,30 @@ ${bewertungen}
 </body>
 </html>`;
 }
+
+/* =================== THEME-SWITCHER =================== */
+(function initThemeSwitch(){
+  const LS_KEY = 'gz-handwerker-theme';
+  const VALID = ['dunkel','hell','atelier','blueprint','werkstatt'];
+  function setTheme(name){
+    if(!VALID.includes(name)) name = 'dunkel';
+    if(name === 'dunkel') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', name);
+    try{ localStorage.setItem(LS_KEY, name); }catch(e){}
+    document.querySelectorAll('.tw-btn').forEach(b => {
+      b.classList.toggle('aktiv', b.getAttribute('data-theme-set') === name);
+    });
+  }
+  let gespeichert = 'dunkel';
+  try{ gespeichert = localStorage.getItem(LS_KEY) || 'dunkel'; }catch(e){}
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.tw-btn').forEach(b => {
+      b.addEventListener('click', () => setTheme(b.getAttribute('data-theme-set')));
+    });
+    setTheme(gespeichert);
+  });
+  setTimeout(() => setTheme(gespeichert), 100);
+})();
 
 /* =================== WALKTHROUGH / TOUR =================== */
 const walkthroughTouren = {
