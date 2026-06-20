@@ -188,6 +188,47 @@ input,textarea,select{font-family:inherit}
   .preview-wrap{grid-column:1}
 }
 
+/* ===== Walkthrough / Tour ===== */
+.wt-overlay{position:fixed;inset:0;z-index:9998;display:none;pointer-events:auto;background:transparent}
+.wt-overlay.aktiv{display:block}
+.wt-loch{position:fixed;z-index:9999;border-radius:10px;pointer-events:none;
+  box-shadow:0 0 0 9999px rgba(4,11,16,.88), 0 0 0 3px var(--accent), 0 0 24px 4px rgba(0,255,170,.55);
+  transition:top .35s cubic-bezier(.4,0,.2,1),left .35s cubic-bezier(.4,0,.2,1),width .35s cubic-bezier(.4,0,.2,1),height .35s cubic-bezier(.4,0,.2,1)}
+.wt-tooltip{position:fixed;z-index:10000;max-width:340px;width:calc(100% - 32px);
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;
+  box-shadow:0 12px 40px rgba(0,0,0,.6), 0 0 0 1px rgba(0,255,170,.25);color:var(--txt);
+  transition:top .35s cubic-bezier(.4,0,.2,1),left .35s cubic-bezier(.4,0,.2,1)}
+.wt-tooltip h3{font-size:1.05rem;margin:0 0 8px;color:var(--accent)}
+.wt-tooltip p{font-size:.88rem;line-height:1.55;color:var(--txt);margin:0 0 14px}
+.wt-zaehler{font-size:.7rem;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px}
+.wt-knoepfe{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.wt-knoepfe button{padding:8px 13px;border-radius:9px;cursor:pointer;font-size:.84rem;
+  border:1px solid var(--line);background:var(--panel2);color:var(--txt);transition:.15s}
+.wt-knoepfe button:hover{background:var(--accent);color:#04111a;border-color:var(--accent)}
+.wt-knoepfe .wt-haupt{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#04111a;border-color:var(--accent);font-weight:700}
+.wt-knoepfe .wt-skip{margin-left:auto;background:transparent;border-color:transparent;color:var(--muted);font-size:.78rem}
+.wt-knoepfe .wt-skip:hover{background:transparent;color:var(--err)}
+.wt-tooltip.zentriert{top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.wt-tooltip.zentriert h3{font-size:1.3rem;margin-bottom:12px}
+.wt-fortschritt{height:3px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.wt-fortschritt-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .35s ease}
+@media (max-width:480px){.wt-tooltip{max-width:none;left:16px!important;right:16px!important;width:auto}}
+.tb-btn.tour-btn{background:linear-gradient(90deg,var(--purple),var(--pink));color:#fff;border:none;font-weight:700}
+.tb-btn.tour-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(140,0,255,.4);color:#fff}
+.tour-modal{position:fixed;inset:0;z-index:1001;display:none;align-items:center;justify-content:center;background:rgba(4,11,16,.75);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.tour-modal.aktiv{display:flex}
+.tour-modal-box{width:min(560px,92vw);max-height:88vh;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px 26px;box-shadow:var(--shadow)}
+.tour-modal-kopf{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.tour-modal-kopf h2{margin:0;font-size:1.15rem;color:var(--accent)}
+.tour-modal-zu{background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1}
+.tour-modal-zu:hover{color:var(--err)}
+.tour-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px}
+@media (min-width:480px){.tour-grid{grid-template-columns:1fr 1fr}}
+.tour-karte{text-align:left;background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:12px 14px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:.9rem;transition:.15s}
+.tour-karte:hover{background:#1a2535;border-color:var(--accent);transform:translateY(-2px)}
+.tour-karte .t-titel{font-weight:700;display:block;margin-bottom:3px;color:var(--accent)}
+.tour-karte .t-sub{font-size:.76rem;color:var(--muted);display:block}
+
 /* ---------- DEMO-MODE ---------- */
 #demoBanner{
   position:fixed;top:0;left:0;right:0;z-index:1500;
@@ -223,7 +264,7 @@ body.demo-mode .topbar{top:42px}
 
 <div id="demoBanner" role="note" aria-label="Demo-Hinweis">
   🔧 <strong>DEMO-VERSION</strong> · Hero &amp; Leistungen frei testbar · Galerie, Über uns, CTA, Kontakt &amp; Export nur in der Vollversion
-  <a href="../index.html#preis">Vollversion holen →</a>
+  <a href="../landingpage/index.html#preis">Vollversion holen →</a>
 </div>
 
 <canvas id="matrix" aria-hidden="true"></canvas>
@@ -237,8 +278,9 @@ body.demo-mode .topbar{top:42px}
     <span class="brand">GZ Handwerker-Web · DEMO</span>
     <span class="lic" id="licBadge">Demo-Modus</span>
     <span class="spacer"></span>
+    <button type="button" class="tb-btn tour-btn" id="btnTour" title="App-Tour starten">📚 Tour</button>
     <a class="tb-btn" href="../HANDBUCH.html" target="_blank" rel="noopener" title="Handbuch öffnen">Handbuch</a>
-    <a class="tb-btn demo-cta" id="btnExport" href="../index.html#preis" title="Vollversion freischalten">🔓 Vollversion freischalten</a>
+    <a class="tb-btn demo-cta" id="btnExport" href="../landingpage/index.html#preis" title="Vollversion freischalten">🔓 Vollversion freischalten</a>
     <!-- versteckte Stubs damit Topbar-JS nicht crasht -->
     <button type="button" id="btnSaveCfg" style="display:none"></button>
     <button type="button" id="btnLoadCfg" style="display:none"></button>
@@ -374,7 +416,7 @@ function applyDemoLock(){
         e.preventDefault();
         e.stopPropagation();
         toast("🔒 Dieser Bereich ist in der Vollversion freigeschaltet");
-        setTimeout(()=>{ location.href = "../index.html#preis"; }, 1300);
+        setTimeout(()=>{ location.href = "../landingpage/index.html#preis"; }, 1300);
       }, true);
     }
   });
@@ -2214,6 +2256,240 @@ ${bewertungen}
 </body>
 </html>`;
 }
+
+/* =================== WALKTHROUGH / TOUR =================== */
+const walkthroughTouren = {
+  start: {
+    titel:'🏁 Erste Schritte',
+    schritte:[
+      { ziel:null, titel:'Willkommen bei der GZ Handwerker-Web Demo!',
+        text:'Diese Tour zeigt dir die wichtigsten Funktionen. Die Demo hat einige Bereiche gesperrt — in der Vollversion ist alles frei. Mit Esc beendest du jederzeit.' },
+      { ziel:'.topbar .brand', titel:'Konfigurator',
+        text:'Links die Einstellungen, rechts die Live-Vorschau. Alle Änderungen siehst du sofort.' },
+      { ziel:'#config details:nth-of-type(1)', titel:'Firma & Logo',
+        text:'Erstes Feld: dein Firmenname, Slogan und Branche. Logo (PNG/JPG) wird direkt in die Website eingebettet.' },
+      { ziel:'#previewFrame', titel:'Live-Vorschau',
+        text:'Rechts siehst du sofort wie deine Seite aussieht. Desktop- und Mobil-Ansicht zum Umschalten.' },
+      { ziel:'#btnTour', titel:'Tour jederzeit verfügbar',
+        text:'Diesen Knopf findest du immer oben rechts. Klick ihn an, wann immer du Hilfe brauchst.' }
+    ]
+  },
+  design: {
+    titel:'🎨 Design & Farben',
+    schritte:[
+      { ziel:'#config details:nth-of-type(2)', titel:'Stil & Schrift',
+        text:'Wähle eine Stil-Vorlage und eine Schriftart. Alle Vorlagen sind in sich abgestimmt.' },
+      { ziel:'#gradientBar', titel:'Farbverlauf (3 Farben)',
+        text:'Wähle drei Farben für deinen Akzent. Der Verlauf erscheint in Überschriften, Buttons und Akzenten.' },
+      { ziel:'#gradPresets', titel:'Schnellauswahl',
+        text:'Keine Lust auf Farben tüfteln? Klick eine fertige Kombi — sofort übernommen.' },
+      { ziel:'#config details:nth-of-type(3)', titel:'Seiten-Hintergrund',
+        text:'Eigenes Hintergrundbild hochladen oder eine Vorlage wählen.' },
+      { ziel:'#config details:nth-of-type(4)', titel:'Farben pro Bereich',
+        text:'Profi-Funktion: Jeder Abschnitt kann eigene Farben und Karten-Stil bekommen.' }
+    ]
+  },
+  inhalte: {
+    titel:'📝 Inhalte einpflegen',
+    schritte:[
+      { ziel:'#config details:nth-of-type(5)', titel:'Startbereich (Hero)',
+        text:'Der erste Eindruck: Obertitel, dein bestes Referenzfoto, drei Vertrauens-Punkte.' },
+      { ziel:'#config details:nth-of-type(9)', titel:'Über uns',
+        text:'Hier erzählst du deine Geschichte. (In der Demo gesperrt — Vollversion freigeben).' },
+      { ziel:'#config details:nth-of-type(10)', titel:'Leistungen',
+        text:'Liste deiner Angebote. In der Demo verfügbar zum Ausprobieren.' },
+      { ziel:'#config details:nth-of-type(12)', titel:'Galerie / Referenzfotos',
+        text:'Deine besten Referenzfotos hochladen. (In der Demo gesperrt).' },
+      { ziel:'#config details:nth-of-type(14)', titel:'Kundenstimmen',
+        text:'Echte Bewertungen verkaufen am besten. (In der Demo gesperrt).' }
+    ]
+  },
+  kontakt: {
+    titel:'📞 Kontakt & Recht',
+    schritte:[
+      { ziel:'#config details:nth-of-type(6)', titel:'Kontakt-Daten',
+        text:'Telefon, E-Mail, Adresse — alles was Kunden brauchen.' },
+      { ziel:'#config details:nth-of-type(7)', titel:'Navigation',
+        text:'Beschriftungen der Menüpunkte anpassen.' },
+      { ziel:'#config details:nth-of-type(15)', titel:'Rechtstexte',
+        text:'WICHTIG: Impressum und Datenschutz sind in Deutschland Pflicht. (In der Demo gesperrt).' },
+      { ziel:'#config details:nth-of-type(16)', titel:'SEO',
+        text:'Such-Maschinen brauchen Titel und Beschreibung. (In der Demo gesperrt).' }
+    ]
+  },
+  export: {
+    titel:'💾 Vollversion freischalten',
+    schritte:[
+      { ziel:'#btnExport', titel:'Vollversion freischalten',
+        text:'Mit der Vollversion bekommst du alle Bereiche frei: Galerie, Kundenstimmen, Rechtstexte, SEO — und kannst deine fertige Website als HTML-Datei exportieren.' },
+      { ziel:null, titel:'Das war die Tour! 🚀',
+        text:'In der Vollversion kannst du alles frei nutzen, Konfigurationen speichern und deine fertige Website als HTML-Datei exportieren. Hol sie dir über den orange-pinken Button oben rechts.' }
+    ]
+  }
+};
+
+let wtAktuelleTour = null;
+let wtIndex = 0;
+let wtAktiv = false;
+
+function wtErstelleElemente(){
+  if(document.getElementById('wtOverlay')) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'wt-overlay'; overlay.id = 'wtOverlay';
+  overlay.setAttribute('aria-hidden','true');
+  const loch = document.createElement('div');
+  loch.className = 'wt-loch'; loch.id = 'wtLoch'; loch.style.display = 'none';
+  const tip = document.createElement('div');
+  tip.className = 'wt-tooltip'; tip.id = 'wtTooltip';
+  tip.setAttribute('role','dialog'); tip.setAttribute('aria-live','polite');
+  document.body.appendChild(overlay);
+  document.body.appendChild(loch);
+  document.body.appendChild(tip);
+  overlay.addEventListener('click', wtBeenden);
+}
+
+function wtZeigeSchritt(i){
+  if(!wtAktuelleTour) return wtBeenden();
+  const schritte = wtAktuelleTour.schritte;
+  const s = schritte[i];
+  if(!s) return wtBeenden();
+  const tip = document.getElementById('wtTooltip');
+  const loch = document.getElementById('wtLoch');
+  const fortschritt = Math.round(((i+1)/schritte.length)*100);
+  tip.innerHTML =
+    '<div class="wt-fortschritt"><div class="wt-fortschritt-bar" style="width:'+fortschritt+'%"></div></div>'+
+    '<div class="wt-zaehler">'+wtAktuelleTour.titel+' · Schritt '+(i+1)+' von '+schritte.length+'</div>'+
+    '<h3>'+s.titel+'</h3><p>'+s.text+'</p>'+
+    '<div class="wt-knoepfe">'+
+      (i>0 ? '<button id="wtZurueck" aria-label="Vorheriger Schritt">← Zurück</button>' : '')+
+      '<button class="wt-haupt" id="wtWeiter">'+ (i===schritte.length-1 ? 'Fertig ✓' : 'Weiter →') +'</button>'+
+      '<button class="wt-skip" id="wtSkip" aria-label="Tour überspringen">Überspringen</button>'+
+    '</div>';
+  setTimeout(() => {
+    const w = document.getElementById('wtWeiter'); if(w){ w.focus(); w.addEventListener('click', () => {
+      if(wtIndex >= schritte.length-1) wtBeenden();
+      else wtZeigeSchritt(++wtIndex);
+    }); }
+    const z = document.getElementById('wtZurueck'); if(z) z.addEventListener('click', () => wtZeigeSchritt(--wtIndex));
+    const sk = document.getElementById('wtSkip'); if(sk) sk.addEventListener('click', wtBeenden);
+  }, 50);
+  if(!s.ziel){
+    tip.classList.add('zentriert');
+    tip.style.top = ''; tip.style.left = '';
+    loch.style.display = 'none';
+    return;
+  }
+  tip.classList.remove('zentriert');
+  const el = document.querySelector(s.ziel);
+  if(!el){ loch.style.display = 'none'; tip.classList.add('zentriert'); return; }
+  if(el.tagName === 'DETAILS' && !el.open) el.open = true;
+  el.scrollIntoView({ behavior:'smooth', block:'center', inline:'center' });
+  setTimeout(() => {
+    const r = el.getBoundingClientRect();
+    const pad = 6;
+    loch.style.display = 'block';
+    loch.style.top = (r.top - pad) + 'px';
+    loch.style.left = (r.left - pad) + 'px';
+    loch.style.width = (r.width + pad*2) + 'px';
+    loch.style.height = (r.height + pad*2) + 'px';
+    const tipR = tip.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    let oben = r.bottom + 18;
+    let linksPos = r.left + r.width/2 - tipR.width/2;
+    if(oben + tipR.height > vh - 16){ oben = r.top - tipR.height - 18; }
+    if(oben < 16) oben = 16;
+    if(linksPos < 16) linksPos = 16;
+    if(linksPos + tipR.width > vw - 16) linksPos = vw - tipR.width - 16;
+    tip.style.top = oben + 'px';
+    tip.style.left = linksPos + 'px';
+  }, 350);
+}
+
+function wtStarten(tourName){
+  const t = walkthroughTouren[tourName];
+  if(!t) return;
+  wtErstelleElemente();
+  wtAktuelleTour = t; wtAktiv = true; wtIndex = 0;
+  document.getElementById('wtOverlay').classList.add('aktiv');
+  document.getElementById('wtTooltip').style.display = 'block';
+  wtZeigeSchritt(0);
+  document.addEventListener('keydown', wtTastatur);
+}
+
+function wtBeenden(){
+  wtAktiv = false;
+  const ov = document.getElementById('wtOverlay'); if(ov) ov.classList.remove('aktiv');
+  const l = document.getElementById('wtLoch'); if(l) l.style.display = 'none';
+  const t = document.getElementById('wtTooltip'); if(t){ t.style.display = 'none'; t.innerHTML = ''; }
+  document.removeEventListener('keydown', wtTastatur);
+  const b = document.getElementById('btnTour'); if(b) b.focus();
+}
+
+function wtTastatur(e){
+  if(!wtAktiv || !wtAktuelleTour) return;
+  const max = wtAktuelleTour.schritte.length;
+  if(e.key === 'Escape'){ e.preventDefault(); wtBeenden(); }
+  else if(e.key === 'ArrowRight' || e.key === 'Enter'){
+    e.preventDefault();
+    if(wtIndex >= max-1) wtBeenden();
+    else wtZeigeSchritt(++wtIndex);
+  }
+  else if(e.key === 'ArrowLeft'){
+    e.preventDefault();
+    if(wtIndex > 0) wtZeigeSchritt(--wtIndex);
+  }
+}
+
+function zeigeTourenAuswahl(){ document.getElementById('tourModal').classList.add('aktiv'); }
+function schliesseTourenAuswahl(){ document.getElementById('tourModal').classList.remove('aktiv'); }
+document.addEventListener('DOMContentLoaded', () => {
+  const b = document.getElementById('btnTour');
+  if(b) b.addEventListener('click', zeigeTourenAuswahl);
+  document.querySelectorAll('[data-tour]').forEach(k => {
+    k.addEventListener('click', () => {
+      const t = k.getAttribute('data-tour');
+      schliesseTourenAuswahl();
+      setTimeout(() => wtStarten(t), 200);
+    });
+  });
+  const z = document.getElementById('tourModalZu');
+  if(z) z.addEventListener('click', schliesseTourenAuswahl);
+});
 </script>
+
+<!-- Tour-Auswahl-Modal -->
+<div class="tour-modal" id="tourModal" role="dialog" aria-labelledby="tourModalTitel">
+  <div class="tour-modal-box">
+    <div class="tour-modal-kopf">
+      <h2 id="tourModalTitel">📚 App-Tour wählen</h2>
+      <button class="tour-modal-zu" id="tourModalZu" aria-label="Schließen">✕</button>
+    </div>
+    <p style="margin:0 0 14px;color:var(--muted);font-size:.88rem">
+      Fünf kompakte Touren — jede etwa eine Minute. Mit <kbd>Esc</kbd> beendest du jederzeit.
+    </p>
+    <div class="tour-grid" role="list">
+      <button class="tour-karte" data-tour="start" role="listitem">
+        <span class="t-titel">🏁 Erste Schritte</span>
+        <span class="t-sub">Grundlagen: Was ist wo?</span>
+      </button>
+      <button class="tour-karte" data-tour="design" role="listitem">
+        <span class="t-titel">🎨 Design &amp; Farben</span>
+        <span class="t-sub">Stil, Schrift, Farbverlauf</span>
+      </button>
+      <button class="tour-karte" data-tour="inhalte" role="listitem">
+        <span class="t-titel">📝 Inhalte einpflegen</span>
+        <span class="t-sub">Hero, Leistungen, Galerie</span>
+      </button>
+      <button class="tour-karte" data-tour="kontakt" role="listitem">
+        <span class="t-titel">📞 Kontakt &amp; Recht</span>
+        <span class="t-sub">Impressum, Datenschutz, SEO</span>
+      </button>
+      <button class="tour-karte" data-tour="export" role="listitem">
+        <span class="t-titel">💾 Vollversion freischalten</span>
+        <span class="t-sub">Was die Vollversion kann</span>
+      </button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
