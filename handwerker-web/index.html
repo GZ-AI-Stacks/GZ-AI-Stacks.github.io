@@ -157,6 +157,11 @@ body.theme-atelier .btn-ghost{text-transform:none;font-style:italic;border-color
 .hero-trust{display:flex;flex-wrap:wrap;gap:18px 28px;justify-content:center;margin-top:42px;font-size:13px;color:var(--muted)}
 .hero-trust span{display:inline-flex;align-items:center;gap:7px}
 .hero-trust span::before{content:"✓";color:var(--accent);font-weight:800}
+.hero-preview{margin:54px auto 0;max-width:920px;text-align:center}
+.hero-preview img{width:100%;height:auto;display:block;border-radius:14px;box-shadow:0 25px 60px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.05)}
+.hero-preview figcaption{margin-top:14px;font-size:13px;color:var(--muted);font-style:italic}
+body.theme-blueprint .hero-preview img{border-radius:4px;box-shadow:0 20px 50px rgba(0,0,0,.4),0 0 0 1px var(--accent)}
+body.theme-atelier .hero-preview img{border-radius:2px;box-shadow:0 25px 60px rgba(0,0,0,.4),0 0 0 1px var(--gold)}
 
 /* ─── SECTIONS ─── */
 section{padding:72px 0;position:relative}
@@ -405,6 +410,10 @@ footer p{color:var(--dim);font-size:.85rem;line-height:1.7}
       <span>Offline, eine Datei</span>
       <span>DSGVO-konform</span>
     </div>
+    <figure class="hero-preview">
+      <img src="img/hero-preview.jpg" alt="Beispiel einer mit GZ Handwerker-Web erstellten Website auf einem Smartphone — Konfigurator-Ansicht links, fertige Handwerker-Website rechts" loading="eager" width="1200" height="628">
+      <figcaption>Beispiel: Mustermann Metallbau — konfiguriert in der Live-Vorschau</figcaption>
+    </figure>
   </div>
 </section>
 
