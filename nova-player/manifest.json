@@ -1,0 +1,27 @@
+{
+  "name": "NOVA Player — Stellar Audio",
+  "short_name": "NOVA Player",
+  "description": "Kostenloser Musik-Player im Browser — 16-Band-Studio-EQ, Visualizer, Playlist, 4 Designs. Offline-fähig, kein Konto, kein Tracking. GZ-AI.-Stacks",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#060a10",
+  "theme_color": "#00ffaa",
+  "lang": "de",
+  "categories": ["music", "entertainment", "utilities"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
