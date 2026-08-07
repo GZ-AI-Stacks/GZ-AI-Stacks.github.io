@@ -1,0 +1,12 @@
+{
+  "name": "Mathe-Fuchs — Kopfrechnen lernen",
+  "short_name": "Mathe-Fuchs",
+  "description": "Kopfrechnen-Lern-App für Kinder. Einmaleins, Plus/Minus/Mal/Geteilt, Highscores.",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f0f4f8",
+  "theme_color": "#4a90d9",
+  "lang": "de",
+  "icons": [{"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}]
+}
