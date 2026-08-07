@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Handbuch für CloneBeam — Windows-Tool zur 1:1-Festplattenspiegelung.">
+<title>CloneBeam — Handbuch</title>
+<style>
+:root{
+  --bg:#0A0C10; --paper:#0e1118; --paper2:#11141a; --line:#262c36;
+  --ink:#e6ecf4; --ink-soft:#8a93a3; --accent:#00FFAA; --cyan:#00B4FF; --accent-soft:#0d2a22; --warn:#ff0080; --warn-soft:#2a0d1c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px}
+.skip{position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden}
+.skip:focus{left:8px; top:8px; width:auto; height:auto; background:var(--paper); color:var(--ink); padding:8px 14px; z-index:100; font-weight:bold; border-radius:6px}
+header{background:var(--paper); border-bottom:1px solid var(--line); padding:28px 32px}
+header .brand{display:flex; align-items:center; gap:14px; max-width:860px; margin:0 auto}
+header .icon{width:46px; height:46px; border-radius:50%; background:var(--accent-soft); display:flex; align-items:center; justify-content:center; font-size:1.6rem; border:1px solid var(--line)}
+header h1{margin:0; font-size:1.6rem; color:var(--ink); font-weight:700}
+header .tag{color:var(--ink-soft); font-size:.9rem; margin-top:2px}
+.toolbar{max-width:860px; margin:12px auto 0; display:flex; gap:8px; justify-content:flex-end; padding:0 32px}
+.toolbar button{background:var(--paper2); color:var(--ink); border:1px solid var(--line); border-radius:6px; padding:6px 12px; cursor:pointer; font-size:.85rem}
+.toolbar button:hover, .toolbar button:focus{border-color:var(--accent); color:var(--accent); outline:none}
+main{padding:36px 24px; max-width:860px; margin:0 auto}
+h2{font-size:1.25rem; color:var(--accent); margin-top:2.4rem; margin-bottom:.6rem; padding-bottom:.5rem; border-bottom:1px solid var(--line)}
+h2:first-child{margin-top:0}
+h3{font-size:1.05rem; color:var(--cyan); margin-top:1.4rem}
+p{margin:10px 0}
+a{color:var(--accent)}
+a:focus, button:focus{outline:2px solid var(--accent); outline-offset:2px}
+ol,ul{margin:10px 0; padding-left:24px}
+li{margin:8px 0}
+code{font-family:Consolas,'Cascadia Mono',monospace; font-size:.9em; background:var(--paper2); padding:2px 6px; border-radius:4px; color:var(--cyan)}
+.box{background:var(--accent-soft); border-radius:6px; padding:16px 20px; margin:18px 0; border-left:4px solid var(--accent)}
+.box.warn{background:var(--warn-soft); border-left-color:var(--warn)}
+.box h4{margin:0 0 6px; font-size:.8rem; letter-spacing:.5px; text-transform:uppercase; color:var(--accent); font-weight:700}
+.box.warn h4{color:var(--warn)}
+footer{border-top:1px solid var(--line); padding:24px 32px; color:var(--ink-soft); font-size:.8rem; text-align:center; margin-top:60px}
+@media (max-width:600px){main{padding:24px 16px}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}
+body.light{
+  --bg:#f4f6f9; --paper:#ffffff; --paper2:#eef1f6; --line:#dde2ea; --ink:#131722; --ink-soft:#5a6274;
+  --accent:#0aa87a; --cyan:#0f7bbf; --accent-soft:#e3f7ef; --warn:#c22a63; --warn-soft:#fbe6ee;
+}
+@media (prefers-color-scheme: light){
+  body:not(.dark):not(.light){
+    --bg:#f4f6f9; --paper:#ffffff; --paper2:#eef1f6; --line:#dde2ea; --ink:#131722; --ink-soft:#5a6274;
+    --accent:#0aa87a; --cyan:#0f7bbf; --accent-soft:#e3f7ef; --warn:#c22a63; --warn-soft:#fbe6ee;
+  }
+}
+</style>
+</head>
+<body>
+<a href="#content" class="skip">Zum Inhalt springen</a>
+<header role="banner">
+  <div class="brand">
+    <span class="icon" aria-hidden="true">💽</span>
+    <div>
+      <h1>CloneBeam — Handbuch</h1>
+      <div class="tag">1:1-Festplatten- und Ordnerspiegelung für Windows</div>
+    </div>
+  </div>
+</header>
+<div class="toolbar" role="toolbar" aria-label="Anzeigeoptionen">
+  <button id="btnTheme" aria-pressed="false">🌓 Hell/Dunkel</button>
+  <button id="btnMinus" aria-label="Schrift verkleinern">A−</button>
+  <button id="btnPlus" aria-label="Schrift vergrößern">A+</button>
+</div>
+<main id="content" role="main" tabindex="-1">
+
+  <h2>Was ist CloneBeam?</h2>
+  <p>CloneBeam spiegelt ein Quellverzeichnis oder ganzes Laufwerk 1:1 auf ein Ziel —
+    z. B. um eine portable Festplatte komplett auf eine zweite Platte zu sichern. Nach dem
+    Lauf ist das Ziel exakt identisch zur Quelle: neue und geänderte Dateien werden
+    ergänzt, Dateien, die nur noch im Ziel liegen, werden dort entfernt.</p>
+
+  <div class="box warn">
+    <h4>Wichtig vor dem ersten Lauf</h4>
+    <p>Da CloneBeam das Ziel exakt an die Quelle angleicht, werden Dateien im Ziel
+      <strong>gelöscht</strong>, wenn sie in der Quelle nicht mehr existieren. Prüfe vor
+      dem ersten Klonen, ob im Zielordner noch benötigte Alt-Dateien liegen, die nicht in
+      der Quelle sind — sonst gehen sie verloren.</p>
+  </div>
+
+  <h2>Bedienung in 3 Schritten</h2>
+  <ol>
+    <li><strong>Quelle wählen</strong> — über das Feld „QUELLE" bzw. den „..."-Button den
+      Ordner oder das Laufwerk auswählen, das gesichert werden soll.</li>
+    <li><strong>Ziel wählen</strong> — genauso beim Feld „ZIEL" das Zielverzeichnis
+      auswählen, auf das gespiegelt werden soll.</li>
+    <li><strong>„1:1 KLONEN STARTEN" klicken</strong> — CloneBeam zeigt vor dem Start noch
+      einmal eine Bestätigung mit Quelle und Ziel. Nach Bestätigung berechnet es zunächst
+      die Gesamtgröße der Quelle, dann läuft die Spiegelung mit Fortschrittsbalken,
+      Prozentanzeige und geschätzter Restzeit. Über „ABBRECHEN" lässt sich ein laufender
+      Vorgang jederzeit stoppen.</li>
+  </ol>
+  <p>Die zuletzt verwendeten Pfade merkt sich CloneBeam automatisch für den nächsten
+    Start.</p>
+
+  <h2>Demo und Freischaltung</h2>
+  <p>CloneBeam lässt sich zunächst <strong>3 Mal kostenlos</strong> ausprobieren. Die Zahl
+    der verbleibenden Testläufe steht oben rechts im Programmfenster. Ist das Limit
+    erreicht, öffnet ein Klick auf „1:1 KLONEN STARTEN" automatisch den
+    Freischalt-Dialog.</p>
+  <p>Nach dem Kauf erhältst du deinen persönlichen Freischaltcode per E-Mail. Trage ihn im
+    Programm über den Button „FREISCHALTEN" oben rechts ein — danach läuft CloneBeam ohne
+    weitere Einschränkung als Vollversion.</p>
+
+  <h2>Voraussetzungen</h2>
+  <ul>
+    <li>Windows 10 oder Windows 11</li>
+    <li>.NET Framework 4.x (auf aktuellen Windows-Systemen bereits vorhanden)</li>
+    <li>Keine Installation nötig — eine einzelne .exe-Datei, portabel startbar</li>
+  </ul>
+
+  <div class="box">
+    <h4>Hinweis beim ersten Start</h4>
+    <p>Da <code>CloneBeam.exe</code> nicht mit einem kostenpflichtigen Code-Signing-Zertifikat
+      signiert ist, zeigt Windows beim allerersten Start möglicherweise den SmartScreen-Hinweis
+      „Windows hat den Start dieser App verhindert". Das ist normal bei kleinen, unabhängig
+      vertriebenen Programmen und kein Anzeichen für ein Sicherheitsproblem. Über
+      „Weitere Informationen" → „Trotzdem ausführen" startet CloneBeam wie gewohnt.</p>
+  </div>
+
+  <h2>Häufige Fragen</h2>
+  <h3>Wird meine Quelle verändert?</h3>
+  <p>Nein. Die Quelle wird ausschließlich gelesen. Alle Änderungen (Ergänzen und Löschen)
+    finden ausschließlich im Ziel statt.</p>
+  <h3>Wie lange dauert ein Klon-Vorgang?</h3>
+  <p>Das hängt von der Datenmenge und der Geschwindigkeit der Laufwerke ab. Die
+    Restzeit-Schätzung pendelt sich nach den ersten ein bis zwei Minuten ein.</p>
+  <h3>Kann ich den Vorgang unterbrechen und später fortsetzen?</h3>
+  <p>Ein abgebrochener Lauf lässt sich einfach erneut starten — bereits kopierte,
+    unveränderte Dateien werden beim nächsten Lauf übersprungen.</p>
+
+  <h2>Support</h2>
+  <p>Bei Fragen oder Problemen: <a href="mailto:gz.ai.stacks@gmail.com">gz.ai.stacks@gmail.com</a></p>
+
+</main>
+<footer>© Gerd Zimmermann GZ-AI.-Stacks &middot; CloneBeam</footer>
+<script>
+(function(){
+  var body = document.body;
+  var saved = localStorage.getItem('clonebeam-handbuch-theme');
+  if (saved === 'light') body.classList.add('light');
+  if (saved === 'dark') body.classList.add('dark');
+
+  document.getElementById('btnTheme').addEventListener('click', function(){
+    if (body.classList.contains('light')) { body.classList.remove('light'); body.classList.add('dark'); localStorage.setItem('clonebeam-handbuch-theme','dark'); }
+    else if (body.classList.contains('dark')) { body.classList.remove('dark'); localStorage.removeItem('clonebeam-handbuch-theme'); }
+    else { body.classList.add('light'); localStorage.setItem('clonebeam-handbuch-theme','light'); }
+  });
+
+  var size = parseFloat(localStorage.getItem('clonebeam-handbuch-fontsize')) || 16;
+  function applySize(){ document.documentElement.style.fontSize = size + 'px'; }
+  applySize();
+  document.getElementById('btnPlus').addEventListener('click', function(){ size = Math.min(24, size + 1); applySize(); localStorage.setItem('clonebeam-handbuch-fontsize', size); });
+  document.getElementById('btnMinus').addEventListener('click', function(){ size = Math.max(12, size - 1); applySize(); localStorage.setItem('clonebeam-handbuch-fontsize', size); });
+})();
+</script>
+</body>
+</html>

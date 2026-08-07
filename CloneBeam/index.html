@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CloneBeam — Windows-Tool zum 1:1-Spiegeln einer Festplatte oder eines Ordners. Nix denken, einfach klonen.">
+<title>CloneBeam — 1:1-Festplattenspiegelung für Windows</title>
+<style>
+:root{
+  --bg:#0A0C10; --paper:#0e1118; --paper2:#11141a; --line:#262c36;
+  --ink:#e6ecf4; --ink-soft:#8a93a3; --accent:#00FFAA; --cyan:#00B4FF; --pink:#FF0080;
+  --accent-soft:#0d2a22; --warn:#ff0080; --warn-soft:#2a0d1c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.65; font-size:16px}
+.skip{position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden}
+.skip:focus{left:8px; top:8px; width:auto; height:auto; background:var(--paper); color:var(--ink); padding:8px 14px; z-index:100; font-weight:bold; border-radius:6px}
+a{color:var(--accent)}
+a:focus, button:focus{outline:2px solid var(--accent); outline-offset:2px}
+
+header.top{padding:14px 24px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); background:var(--paper)}
+header.top .brand{display:flex; align-items:center; gap:10px; font-weight:700}
+header.top .brand .icon{font-size:1.3rem}
+.toolbar{display:flex; gap:8px}
+.toolbar button{background:var(--paper2); color:var(--ink); border:1px solid var(--line); border-radius:6px; padding:6px 12px; cursor:pointer; font-size:.85rem}
+.toolbar button:hover{border-color:var(--accent); color:var(--accent)}
+
+.hero{max-width:900px; margin:0 auto; padding:64px 24px 40px; text-align:center}
+.hero .eyebrow{color:var(--cyan); letter-spacing:2px; font-size:.8rem; text-transform:uppercase; font-weight:700}
+.hero h1{font-size:2.4rem; margin:14px 0; font-weight:800; background:linear-gradient(90deg, var(--accent), var(--cyan)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.hero p.lead{color:var(--ink-soft); font-size:1.15rem; max-width:640px; margin:0 auto 28px}
+.cta{display:inline-block; background:linear-gradient(90deg, var(--accent), var(--cyan)); color:#04140f; font-weight:700; padding:14px 30px; border-radius:8px; text-decoration:none; font-size:1.05rem}
+.cta:hover{filter:brightness(1.1)}
+
+section{max-width:900px; margin:0 auto; padding:32px 24px}
+h2.section-title{color:var(--ink); font-size:1.5rem; text-align:center; margin-bottom:28px}
+
+.grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:18px}
+.card{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:20px}
+.card h3{margin:0 0 8px; color:var(--accent); font-size:1.05rem}
+.card p{margin:0; color:var(--ink-soft); font-size:.95rem}
+
+.steps{counter-reset:step; display:grid; gap:16px}
+.step{display:flex; gap:16px; align-items:flex-start; background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:18px 20px}
+.step .num{counter-increment:step; content:counter(step); background:var(--accent-soft); color:var(--accent); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0}
+.step .num::before{content:counter(step)}
+.step h3{margin:0 0 4px; font-size:1rem; color:var(--ink)}
+.step p{margin:0; color:var(--ink-soft); font-size:.92rem}
+
+.pricing{display:flex; justify-content:center}
+.price-card{background:var(--paper); border:1px solid var(--accent); border-radius:14px; padding:32px; max-width:380px; width:100%; text-align:center; box-shadow:0 0 40px rgba(0,255,170,.08)}
+.price-card .badge{display:inline-block; background:var(--accent-soft); color:var(--accent); font-size:.75rem; font-weight:700; letter-spacing:.5px; text-transform:uppercase; padding:4px 12px; border-radius:20px; margin-bottom:12px}
+.price-card .amount{font-size:2.6rem; font-weight:800; color:var(--ink)}
+.price-card .amount .cents{font-size:1.4rem}
+.price-card .vat{color:var(--ink-soft); font-size:.85rem; margin-bottom:20px}
+.price-card ul{list-style:none; padding:0; margin:20px 0; text-align:left}
+.price-card li{padding:8px 0; border-bottom:1px solid var(--line); color:var(--ink); font-size:.95rem}
+.price-card li:last-child{border-bottom:none}
+.price-card li.no{color:var(--ink-soft)}
+.price-card .cta{width:100%; margin-top:10px}
+details.datenblatt{margin-top:20px; text-align:left; background:var(--paper2); border-radius:8px; padding:12px 16px}
+details.datenblatt summary{cursor:pointer; color:var(--cyan); font-weight:600}
+
+.legal-note{max-width:900px; margin:0 auto; padding:0 24px 40px; color:var(--ink-soft); font-size:.85rem; text-align:center}
+.legal-note a{color:var(--ink-soft); text-decoration:underline}
+
+footer{border-top:1px solid var(--line); padding:28px 24px; text-align:center; color:var(--ink-soft); font-size:.85rem}
+footer nav a{color:var(--ink-soft); margin:0 8px; text-decoration:none}
+footer nav a:hover{color:var(--accent)}
+
+@media (max-width:600px){.hero h1{font-size:1.8rem}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}
+
+body.light{
+  --bg:#f4f6f9; --paper:#ffffff; --paper2:#eef1f6; --line:#dde2ea; --ink:#131722; --ink-soft:#5a6274;
+  --accent:#0aa87a; --cyan:#0f7bbf; --accent-soft:#e3f7ef; --warn:#c22a63; --warn-soft:#fbe6ee;
+}
+@media (prefers-color-scheme: light){
+  body:not(.dark):not(.light){
+    --bg:#f4f6f9; --paper:#ffffff; --paper2:#eef1f6; --line:#dde2ea; --ink:#131722; --ink-soft:#5a6274;
+    --accent:#0aa87a; --cyan:#0f7bbf; --accent-soft:#e3f7ef; --warn:#c22a63; --warn-soft:#fbe6ee;
+  }
+}
+</style>
+</head>
+<body>
+<a href="#content" class="skip">Zum Inhalt springen</a>
+
+<header class="top" role="banner">
+  <div class="brand"><span class="icon" aria-hidden="true">💽</span> CloneBeam</div>
+  <div class="toolbar" role="toolbar" aria-label="Anzeigeoptionen">
+    <button id="btnTheme" aria-pressed="false">🌓 Hell/Dunkel</button>
+    <button id="btnMinus" aria-label="Schrift verkleinern">A−</button>
+    <button id="btnPlus" aria-label="Schrift vergrößern">A+</button>
+  </div>
+</header>
+
+<main id="content" role="main" tabindex="-1">
+
+  <section class="hero">
+    <div class="eyebrow">Windows-Tool &middot; GZ-AI.-Stacks</div>
+    <h1>Deine Festplatte, 1:1 gesichert.<br>Ohne nachzudenken.</h1>
+    <p class="lead">CloneBeam spiegelt einen Ordner oder ein ganzes Laufwerk exakt auf ein
+      Ziel — Quelle wählen, Ziel wählen, klonen. Fortschritt, Restzeit und Protokoll siehst
+      du live im Fenster.</p>
+    <p class="lead" style="font-size:.95rem">Läuft intern über das in Windows enthaltene
+      robocopy — CloneBeam erspart dir aber Kommandozeile und Parameter: fertige Oberfläche mit
+      Fortschrittsbalken, Restzeit-Schätzung, Protokoll und einem expliziten
+      Sicherheits-Dialog vor jedem Lauf.</p>
+    <a class="cta" href="#kaufen">Jetzt sichern — 14,90&nbsp;€</a>
+  </section>
+
+  <section aria-labelledby="funktionen-title">
+    <h2 class="section-title" id="funktionen-title">Was CloneBeam kann</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>1:1-Spiegelung</h3>
+        <p>Nutzt robocopy /MIR im Hintergrund — das Ziel entspricht danach exakt der
+          Quelle, inklusive Löschen veralteter Dateien im Ziel.</p>
+      </div>
+      <div class="card">
+        <h3>Fortschritt in Echtzeit</h3>
+        <p>Vor dem Kopieren wird die Gesamtgröße der Quelle ermittelt, danach zeigt ein
+          Fortschrittsbalken Prozent und geschätzte Restzeit.</p>
+      </div>
+      <div class="card">
+        <h3>Sichere Bestätigung</h3>
+        <p>Vor jedem Lauf bestätigst du Quelle und Ziel noch einmal ausdrücklich — kein
+          versehentliches Überschreiben.</p>
+      </div>
+      <div class="card">
+        <h3>Keine Installation</h3>
+        <p>Eine einzelne .exe-Datei, portabel startbar, keine Cloud, keine Konten, keine
+          Datenübertragung an Dritte.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="ablauf-title">
+    <h2 class="section-title" id="ablauf-title">So funktioniert's</h2>
+    <div class="steps">
+      <div class="step"><span class="num" aria-hidden="true"></span>
+        <div><h3>Quelle wählen</h3><p>Ordner oder Laufwerk auswählen, das gesichert werden soll.</p></div>
+      </div>
+      <div class="step"><span class="num" aria-hidden="true"></span>
+        <div><h3>Ziel wählen</h3><p>Zielordner bzw. Ziellaufwerk auswählen, auf das gespiegelt wird.</p></div>
+      </div>
+      <div class="step"><span class="num" aria-hidden="true"></span>
+        <div><h3>Klonen starten</h3><p>Bestätigen, zurücklehnen — CloneBeam erledigt den Rest automatisch.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="kaufen" aria-labelledby="preis-title">
+    <h2 class="section-title" id="preis-title">Preis</h2>
+    <div class="pricing">
+      <div class="price-card">
+        <span class="badge">Einzel-Lizenz</span>
+        <div class="amount"><span class="euro">€</span>14<span class="cents">,90</span></div>
+        <div class="vat">Einmalig, keine Umsatzsteuer (§ 19 UStG)</div>
+        <ul>
+          <li>1:1-Ordner-/Laufwerksspiegelung</li>
+          <li>Fortschritt, ETA, Protokoll</li>
+          <li>Freischaltcode per E-Mail</li>
+          <li>Updates &amp; Support 3 Jahre</li>
+          <li class="no">Kein Abonnement</li>
+        </ul>
+        <a class="cta" href="mailto:gz.ai.stacks@gmail.com?subject=CloneBeam%20kaufen">Jetzt sichern</a>
+        <details class="datenblatt">
+          <summary>Technisches Datenblatt</summary>
+          <p style="margin-top:10px; color:var(--ink-soft); font-size:.9rem">
+            Windows 10/11, .NET Framework 4.x, keine Installation nötig. Läuft
+            vollständig lokal, keine Datenübertragung an Server des Anbieters.
+            Demo: 3 kostenlose Testläufe, danach Freischaltcode nötig.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <p class="legal-note"><strong>Wichtig:</strong> CloneBeam gleicht das Ziel exakt an die Quelle
+    an — Dateien, die nur im Ziel liegen, werden dabei gelöscht. Vor jedem Lauf bestätigst du
+    Quelle und Ziel im Programm noch einmal ausdrücklich. Käufe werden über Digistore24
+    abgewickelt. Es gilt ein gesetzliches 14-tägiges Widerrufsrecht, siehe
+    <a href="widerruf.html">Widerrufsbelehrung</a>. Näheres in den <a href="agb.html">AGB</a>.</p>
+
+</main>
+
+<footer>
+  <nav aria-label="Rechtliches">
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+    <a href="agb.html">AGB</a>
+    <a href="widerruf.html">Widerruf</a>
+    <a href="HANDBUCH.html">Handbuch</a>
+  </nav>
+  <p style="margin-top:14px">© Gerd Zimmermann GZ-AI.-Stacks &middot; CloneBeam</p>
+</footer>
+
+<script>
+(function(){
+  var body = document.body;
+  var saved = localStorage.getItem('clonebeam-site-theme');
+  if (saved === 'light') body.classList.add('light');
+  if (saved === 'dark') body.classList.add('dark');
+
+  document.getElementById('btnTheme').addEventListener('click', function(){
+    if (body.classList.contains('light')) { body.classList.remove('light'); body.classList.add('dark'); localStorage.setItem('clonebeam-site-theme','dark'); }
+    else if (body.classList.contains('dark')) { body.classList.remove('dark'); localStorage.removeItem('clonebeam-site-theme'); }
+    else { body.classList.add('light'); localStorage.setItem('clonebeam-site-theme','light'); }
+  });
+
+  var size = parseFloat(localStorage.getItem('clonebeam-site-fontsize')) || 16;
+  function applySize(){ document.documentElement.style.fontSize = size + 'px'; }
+  applySize();
+  document.getElementById('btnPlus').addEventListener('click', function(){ size = Math.min(22, size + 1); applySize(); localStorage.setItem('clonebeam-site-fontsize', size); });
+  document.getElementById('btnMinus').addEventListener('click', function(){ size = Math.max(12, size - 1); applySize(); localStorage.setItem('clonebeam-site-fontsize', size); });
+})();
+</script>
+</body>
+</html>
