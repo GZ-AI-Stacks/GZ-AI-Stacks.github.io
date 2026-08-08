@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧭 Vertrags-Kompass — Handbuch</title>
+<style>
+:root{
+  --bg:#ecdcb8; --paper:#faf3e4; --paper2:#f2e2bd; --line:#cdb27f;
+  --ink:#2b2318; --ink-soft:#6b5c42;
+  --navy:#1c3a5e; --navy-soft:#dbe3ec;
+  --brass:#a6763a; --brass-soft:#f0dfc0;
+  --ok:#3d6b4f; --ok-soft:#dfe9df;
+  --warn:#a6763a; --warn-soft:#f0dfc0;
+  --err:#a83e3e; --err-soft:#f2dcdc;
+  --zoom:1;
+}
+:root[data-theme="dark"]{
+  --bg:#1c1712; --paper:#221b16; --paper2:#2b211a; --line:#3d2e22;
+  --ink:#f1e6d8; --ink-soft:#b8a68e;
+  --navy:#e59677; --navy-soft:#3d2c20;
+  --brass:#cc785c; --brass-soft:#3d2318;
+  --ok:#7fb494; --ok-soft:#233329;
+  --warn:#e0a05a; --warn-soft:#3a2c12;
+  --err:#e0796f; --err-soft:#3a2320;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{font-size:calc(16px * var(--zoom))}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  min-height:100vh; line-height:1.65;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(166,118,58,.32), transparent 62%),
+    radial-gradient(ellipse 70% 50% at 90% 100%, rgba(28,58,94,.28), transparent 62%),
+    radial-gradient(ellipse 100% 80% at 50% 40%, rgba(166,118,58,.12), transparent 72%);
+  padding-bottom:3rem;
+}
+:root[data-theme="dark"] body{
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(204,120,92,.30), transparent 62%),
+    radial-gradient(ellipse 70% 50% at 90% 100%, rgba(229,150,119,.22), transparent 62%),
+    radial-gradient(ellipse 100% 80% at 50% 40%, rgba(204,120,92,.10), transparent 72%);
+}
+.serif{font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif}
+a{color:var(--navy)}
+a:focus-visible, button:focus-visible{outline:2px solid var(--navy); outline-offset:2px}
+
+.skip-link{position:absolute; left:-999px; top:auto}
+.skip-link:focus{left:12px; top:12px; z-index:200; background:var(--paper); padding:10px 16px; border-radius:8px; box-shadow:0 4px 16px rgba(30,20,10,.2)}
+
+header{
+  position:sticky; top:0; z-index:20;
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:14px 22px; background:var(--paper); border-bottom:1px solid var(--line);
+  box-shadow:0 2px 8px rgba(40,30,15,.08);
+}
+header .brand{font-weight:700; font-size:1.15rem; display:flex; align-items:center; gap:10px}
+header .sub{font-size:.8rem; color:var(--ink-soft)}
+.toolbar{display:flex; gap:8px; align-items:center; margin-left:auto; flex-wrap:wrap}
+.tool-group{display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:var(--paper2)}
+.tool-btn{border:none; background:transparent; color:var(--ink); padding:7px 11px; cursor:pointer; font-size:.85rem}
+.tool-btn:hover{background:var(--brass-soft)}
+.tool-group .tool-btn + .tool-btn{border-left:1px solid var(--line)}
+#zoomLevel{padding:7px 4px; font-size:.75rem; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+.btn-primary{
+  background:var(--navy); color:#fdf8ec; border:none; font-weight:600; text-decoration:none;
+  padding:9px 16px; border-radius:8px; cursor:pointer; font-size:.85rem; display:inline-block;
+}
+.btn-primary:hover{filter:brightness(1.15)}
+
+main{max-width:900px; margin:0 auto; padding:0 18px}
+.hero{text-align:center; padding:2.4rem 1rem 1.2rem}
+.hero .emoji{font-size:3rem; margin-bottom:.4rem}
+.hero h1{font-size:clamp(1.8rem,5vw,2.6rem)}
+.hero p{color:var(--ink-soft); margin-top:.6rem}
+
+nav.toc{background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:1.2rem 1.4rem; margin:1.4rem 0}
+nav.toc h2{font-size:.95rem; color:var(--brass); text-transform:uppercase; letter-spacing:1px; margin-bottom:.7rem}
+nav.toc ol{list-style:none; display:grid; grid-template-columns:1fr; gap:.35rem; counter-reset:toc}
+@media(min-width:560px){nav.toc ol{grid-template-columns:1fr 1fr}}
+nav.toc li{counter-increment:toc}
+nav.toc a{display:block; text-decoration:none; color:var(--ink); padding:.4rem .6rem; border-radius:6px}
+nav.toc a::before{content:counter(toc) "."; color:var(--brass); font-weight:700; margin-right:.5rem}
+nav.toc a:hover{background:var(--brass-soft)}
+
+section.card{background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:1.5rem 1.4rem; margin:1.2rem 0; box-shadow:0 1px 4px rgba(40,30,15,.06)}
+section.card h2{font-size:1.35rem; margin-bottom:.8rem; border-left:4px solid var(--navy); padding-left:.75rem}
+section.card h3{font-size:1.05rem; margin:1.1rem 0 .4rem; color:var(--brass)}
+section.card p{margin:.55rem 0}
+section.card ul, section.card ol{margin:.55rem 0 .55rem 1.3rem}
+section.card li{margin:.3rem 0}
+strong{color:var(--navy)}
+:root[data-theme="dark"] strong{color:var(--brass)}
+code{background:var(--brass-soft); border:1px solid var(--line); border-radius:.4rem; padding:.1rem .45rem; font-family:Consolas,monospace; color:var(--brass); font-size:.9em}
+
+.callout{border-radius:8px; padding:.9rem 1.05rem; margin:1rem 0; border:1px solid var(--line); display:flex; gap:.7rem; align-items:flex-start}
+.callout .ic{font-size:1.3rem; flex:0 0 auto; line-height:1}
+.callout.info{background:var(--navy-soft)}
+.callout.tip{background:var(--ok-soft)}
+.callout.warn{background:var(--warn-soft)}
+
+.status-demo{display:flex; gap:10px; flex-wrap:wrap; margin:.8rem 0}
+.chip{padding:6px 12px; border-radius:100px; font-size:.8rem; font-weight:600}
+.chip.ok{background:var(--ok-soft); color:var(--ok)}
+.chip.soon{background:var(--warn-soft); color:var(--warn)}
+.chip.urgent{background:var(--err-soft); color:var(--err)}
+
+.totop{display:inline-block; margin-top:.6rem; color:var(--navy); text-decoration:none; font-size:.85rem}
+.totop:hover{text-decoration:underline}
+
+footer{max-width:900px; margin:2rem auto 0; padding:1.4rem 1.2rem; border-top:1px solid var(--line); color:var(--ink-soft); font-size:.85rem; text-align:center}
+footer nav a{margin:0 6px; color:var(--navy); text-decoration:none}
+footer nav a:hover{text-decoration:underline}
+
+@media (max-width:600px){
+  header{flex-direction:column; align-items:flex-start}
+  .toolbar{margin-left:0}
+}
+</style>
+</head>
+<body>
+<a href="#inhalt" class="skip-link">Zum Inhalt springen</a>
+
+<header role="banner">
+  <div class="brand"><span aria-hidden="true">🧭</span> <span class="serif">Vertrags-Kompass</span></div>
+  <div class="sub">Handbuch</div>
+  <div class="toolbar">
+    <div class="tool-group" role="group" aria-label="Schriftgröße">
+      <button type="button" class="tool-btn" id="zoomOut" aria-label="Schrift verkleinern">−</button>
+      <span id="zoomLevel">100%</span>
+      <button type="button" class="tool-btn" id="zoomIn" aria-label="Schrift vergrößern">+</button>
+    </div>
+    <div class="tool-group" role="group" aria-label="Darstellung">
+      <button type="button" class="tool-btn" id="themeToggle" aria-pressed="false" aria-label="Hell/Dunkel umschalten">◐ Hell/Dunkel</button>
+    </div>
+    <a class="btn-primary" href="Vollversion.html">← Zur App</a>
+  </div>
+</header>
+
+<main id="main" role="main" aria-label="Handbuch-Inhalt">
+  <div class="hero">
+    <div class="emoji" aria-hidden="true">🧭</div>
+    <h1 class="serif">Vertrags-Kompass</h1>
+    <p>Deine Abos &amp; Verträge im Blick · 100&nbsp;% offline · keine Anmeldung · kein Tracking</p>
+  </div>
+
+  <nav class="toc" id="inhalt" aria-label="Inhaltsverzeichnis">
+    <h2>Inhalt</h2>
+    <ol>
+      <li><a href="#was">Was ist der Vertrags-Kompass?</a></li>
+      <li><a href="#start">Erster Start</a></li>
+      <li><a href="#vertrag">Einen Vertrag anlegen</a></li>
+      <li><a href="#status">Ampel &amp; Kündigungsfrist</a></li>
+      <li><a href="#uebersicht">Übersicht, Filter &amp; Suche</a></li>
+      <li><a href="#kalender">Kalender-Export</a></li>
+      <li><a href="#installieren">Als App installieren</a></li>
+      <li><a href="#daten">Daten &amp; Sicherheit</a></li>
+      <li><a href="#faq">Häufige Fragen</a></li>
+    </ol>
+  </nav>
+
+  <section class="card" id="was">
+    <h2>🧭 Was ist der Vertrags-Kompass?</h2>
+    <p>Der <strong>Vertrags-Kompass</strong> ist deine private Übersicht über alle laufenden Abos und Verträge — Streaming, Versicherungen, Handyvertrag, Fitnessstudio, Zeitschriften und mehr. Du siehst auf einen Blick, was dich wie viel kostet und wann du spätestens kündigen musst, um nicht ungewollt in die nächste Laufzeit zu rutschen.</p>
+    <h3>Das Besondere</h3>
+    <ul>
+      <li><strong>Kein Abo:</strong> einmal kaufen, jederzeit nutzen.</li>
+      <li><strong>Kein Konto, keine Anmeldung:</strong> einfach öffnen und loslegen.</li>
+      <li><strong>Kein Tracking, kein Server:</strong> die App sendet nichts irgendwohin.</li>
+      <li><strong>100&nbsp;% offline:</strong> alle Daten bleiben ausschließlich auf deinem Gerät.</li>
+      <li><strong>Automatische Fristberechnung:</strong> aus Verlängerungsdatum + Kündigungsfrist wird der letztmögliche Kündigungstermin errechnet.</li>
+      <li><strong>Kalender-Export:</strong> alle Kündigungstermine als Erinnerung in deinen Kalender.</li>
+    </ul>
+    <div class="callout info"><span class="ic">ℹ</span><div>Der Vertrags-Kompass ist ein <strong>Erinnerungswerkzeug</strong>, keine Rechtsberatung. Prüfe Fristen und Formvorschriften (z.&nbsp;B. Schriftform) immer zusätzlich in deinem jeweiligen Vertrag.</div></div>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="start">
+    <h2>🚀 Erster Start</h2>
+    <ol>
+      <li>Öffne die Datei <code>Vollversion.html</code> per Doppelklick — am besten in Chrome, Edge, Firefox oder Safari.</li>
+      <li>Die App startet sofort mit einer leeren Übersicht. Kein Login, kein Freischaltcode nötig.</li>
+      <li>Klicke oben rechts auf <strong>„+ Neuer Vertrag"</strong>, um deinen ersten Eintrag anzulegen.</li>
+    </ol>
+    <div class="callout tip"><span class="ic">💡</span><div><strong>Tipp:</strong> Lege dir einen Ordner an, in dem <code>Vollversion.html</code> liegt, und öffne diese eine Datei künftig immer von dort — deine Daten hängen am Browser, nicht am Speicherort der Datei.</div></div>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="vertrag">
+    <h2>📝 Einen Vertrag anlegen</h2>
+    <p>Trage für jeden Vertrag folgende Angaben ein:</p>
+    <ul>
+      <li><strong>Name:</strong> z.&nbsp;B. „Netflix" oder „Kfz-Versicherung".</li>
+      <li><strong>Kategorie:</strong> Streaming, Versicherung, Handy/Internet, Fitness, Abo/Zeitschrift oder Sonstiges.</li>
+      <li><strong>Kosten &amp; Zahlweise:</strong> Betrag in Euro, monatlich oder jährlich fällig.</li>
+      <li><strong>Nächstes Verlängerungsdatum:</strong> das Datum, an dem sich der Vertrag automatisch verlängert oder erneut fällig wird — steht meist im Vertrag oder der letzten Rechnung.</li>
+      <li><strong>Kündigungsfrist:</strong> wie viele Tage vorher du spätestens kündigen musst (Standard: 30 Tage).</li>
+    </ul>
+    <p>Über <strong>„✏ Bearbeiten"</strong> auf einer Karte kannst du jeden Eintrag jederzeit ändern, über <strong>„🗑 Löschen"</strong> entfernen (mit Sicherheitsabfrage).</p>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="status">
+    <h2>🚦 Ampel &amp; Kündigungsfrist</h2>
+    <p>Aus Verlängerungsdatum und Kündigungsfrist errechnet die App automatisch den letztmöglichen Kündigungstermin und färbt jede Karte entsprechend ein:</p>
+    <div class="status-demo">
+      <span class="chip ok">Grün · noch mehr als 45 Tage Zeit</span>
+      <span class="chip soon">Gelb · 15–45 Tage bis zur Frist</span>
+      <span class="chip urgent">Rot · 14 Tage oder weniger, oder Frist bereits verpasst</span>
+    </div>
+    <p>Die Vertragsliste ist automatisch nach dringlichster Frist sortiert — was zuerst gekündigt werden muss, steht oben.</p>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="uebersicht">
+    <h2>📊 Übersicht, Filter &amp; Suche</h2>
+    <p>Die vier Kacheln oben zeigen dir auf einen Blick: Anzahl Verträge, monatliche Gesamtkosten, hochgerechnete Jahreskosten und wie viele Kündigungen bald fällig sind.</p>
+    <p>Mit dem <strong>Kategorie-Filter</strong> blendest du z.&nbsp;B. nur Streaming-Abos ein, mit dem <strong>Suchfeld</strong> findest du einen Vertrag per Namen.</p>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="kalender">
+    <h2>📅 Kalender-Export</h2>
+    <p>Über den Button <strong>„📅 Kalender-Export"</strong> lädst du eine Datei <code>vertragskompass-kuendigungsfristen.ics</code> herunter — eine für jeden Kalender lesbare Datei mit einem Termin pro Kündigungsfrist (inklusive 7-Tage-Erinnerung).</p>
+    <ol>
+      <li>Button klicken, Datei wird heruntergeladen.</li>
+      <li>Datei doppelklicken oder in Google Kalender, Outlook bzw. Apple Kalender importieren.</li>
+      <li>Bei neuen oder geänderten Verträgen einfach erneut exportieren.</li>
+    </ol>
+    <div class="callout tip"><span class="ic">💡</span><div><strong>Tipp:</strong> Exportiere nach jeder Änderung neu — der Export enthält immer den aktuellen Stand aller Verträge.</div></div>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="installieren">
+    <h2>📲 Als App installieren</h2>
+    <p>Vertrags-Kompass bringt ein eigenes App-Symbol mit, das direkt in der Datei eingebettet ist — du kannst die Seite wie eine echte App auf deinem Startbildschirm ablegen.</p>
+    <ul>
+      <li><strong>Android (Chrome):</strong> Menü ⋮ → „App installieren" bzw. „Zum Startbildschirm hinzufügen"</li>
+      <li><strong>iPhone/iPad (Safari):</strong> Teilen-Symbol → „Zum Home-Bildschirm"</li>
+      <li><strong>Windows/Mac (Chrome/Edge):</strong> Installations-Symbol in der Adressleiste</li>
+    </ul>
+    <p>Danach startet Vertrags-Kompass mit eigenem Icon und ohne Adressleiste — wie eine echte App, ganz ohne App Store.</p>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="daten">
+    <h2>🔐 Daten &amp; Sicherheit</h2>
+    <p>Alle Verträge werden ausschließlich im <strong>lokalen Speicher deines Browsers</strong> (LocalStorage) auf diesem Gerät abgelegt. Es gibt keinen Server, kein Konto, keine Cloud-Synchronisierung.</p>
+    <div class="callout warn"><span class="ic">⚠</span><div><strong>Achtung:</strong> Löschst du den Browser-Verlauf/die Website-Daten oder wechselst du das Gerät, gehen deine Einträge verloren. Es gibt aktuell keine Backup- oder Export-Funktion für die Vertragsdaten selbst — nur den Kalender-Export für die Fristen.</div></div>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="faq">
+    <h2>❓ Häufige Fragen</h2>
+    <h3>Wo werden meine Daten gespeichert?</h3>
+    <p>Ausschließlich lokal in deinem Browser. Nichts geht ins Internet, nichts wird an einen Server gesendet.</p>
+
+    <h3>Funktioniert die App auf dem Handy?</h3>
+    <p>Ja. Öffne <code>Vollversion.html</code> im Browser deines Smartphones — die Ansicht passt sich automatisch an.</p>
+
+    <h3>Kann ich mehrere Geräte synchronisieren?</h3>
+    <p>Nein, bewusst nicht — der Vertrags-Kompass speichert rein lokal ohne Konto und Server. Nutzt du mehrere Geräte, musst du Verträge auf jedem Gerät einzeln eintragen.</p>
+
+    <h3>Was passiert, wenn ich die Kündigungsfrist verpasse?</h3>
+    <p>Die Karte färbt sich rot und zeigt „Kündigungsfrist bereits verpasst" mit dem Datum. Das ersetzt keine rechtliche Prüfung — kontrolliere den Vertrag im Zweifel direkt beim Anbieter.</p>
+
+    <h3>Kann ich Verträge exportieren oder sichern?</h3>
+    <p>Aktuell nur die Kündigungstermine per Kalender-Export. Ein vollständiges Daten-Backup ist noch nicht enthalten.</p>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+</main>
+
+<footer role="contentinfo">
+  <div>Vertrags-Kompass · GZ-AI.-Stacks · <a href="https://www.gz-ai-stacks.de" target="_blank" rel="noopener">www.gz-ai-stacks.de</a></div>
+  <nav aria-label="Rechtliches">
+    <a href="impressum.html">Impressum</a> ·
+    <a href="datenschutz.html">Datenschutz</a> ·
+    <a href="agb.html">AGB</a> ·
+    <a href="widerruf.html">Widerruf</a>
+  </nav>
+  <div style="margin-top:.5rem; font-size:.78rem">© Gerd Zimmermann GZ-AI.-Stacks</div>
+</footer>
+
+<script>
+(function(){
+  var ZOOM_KEY = 'vertragskompass-handbuch-zoom';
+  var THEME_KEY = 'vertragskompass-theme';
+  var root = document.documentElement;
+
+  var zoom = parseInt(localStorage.getItem(ZOOM_KEY), 10) || 100;
+  var zoomLabel = document.getElementById('zoomLevel');
+  function applyZoom(){
+    zoom = Math.max(80, Math.min(160, zoom));
+    root.style.setProperty('--zoom', zoom / 100);
+    zoomLabel.textContent = zoom + '%';
+    localStorage.setItem(ZOOM_KEY, zoom);
+  }
+  document.getElementById('zoomIn').addEventListener('click', function(){ zoom += 10; applyZoom(); });
+  document.getElementById('zoomOut').addEventListener('click', function(){ zoom -= 10; applyZoom(); });
+  applyZoom();
+
+  var themeBtn = document.getElementById('themeToggle');
+  var savedTheme = localStorage.getItem(THEME_KEY);
+  if(savedTheme){
+    root.setAttribute('data-theme', savedTheme);
+    themeBtn.setAttribute('aria-pressed', savedTheme === 'dark' ? 'true' : 'false');
+  }
+  themeBtn.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem(THEME_KEY, next);
+    themeBtn.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
