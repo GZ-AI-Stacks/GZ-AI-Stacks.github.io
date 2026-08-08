@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vertrags-Kompass — Abos &amp; Verträge nie wieder verpassen | GZ-AI.-Stacks</title>
+<meta name="description" content="Vertrags-Kompass: Alle Abos und Verträge auf einen Blick, automatische Kündigungsfrist-Berechnung, ICS-Kalender-Export. Offline, ohne Konto, einmal kaufen.">
+<meta name="theme-color" content="#1c3a5e">
+<meta property="og:title" content="Vertrags-Kompass — Abos &amp; Verträge im Blick">
+<meta property="og:description" content="Nie wieder eine Kündigungsfrist verpassen. Alle Verträge auf einen Blick, offline, ohne Konto.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta property="og:image" content="img/hero.png">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9Ijk2IiBmaWxsPSIjMWMzYTVlIi8+CiAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIxNzIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YwZGZjMCIgc3Ryb2tlLXdpZHRoPSIxMCIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTMyIiBmaWxsPSJub25lIiBzdHJva2U9IiNmMGRmYzAiIHN0cm9rZS13aWR0aD0iNCIgb3BhY2l0eT0iMC41NSIvPgogIDxnIHN0cm9rZT0iI2YwZGZjMCIgc3Ryb2tlLXdpZHRoPSI1Ij4KICAgIDxsaW5lIHgxPSIyNTYiIHkxPSI2NiIgeDI9IjI1NiIgeTI9IjQ0NiIvPgogICAgPGxpbmUgeDE9IjY2IiB5MT0iMjU2IiB4Mj0iNDQ2IiB5Mj0iMjU2Ii8+CiAgPC9nPgogIDxwb2x5Z29uIHBvaW50cz0iMjU2LDExNiAyODYsMjU2IDI1NiwzOTYgMjI2LDI1NiIgZmlsbD0iI2YwZGZjMCIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTE2LDI1NiAyNTYsMjI2IDM5NiwyNTYgMjU2LDI4NiIgZmlsbD0iI2NjOWE1YSIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTgiIGZpbGw9IiMxYzNhNWUiIHN0cm9rZT0iI2YwZGZjMCIgc3Ryb2tlLXdpZHRoPSI2Ii8+Cjwvc3ZnPg==">
+<style>
+:root{
+  --bg:#ecdcb8; --paper:#efe0c0; --paper2:#f2e2bd; --line:#cdb27f;
+  --ink:#2b2318; --ink-soft:#6b5c42;
+  --navy:#1c3a5e; --navy-soft:#dbe3ec;
+  --brass:#a6763a; --brass-soft:#f0dfc0;
+  --ok:#3d6b4f; --ok-soft:#dfe9df;
+  --shadow:0 4px 20px rgba(40,30,15,.10);
+  --shadow-strong:0 10px 34px rgba(40,30,15,.18);
+}
+:root[data-theme="dark"]{
+  --bg:#1c1712; --paper:#221b16; --paper2:#2b211a; --line:#3d2e22;
+  --ink:#f1e6d8; --ink-soft:#b8a68e;
+  --navy:#e59677; --navy-soft:#3d2c20;
+  --brass:#cc785c; --brass-soft:#3d2318;
+  --ok:#7fb494; --ok-soft:#233329;
+  --shadow:0 4px 20px rgba(0,0,0,.35);
+  --shadow-strong:0 10px 34px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth; font-size:calc(16px * var(--zoom,1))}
+body{
+  font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.6; min-height:100vh;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(166,118,58,.28), transparent 62%),
+    radial-gradient(ellipse 70% 50% at 90% 100%, rgba(28,58,94,.24), transparent 62%);
+}
+:root[data-theme="dark"] body{
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(204,120,92,.26), transparent 62%),
+    radial-gradient(ellipse 70% 50% at 90% 100%, rgba(229,150,119,.18), transparent 62%);
+}
+.serif{font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif}
+a{color:var(--navy)}
+:root[data-theme="dark"] a{color:var(--brass)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--brass);outline-offset:3px;border-radius:4px}
+.skip-link{position:absolute;left:-9999px}
+.skip-link:focus{left:1rem;top:1rem;background:var(--paper);color:var(--ink);padding:.6rem 1rem;z-index:999;border-radius:6px;font-weight:700;box-shadow:var(--shadow)}
+
+/* ============ HEADER ============ */
+.site-header{max-width:1100px;margin:0 auto;padding:1.3rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.8rem;flex:1;min-width:220px}
+.brand-icon{width:44px;height:44px;border-radius:50%;background:var(--navy-soft);display:flex;align-items:center;justify-content:center;font-size:1.3rem;border:1px solid var(--line)}
+.brand-text h1{font-size:1.3rem;font-weight:700;color:var(--ink)}
+.brand-text .tag{font-size:.72rem;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase}
+.header-actions{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.icon-btn{
+  background:var(--paper2); border:1px solid var(--line); color:var(--ink);
+  width:38px; height:38px; border-radius:8px; cursor:pointer; font-size:1rem;
+  display:flex; align-items:center; justify-content:center;
+}
+.icon-btn:hover{background:var(--brass-soft)}
+.nav-cta{
+  background:var(--navy); color:#fdf8ec; padding:.6rem 1.2rem; border-radius:8px;
+  text-decoration:none; font-weight:700; font-size:.92rem;
+}
+:root[data-theme="dark"] .nav-cta{color:#1c1712}
+.nav-cta:hover{filter:brightness(1.12)}
+
+/* ============ HERO ============ */
+.hero{max-width:1100px;margin:0 auto;padding:1.5rem 1.5rem 3rem;display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center}
+.hero-content h2{font-family:Georgia,serif;font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;line-height:1.2;margin-bottom:1rem;color:var(--ink)}
+.hero-content h2 .accent{color:var(--navy)}
+:root[data-theme="dark"] .hero-content h2 .accent{color:var(--brass)}
+.hero-content .lead{font-size:1.08rem;color:var(--ink-soft);margin-bottom:1.4rem}
+.hero-pills{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.6rem}
+.pill{background:var(--navy-soft);color:var(--navy);padding:.35rem .8rem;border-radius:100px;font-size:.8rem;font-weight:600}
+:root[data-theme="dark"] .pill{color:var(--brass)}
+.hero-cta{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center}
+.btn-primary{
+  background:var(--navy); color:#fdf8ec; padding:.95rem 1.6rem; border-radius:10px;
+  text-decoration:none; font-weight:700; font-size:1rem; box-shadow:var(--shadow-strong);
+  display:inline-flex; align-items:center; gap:.4rem; border:none; cursor:pointer;
+}
+:root[data-theme="dark"] .btn-primary{color:#1c1712}
+.btn-primary:hover{filter:brightness(1.1)}
+.btn-secondary{
+  background:var(--paper); color:var(--navy); padding:.9rem 1.4rem; border-radius:10px;
+  text-decoration:none; font-weight:700; font-size:1rem; border:2px solid var(--navy);
+}
+:root[data-theme="dark"] .btn-secondary{color:var(--brass); border-color:var(--brass)}
+.btn-secondary:hover{background:var(--brass-soft)}
+
+.compass-art{
+  aspect-ratio:1/1; border-radius:50%; background:var(--paper);
+  border:1px solid var(--line); box-shadow:var(--shadow-strong);
+  display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
+}
+.compass-art::before{
+  content:""; position:absolute; inset:8%; border-radius:50%;
+  border:1px solid var(--line); opacity:.6;
+}
+.compass-art .needle{font-size:min(14vw,140px); color:var(--brass)}
+
+/* ============ TRUST ============ */
+.trust-bar{background:var(--paper);border-block:1px solid var(--line);padding:1.3rem 1.5rem;margin-block:0 2rem}
+.trust-inner{max-width:1100px;margin:0 auto;display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:space-around;align-items:center}
+.trust-item{display:flex;align-items:center;gap:.6rem;color:var(--ink-soft);font-weight:600;font-size:.9rem}
+.trust-item .icon{font-size:1.3rem}
+
+/* ============ SECTIONS ============ */
+section{max-width:1100px;margin:0 auto;padding:3rem 1.5rem}
+section h3.section-title{font-family:Georgia,serif;font-size:1.8rem;text-align:center;margin-bottom:.6rem;color:var(--ink);font-weight:700}
+section .section-sub{text-align:center;color:var(--ink-soft);margin-bottom:2.4rem;font-size:1.02rem;max-width:600px;margin-inline:auto}
+
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.feature{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:1.5rem 1.4rem}
+.feature .icon{font-size:1.8rem;margin-bottom:.7rem;display:flex;align-items:center;justify-content:center;background:var(--navy-soft);width:52px;height:52px;border-radius:10px}
+.feature h4{font-size:1.05rem;color:var(--ink);margin-bottom:.4rem;font-weight:700}
+.feature p{color:var(--ink-soft);font-size:.92rem}
+
+.steps{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:2rem 1.5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.step{text-align:center;padding:.6rem}
+.step .num{display:inline-flex;align-items:center;justify-content:center;background:var(--navy);color:#fdf8ec;width:36px;height:36px;border-radius:50%;font-weight:800;margin-bottom:.6rem}
+:root[data-theme="dark"] .step .num{color:#1c1712}
+.step h5{color:var(--ink);font-size:1rem;margin-bottom:.3rem;font-weight:700}
+.step p{color:var(--ink-soft);font-size:.87rem}
+
+/* ============ KAUFEN ============ */
+#kaufen{padding-block:3.5rem}
+.preis-card{
+  background:var(--paper); border:2px solid var(--brass); border-radius:16px;
+  padding:2.2rem 1.8rem; text-align:center; max-width:420px; margin:0 auto; box-shadow:var(--shadow-strong);
+}
+.preis-card h4{font-size:1.15rem;color:var(--ink);margin-bottom:.4rem;font-weight:700}
+.preis-card .preis{font-family:Georgia,serif;font-size:3rem;font-weight:700;color:var(--navy);margin-block:.4rem .2rem;line-height:1}
+:root[data-theme="dark"] .preis-card .preis{color:var(--brass)}
+.preis-card .preis .euro{font-size:1.5rem;vertical-align:top;margin-right:.05em}
+.preis-card .preis-sub{color:var(--ink-soft);font-size:.86rem;margin-bottom:1.3rem}
+.preis-card ul{list-style:none;text-align:left;margin-bottom:1.4rem;padding-inline:.4rem}
+.preis-card li{padding:.3rem 0;color:var(--ink-soft);font-size:.94rem;display:flex;gap:.5rem;align-items:flex-start}
+.preis-card li::before{content:"✓";color:var(--ok);font-weight:800;flex-shrink:0}
+.preis-card .btn-buy{
+  display:block;width:100%;background:var(--navy);color:#fdf8ec;border:none;padding:1rem;
+  border-radius:10px;font-weight:700;font-size:1.05rem;cursor:pointer;text-align:center;
+  text-decoration:none;box-sizing:border-box;font-family:inherit;
+}
+:root[data-theme="dark"] .preis-card .btn-buy{color:#1c1712}
+.preis-card .btn-buy:hover{filter:brightness(1.1)}
+.preis-card .btn-buy[aria-disabled="true"]{background:var(--line);color:var(--ink-soft);cursor:not-allowed}
+.preis-card .hinweis{font-size:.78rem;color:var(--ink-soft);margin-top:.8rem}
+.preis-rechtshinweis{max-width:700px;margin:1.4rem auto 0;text-align:center;font-size:.78rem;line-height:1.6;color:var(--ink-soft)}
+
+/* ============ FAQ ============ */
+.faq{max-width:780px;margin-inline:auto}
+.faq details{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.4rem 1.2rem;margin-bottom:.7rem}
+.faq details[open]{border-color:var(--navy)}
+.faq summary{font-weight:700;color:var(--ink);cursor:pointer;padding:.9rem 0;font-size:1rem;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.faq summary::after{content:"+";color:var(--navy);font-size:1.3rem;font-weight:300}
+:root[data-theme="dark"] .faq summary::after{color:var(--brass)}
+.faq details[open] summary::after{content:"−"}
+.faq details p{color:var(--ink-soft);padding-bottom:1rem}
+
+/* ============ FOOTER ============ */
+footer{background:var(--paper);border-top:1px solid var(--line);padding:2rem 1.5rem;margin-top:3rem}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;align-items:center}
+.footer-brand{color:var(--ink);font-weight:700}
+.footer-brand small{display:block;color:var(--ink-soft);font-weight:400;margin-top:.2rem;font-size:.85rem}
+.footer-links{display:flex;gap:1rem;flex-wrap:wrap}
+.footer-links a{color:var(--ink-soft);text-decoration:none;font-size:.9rem;font-weight:600}
+.footer-links a:hover{color:var(--navy);text-decoration:underline}
+:root[data-theme="dark"] .footer-links a:hover{color:var(--brass)}
+
+@media (max-width:780px){
+  .hero{grid-template-columns:1fr;gap:1.5rem;padding-block:1rem 2rem}
+  .compass-art{order:-1;max-width:260px;margin:0 auto}
+  .features{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  section{padding:2rem 1.2rem}
+  section h3.section-title{font-size:1.5rem}
+  .footer-inner{flex-direction:column;text-align:center}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<a href="#kaufen" class="skip-link">Zum Kauf-Bereich springen</a>
+
+<header class="site-header" role="banner">
+  <div class="brand">
+    <span class="brand-icon" aria-hidden="true">🧭</span>
+    <div class="brand-text">
+      <h1>Vertrags-Kompass</h1>
+      <div class="tag">GZ-AI.-STACKS · ALLTAGS-APP</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button type="button" class="icon-btn" id="zoomOut" aria-label="Schrift verkleinern">A−</button>
+    <button type="button" class="icon-btn" id="zoomIn" aria-label="Schrift vergrößern">A+</button>
+    <button type="button" class="icon-btn" id="themeToggle" aria-label="Hell/Dunkel umschalten">🌓</button>
+    <a href="#kaufen" class="nav-cta" aria-label="Zum Kauf-Bereich">Jetzt kaufen</a>
+  </div>
+</header>
+
+<main id="main" role="main">
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-content">
+    <h2 id="hero-title">Nie wieder eine <span class="accent">Kündigungsfrist</span> verpassen</h2>
+    <p class="lead">Alle Abos und Verträge auf einen Blick, mit automatisch berechnetem spätesten Kündigungstermin und Kalender-Erinnerung. Läuft komplett offline auf Ihrem Gerät &mdash; ohne Konto, ohne Cloud, ohne Abo.</p>
+    <div class="hero-pills">
+      <span class="pill">📴 Offline &amp; ohne Konto</span>
+      <span class="pill">🔒 Alles bleibt lokal</span>
+      <span class="pill">📅 Kalender-Export</span>
+      <span class="pill">💾 Backup inklusive</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#kaufen" class="btn-primary">Jetzt kaufen — 12,90&nbsp;€</a>
+      <a href="../HANDBUCH.html" class="btn-secondary">Anleitung ansehen</a>
+    </div>
+  </div>
+  <div class="compass-art" aria-hidden="true"><span class="needle">🧭</span></div>
+</section>
+
+<div class="trust-bar" aria-label="Vertrauen">
+  <div class="trust-inner">
+    <div class="trust-item"><span class="icon" aria-hidden="true">🇩🇪</span> Aus Deutschland</div>
+    <div class="trust-item"><span class="icon" aria-hidden="true">🔐</span> DSGVO-konform</div>
+    <div class="trust-item"><span class="icon" aria-hidden="true">📵</span> Offline-fähig</div>
+    <div class="trust-item"><span class="icon" aria-hidden="true">🗓️</span> ICS-Kalender-Export</div>
+    <div class="trust-item"><span class="icon" aria-hidden="true">⭐</span> Einmal kaufen</div>
+  </div>
+</div>
+
+<section aria-labelledby="features-title">
+  <h3 id="features-title" class="section-title">Was der Vertrags-Kompass für Sie erledigt</h3>
+  <p class="section-sub">Alle Verträge im Blick, keine Frist mehr verpasst, keine Daten in fremden Clouds.</p>
+  <div class="features">
+    <div class="feature">
+      <div class="icon" aria-hidden="true">📋</div>
+      <h4>Alle Verträge im Überblick</h4>
+      <p>Name, Kategorie, Kosten und Verlängerungsdatum auf einer Karte — sortiert und filterbar.</p>
+    </div>
+    <div class="feature">
+      <div class="icon" aria-hidden="true">🚦</div>
+      <h4>Ampel-Warnung</h4>
+      <p>Auf einen Blick sehen, welcher Vertrag bald gekündigt werden muss.</p>
+    </div>
+    <div class="feature">
+      <div class="icon" aria-hidden="true">🧮</div>
+      <h4>Kündigungsfrist automatisch berechnet</h4>
+      <p>Der Vertrags-Kompass rechnet den spätesten Kündigungstermin für Sie aus.</p>
+    </div>
+    <div class="feature">
+      <div class="icon" aria-hidden="true">🗓️</div>
+      <h4>Kalender-Export</h4>
+      <p>Erinnerung als ICS-Datei exportieren — passend für Google Kalender, Outlook &amp; Co.</p>
+    </div>
+    <div class="feature">
+      <div class="icon" aria-hidden="true">💶</div>
+      <h4>Kostenübersicht</h4>
+      <p>Monatliche und jährliche Gesamtkosten aller Abos auf einen Blick.</p>
+    </div>
+    <div class="feature">
+      <div class="icon" aria-hidden="true">💾</div>
+      <h4>Backup &amp; Wiederherstellung</h4>
+      <p>Alle Daten jederzeit als JSON-Datei sichern und auf einem anderen Gerät wiederherstellen.</p>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="steps-title">
+  <h3 id="steps-title" class="section-title">So einfach geht's</h3>
+  <p class="section-sub">In drei Schritten startklar — ganz ohne Installation.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="num" aria-hidden="true">1</div>
+      <h5>Datei öffnen</h5>
+      <p>Nach dem Kauf die Datei speichern und per Doppelklick im Browser öffnen.</p>
+    </div>
+    <div class="step">
+      <div class="num" aria-hidden="true">2</div>
+      <h5>Verträge eintragen</h5>
+      <p>Name, Kosten, Verlängerungsdatum und Kündigungsfrist erfassen.</p>
+    </div>
+    <div class="step">
+      <div class="num" aria-hidden="true">3</div>
+      <h5>Entspannt bleiben</h5>
+      <p>Der Vertrags-Kompass warnt rechtzeitig vor jeder Kündigungsfrist.</p>
+    </div>
+  </div>
+</section>
+
+<section id="kaufen" aria-labelledby="kaufen-title">
+  <h3 id="kaufen-title" class="section-title">Jetzt sichern</h3>
+  <p class="section-sub">Einmal kaufen &mdash; jederzeit nutzen. Kein Abo, keine versteckten Kosten.</p>
+
+  <div class="preis-card">
+    <h4>Einzellizenz</h4>
+    <div class="preis"><span class="euro">€</span>12,90</div>
+    <div class="preis-sub">Einmaliger Kaufpreis</div>
+    <ul>
+      <li>Beliebig viele Verträge erfassen</li>
+      <li>Automatische Kündigungsfrist-Berechnung</li>
+      <li>ICS-Kalender-Export</li>
+      <li>JSON-Backup &amp; Wiederherstellung</li>
+      <li>Offline-fähig, ohne Konto</li>
+      <li>Einmal kaufen, jederzeit nutzen</li>
+    </ul>
+    <button type="button" class="btn-buy" aria-disabled="true" disabled>🔜 In Kürze verfügbar</button>
+    <div class="hinweis">Sicher bezahlen über Digistore24</div>
+  </div>
+
+  <p class="preis-rechtshinweis">
+    Einmalkauf ohne laufende Kosten &middot; Lieferung als Sofort-Download (digitales Gut) &middot;
+    <strong>14 Tage gesetzliches Widerrufsrecht</strong> für Verbraucher &middot;
+    Anbieter: Gerd Zimmermann &middot; GZ-AI.-Stacks &middot;
+    <a href="impressum.html">Impressum</a> &middot; <a href="widerruf.html">Widerruf</a>
+  </p>
+</section>
+
+<section aria-labelledby="faq-title">
+  <h3 id="faq-title" class="section-title">Häufige Fragen</h3>
+  <p class="section-sub">Antworten auf die typischen Fragen vor dem Kauf.</p>
+  <div class="faq">
+    <details>
+      <summary>Wo werden meine Vertragsdaten gespeichert?</summary>
+      <p>Ausschließlich lokal in Ihrem Browser (localStorage). Es gibt keinen Server, kein Konto und keine Cloud-Übertragung — Ihre Daten verlassen Ihr Gerät nicht.</p>
+    </details>
+    <details>
+      <summary>Was passiert, wenn ich den Browser wechsle oder die Daten lösche?</summary>
+      <p>Da alle Daten lokal liegen, gehen sie beim Löschen der Browser-Daten verloren. Nutzen Sie regelmäßig die Backup-Funktion (💾), um eine JSON-Sicherung zu erstellen und bei Bedarf wiederherzustellen.</p>
+    </details>
+    <details>
+      <summary>Wie bekomme ich meinen Freischaltcode?</summary>
+      <p>Nach dem Kauf bei Digistore24 erhalten Sie sofort eine Bestätigungs-E-Mail mit Ihrem persönlichen Freischaltcode. Diesen beim ersten Öffnen einmal eingeben — fertig.</p>
+    </details>
+    <details>
+      <summary>Funktioniert die App auch ohne Internet?</summary>
+      <p>Ja. Nach dem ersten Öffnen läuft der Vertrags-Kompass vollständig offline.</p>
+    </details>
+    <details>
+      <summary>Auf welchen Geräten läuft die App?</summary>
+      <p>Auf jedem Gerät mit modernem Browser: Smartphone, Tablet, Laptop oder Desktop — egal ob Windows, Mac, Android oder iOS.</p>
+    </details>
+    <details>
+      <summary>Kann ich Verträge auf mehreren Geräten synchronisieren?</summary>
+      <p>Nicht automatisch, da bewusst kein Server zum Einsatz kommt. Mit der JSON-Backup-Funktion können Sie Ihre Daten aber manuell auf ein anderes Gerät übertragen.</p>
+    </details>
+    <details>
+      <summary>Gibt es ein Abo oder versteckte Kosten?</summary>
+      <p>Nein. Sie zahlen einmal und nutzen die App, so oft und so lange Sie möchten.</p>
+    </details>
+    <details>
+      <summary>Was ist, wenn mir die App nicht gefällt?</summary>
+      <p>Für den Kauf gilt das gesetzliche Widerrufsrecht von 14 Tagen für Verbraucher. Details siehe <a href="widerruf.html">Widerrufsbelehrung</a>.</p>
+    </details>
+  </div>
+</section>
+
+</main>
+
+<footer role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      🧭 Vertrags-Kompass
+      <small>© Gerd Zimmermann GZ-AI.-Stacks</small>
+    </div>
+    <nav class="footer-links" aria-label="Rechtliche Hinweise">
+      <a href="impressum.html">Impressum</a>
+      <a href="agb.html">AGB</a>
+      <a href="widerruf.html">Widerruf</a>
+      <a href="datenschutz.html">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var ZOOM_KEY = 'vk-verkauf-zoom', THEME_KEY = 'vk-verkauf-theme';
+  var zoom = parseFloat(localStorage.getItem(ZOOM_KEY)) || 1;
+  function applyZoom(){ root.style.setProperty('--zoom', zoom); }
+  applyZoom();
+  document.getElementById('zoomIn').addEventListener('click', function(){
+    zoom = Math.min(1.4, zoom + 0.1); localStorage.setItem(ZOOM_KEY, zoom); applyZoom();
+  });
+  document.getElementById('zoomOut').addEventListener('click', function(){
+    zoom = Math.max(0.8, zoom - 0.1); localStorage.setItem(ZOOM_KEY, zoom); applyZoom();
+  });
+  var savedTheme = localStorage.getItem(THEME_KEY);
+  if (savedTheme) root.setAttribute('data-theme', savedTheme);
+  else if (window.matchMedia('(prefers-color-scheme: dark)').matches) root.setAttribute('data-theme', 'dark');
+  document.getElementById('themeToggle').addEventListener('click', function(){
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem(THEME_KEY, next);
+  });
+})();
+</script>
+
+</body>
+</html>
