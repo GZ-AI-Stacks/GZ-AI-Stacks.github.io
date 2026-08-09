@@ -10,7 +10,7 @@
 <meta property="og:description" content="Nie wieder eine Kündigungsfrist verpassen. Alle Verträge auf einen Blick, offline, ohne Konto.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
-<meta property="og:image" content="img/hero.png">
+<meta property="og:image" content="img/hero-mockup.jpg">
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9Ijk2IiBmaWxsPSIjMWMzYTVlIi8+CiAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIxNzIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YwZGZjMCIgc3Ryb2tlLXdpZHRoPSIxMCIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTMyIiBmaWxsPSJub25lIiBzdHJva2U9IiNmMGRmYzAiIHN0cm9rZS13aWR0aD0iNCIgb3BhY2l0eT0iMC41NSIvPgogIDxnIHN0cm9rZT0iI2YwZGZjMCIgc3Ryb2tlLXdpZHRoPSI1Ij4KICAgIDxsaW5lIHgxPSIyNTYiIHkxPSI2NiIgeDI9IjI1NiIgeTI9IjQ0NiIvPgogICAgPGxpbmUgeDE9IjY2IiB5MT0iMjU2IiB4Mj0iNDQ2IiB5Mj0iMjU2Ii8+CiAgPC9nPgogIDxwb2x5Z29uIHBvaW50cz0iMjU2LDExNiAyODYsMjU2IDI1NiwzOTYgMjI2LDI1NiIgZmlsbD0iI2YwZGZjMCIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTE2LDI1NiAyNTYsMjI2IDM5NiwyNTYgMjU2LDI4NiIgZmlsbD0iI2NjOWE1YSIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTgiIGZpbGw9IiMxYzNhNWUiIHN0cm9rZT0iI2YwZGZjMCIgc3Ryb2tlLXdpZHRoPSI2Ii8+Cjwvc3ZnPg==">
 <style>
 :root{
@@ -97,15 +97,9 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--brass);outline-offs
 .btn-secondary:hover{background:var(--brass-soft)}
 
 .compass-art{
-  aspect-ratio:1/1; border-radius:50%; background:var(--paper);
-  border:1px solid var(--line); box-shadow:var(--shadow-strong);
-  display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
+  border-radius:16px; overflow:hidden; box-shadow:var(--shadow-strong); border:1px solid var(--line);
 }
-.compass-art::before{
-  content:""; position:absolute; inset:8%; border-radius:50%;
-  border:1px solid var(--line); opacity:.6;
-}
-.compass-art .needle{font-size:min(14vw,140px); color:var(--brass)}
+.compass-art img{display:block; width:100%; height:auto}
 
 /* ============ TRUST ============ */
 .trust-bar{background:var(--paper);border-block:1px solid var(--line);padding:1.3rem 1.5rem;margin-block:0 2rem}
@@ -224,7 +218,7 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:2rem 1.5
       <a href="HANDBUCH.html" class="btn-secondary">Anleitung ansehen</a>
     </div>
   </div>
-  <div class="compass-art" aria-hidden="true"><span class="needle">🧭</span></div>
+  <div class="compass-art"><img src="img/hero-mockup.jpg" alt="Vertrags-Kompass App auf Desktop, Tablet und Smartphone" loading="eager"></div>
 </section>
 
 <div class="trust-bar" aria-label="Vertrauen">
