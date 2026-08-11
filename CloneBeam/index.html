@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="canonical" href="https://www.gz-ai-stacks.de/CloneBeam/">
 <meta name="description" content="CloneBeam — Windows-Tool zum 1:1-Spiegeln einer Festplatte oder eines Ordners. Nix denken, einfach klonen.">
 <title>CloneBeam — 1:1-Festplattenspiegelung für Windows</title>
+<link rel="canonical" href="https://www.gz-ai-stacks.de/CloneBeam/">
 <style>
 :root{
   --bg:#0A0C10; --paper:#0e1118; --paper2:#11141a; --line:#262c36;
@@ -37,8 +37,8 @@ header.top .brand .icon{font-size:1.3rem}
 section{max-width:900px; margin:0 auto; padding:32px 24px}
 h2.section-title{color:var(--ink); font-size:1.5rem; text-align:center; margin-bottom:28px}
 
-.grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:18px}
-.card{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:20px}
+.grid{display:flex; flex-wrap:wrap; justify-content:center; gap:18px}
+.card{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:20px; flex:1 1 240px; max-width:280px}
 .card h3{margin:0 0 8px; color:var(--accent); font-size:1.05rem}
 .card p{margin:0; color:var(--ink-soft); font-size:.95rem}
 
@@ -112,6 +112,10 @@ body.light{
     <a class="cta" href="#kaufen">Jetzt sichern — 14,90&nbsp;€</a>
   </section>
 
+  <section aria-label="Programmoberfläche" style="max-width:900px; margin:0 auto; padding:0 24px 40px; text-align:center">
+    <img src="img/screenshot-app.png" alt="CloneBeam Programmoberfläche: Quelle und Ziel wählen, 1:1-Klonen starten, Fortschritt und Protokoll live im Fenster" style="max-width:700px; width:100%; display:block; margin:0 auto; border-radius:12px; border:1px solid var(--line); box-shadow:0 20px 60px rgba(0,0,0,.5)">
+  </section>
+
   <section aria-labelledby="funktionen-title">
     <h2 class="section-title" id="funktionen-title">Was CloneBeam kann</h2>
     <div class="grid">
@@ -182,9 +186,7 @@ body.light{
 
   <p class="legal-note"><strong>Wichtig:</strong> CloneBeam gleicht das Ziel exakt an die Quelle
     an — Dateien, die nur im Ziel liegen, werden dabei gelöscht. Vor jedem Lauf bestätigst du
-    Quelle und Ziel im Programm noch einmal ausdrücklich. Käufe werden über Digistore24
-    abgewickelt. Es gilt ein gesetzliches 14-tägiges Widerrufsrecht, siehe
-    <a href="widerruf.html">Widerrufsbelehrung</a>. Näheres in den <a href="agb.html">AGB</a>.</p>
+    Quelle und Ziel im Programm noch einmal ausdrücklich.</p>
 
 </main>
 
