@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="ozean">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>GPS LookUp — Feldprotokoll</title>
+    <meta name="description" content="Feldprotokoll für Flyer- und Werbeverteilung: GPS-Standort, Adresse und Anzahl je Klick erfassen, offline nutzbar.">
+    <meta name="theme-color" content="#00b4ff">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        /* =========================================
+           GPS LOOKUP — HUD / TACTICAL CONSOLE
+           3 Modi, ein technisches Erscheinungsbild,
+           nur die Akzentfarbe (aus dem GZ-AI-Stacks
+           Neon-Set) wechselt.
+           ========================================= */
+        :root {
+            --bg: #05080b;
+            --surface: rgba(16, 22, 29, 0.72);
+            --surface-solid: #10161d;
+            --text-main: #e7f1f8;
+            --text-muted: #7d93a3;
+            --border: rgba(255,255,255,0.09);
+            --success: #00ffaa;
+            --error: #ff3b57;
+            --mono: "JetBrains Mono", "Cascadia Code", "SF Mono", Consolas, "Roboto Mono", ui-monospace, monospace;
+            --head: "Bahnschrift", "Segoe UI Semibold", "Segoe UI", sans-serif;
+            --accent: #00b4ff;
+            --accent-soft: rgba(0, 180, 255, 0.14);
+            --accent-dim: rgba(0, 180, 255, 0.35);
+            --radius: 2px;
+            --clip: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        :root { --accent-text: var(--accent); }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: var(--bg-tint);
+                --surface: var(--surface-tint);
+                --surface-solid: var(--surface-tint-solid);
+                --text-main: #10161d;
+                --text-muted: #45525d;
+                --border: var(--border-tint);
+                --accent-text: var(--accent-text-light);
+            }
+        }
+
+        /* Manueller Hell/Dunkel-Umschalter — hat Vorrang vor der Systemeinstellung */
+        :root[data-scheme="light"] {
+            --bg: var(--bg-tint);
+            --surface: var(--surface-tint);
+            --surface-solid: var(--surface-tint-solid);
+            --text-main: #10161d;
+            --text-muted: #45525d;
+            --border: var(--border-tint);
+            --accent-text: var(--accent-text-light);
+        }
+        :root[data-scheme="dark"] {
+            --bg: #05080b;
+            --surface: rgba(16, 22, 29, 0.72);
+            --surface-solid: #10161d;
+            --text-main: #e7f1f8;
+            --text-muted: #7d93a3;
+            --border: rgba(255,255,255,0.09);
+            --accent-text: var(--accent);
+        }
+
+        /* Jeder Modus bekommt auch im Hellmodus einen eigenen, deutlich
+           erkennbaren Farbstich statt eines neutralen Grau-Looks. */
+        [data-theme="ozean"] {
+            --accent: #00b4ff; --accent-soft: rgba(0,180,255,.14); --accent-dim: rgba(0,180,255,.35); --accent-text-light: #005f82;
+            --bg-tint: #eaf6fb; --surface-tint: rgba(255,255,255,0.78); --surface-tint-solid: #f4fbfd; --border-tint: rgba(0,120,170,0.22);
+        }
+        [data-theme="atelier"] {
+            --accent: #8c00ff; --accent-soft: rgba(140,0,255,.14); --accent-dim: rgba(140,0,255,.35); --accent-text-light: #6b21a8;
+            --bg-tint: #f6eef7; --surface-tint: rgba(255,255,255,0.78); --surface-tint-solid: #fdf7fd; --border-tint: rgba(120,0,190,0.20);
+        }
+        [data-theme="sonne"] {
+            --accent: #ff0080; --accent-soft: rgba(255,0,128,.14); --accent-dim: rgba(255,0,128,.35); --accent-text-light: #b8005a;
+            --bg-tint: #fff0f6; --surface-tint: rgba(255,255,255,0.78); --surface-tint-solid: #fff7fa; --border-tint: rgba(200,0,100,0.20);
+        }
+
+        /* Sichtbarer Fokus-Indikator für Tastatur-Navigation (WCAG 2.4.7) */
+        button:focus-visible, a:focus-visible, input:focus-visible {
+            outline: 2px solid var(--accent-text);
+            outline-offset: 2px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body { height: 100%; }
+
+        body {
+            font-family: var(--mono);
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle, var(--border) 1px, transparent 1px),
+                radial-gradient(ellipse at 50% 0%, var(--accent-soft), transparent 60%);
+            background-size: 26px 26px, 100% 100%;
+            background-position: center top, center top;
+            background-attachment: fixed, fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            transition: color .3s ease;
+        }
+
+        main {
+            width: 100%;
+            max-width: 36rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding-bottom: 2rem;
+        }
+
+        @keyframes riseIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        main > * { animation: riseIn .45s cubic-bezier(.2,.7,.2,1) backwards; }
+        header { animation-delay: 0s; }
+        main > section:nth-of-type(1), main > details { animation-delay: .05s; }
+        main > section:nth-of-type(2) { animation-delay: .1s; }
+        main > details { animation-delay: .15s; }
+        main > section:nth-of-type(3) { animation-delay: .2s; }
+
+        /* ---------- Header ---------- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 0.9rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .brand { display: flex; align-items: center; gap: 0.65rem; }
+        .brand-icon {
+            width: 2.1rem; height: 2.1rem;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent);
+            border: 1px solid var(--accent-dim);
+            border-radius: 50%;
+            box-shadow: 0 0 14px var(--accent-soft), inset 0 0 8px var(--accent-soft);
+            flex-shrink: 0;
+        }
+        .brand-icon svg { width: 1.15rem; height: 1.15rem; }
+        .brand h1 {
+            margin: 0;
+            font-family: var(--head);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+        .brand .tagline {
+            margin: 0;
+            font-size: 0.65rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* Ansicht-Leiste: Hell/Dunkel + Textgröße */
+        .view-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.6rem;
+            padding-bottom: 0.8rem;
+        }
+        .icon-btn-lg {
+            all: unset;
+            cursor: pointer;
+            width: 2.2rem; height: 2.2rem;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            flex-shrink: 0;
+            transition: color .15s, border-color .15s;
+        }
+        .icon-btn-lg:hover { color: var(--accent-text); border-color: var(--accent-dim); }
+        .icon-btn-lg[aria-pressed="true"] { color: var(--accent-text); border-color: var(--accent-dim); }
+        .scale-group {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            border: 1px solid var(--border);
+            padding: 0 0.2rem;
+        }
+        .scale-group .icon-btn-lg { border: none; font-family: var(--mono); font-weight: 700; font-size: 1.1rem; }
+        .scale-value {
+            font-size: 0.68rem;
+            font-family: var(--mono);
+            color: var(--text-muted);
+            min-width: 2.8rem;
+            text-align: center;
+        }
+
+        /* Moden-Wahl (Theme) */
+        .mode-select { display: flex; gap: 0.4rem; }
+        .mode-btn {
+            all: unset;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.3rem 0.5rem;
+            border: 1px solid var(--border);
+            opacity: 0.55;
+            transition: opacity .2s, border-color .2s;
+        }
+        .mode-btn .dot {
+            width: 0.55rem; height: 0.55rem; border-radius: 50%;
+            background: var(--dot-color);
+            box-shadow: 0 0 6px var(--dot-color);
+        }
+        .mode-btn .code { font-size: 0.55rem; letter-spacing: 0.08em; color: var(--text-muted); }
+        .mode-btn[aria-pressed="true"] { opacity: 1; border-color: var(--dot-color); }
+        .mode-btn:nth-child(1) { --dot-color: #00b4ff; }
+        .mode-btn:nth-child(2) { --dot-color: #8c00ff; }
+        .mode-btn:nth-child(3) { --dot-color: #ff0080; }
+
+        h2 {
+            font-family: var(--head);
+            margin: 0 0 1rem;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        h2::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+        /* ---------- Panels ---------- */
+        .card {
+            position: relative;
+            background: var(--surface);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 1.3rem;
+            border: 1px solid var(--border);
+            clip-path: var(--clip);
+        }
+        .card::before, .card::after { content: ""; position: absolute; width: 12px; height: 12px; pointer-events: none; }
+        .card::before { top: -1px; left: -1px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); }
+        .card::after { bottom: -1px; right: -1px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); }
+
+        /* ---------- Status Readout ---------- */
+        .status-bar {
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.3rem;
+            padding: 0.8rem;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid var(--border);
+            color: var(--accent);
+            text-shadow: 0 0 8px var(--accent-soft);
+            min-height: 1.2rem;
+        }
+        .status-bar .bar-dot {
+            display: inline-block; width: 0.45rem; height: 0.45rem; border-radius: 50%;
+            background: currentColor; margin-right: 0.5rem; vertical-align: middle;
+            box-shadow: 0 0 6px currentColor;
+        }
+        .status-bar.searching .bar-dot { animation: blink 0.9s infinite; }
+        @keyframes blink { 50% { opacity: 0.15; } }
+        .status-bar.searching::after {
+            content: "";
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg, transparent, var(--accent-soft), transparent);
+            animation: sweep 1.3s linear infinite;
+        }
+        @keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+        .status-bar.warn { color: var(--error); text-shadow: 0 0 8px rgba(255,59,87,.4); }
+
+        /* ---------- Stat-Telemetrie ---------- */
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+        .stat-tile { background: rgba(0,0,0,0.3); padding: 0.6rem 0.3rem; text-align: center; }
+        .stat-tile .num { display: block; font-size: 1.15rem; font-weight: 700; color: var(--success); text-shadow: 0 0 8px rgba(0,255,170,.35); }
+        .stat-tile .lbl { display: block; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.2rem; }
+
+        /* ---------- Buttons ---------- */
+        .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+
+        button {
+            font-family: var(--mono);
+            padding: 1.05rem 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            background: rgba(0,0,0,0.25);
+            color: var(--text-main);
+            border: 1px solid var(--accent-dim);
+            clip-path: var(--clip);
+            cursor: pointer;
+            transition: background-color .2s, box-shadow .2s, transform .1s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+        }
+        @media (hover: hover) {
+            button:not(:disabled):hover { box-shadow: 0 0 16px var(--accent-soft); border-color: var(--accent); }
+        }
+        button:active:not(:disabled) { transform: scale(0.97); background: var(--accent-soft); }
+        button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .btn-large {
+            grid-column: 1 / -1;
+            background: var(--accent);
+            color: #05080b;
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 1.3rem;
+            border-color: var(--accent);
+        }
+        .btn-large svg { color: #05080b; }
+
+        .btn-ghost {
+            border-color: var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 0.7rem 0.5rem;
+            flex-direction: row;
+            gap: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .toolbar { display: flex; gap: 0.6rem; margin-top: 1rem; }
+        .toolbar button { flex: 1; }
+
+        .custom-count-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.7rem;
+        }
+        .custom-count-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .custom-count-row input {
+            flex: 1;
+            min-width: 0;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            padding: 0.55rem 0.6rem;
+            border: 1px solid var(--border);
+            background: rgba(0,0,0,0.25);
+            color: var(--text-main);
+        }
+        .custom-count-row .btn-ghost { flex-shrink: 0; padding: 0.55rem 0.7rem; }
+
+        svg.icon { width: 1.1rem; height: 1.1rem; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* ---------- Log-Liste ---------- */
+        ul { list-style: none; padding: 0; margin: 0; }
+
+        li.entry {
+            border-bottom: 1px solid var(--border);
+            padding: 0.8rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        li.entry:last-child { border-bottom: none; padding-bottom: 0; }
+
+        .entry-idx {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            min-width: 2.4rem;
+            flex-shrink: 0;
+        }
+
+        .badge {
+            background: transparent;
+            color: var(--accent-text);
+            border: 1px solid var(--accent-dim);
+            padding: 0.3rem 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .details { font-size: 0.72rem; color: var(--text-muted); text-align: right; line-height: 1.5; flex: 1; }
+        .details .addr { color: var(--text-main); }
+        .details .addr.unknown { color: var(--text-muted); font-style: italic; }
+        .details .row { display: flex; align-items: center; justify-content: flex-end; gap: 0.3rem; }
+        .details svg.icon { width: 0.85rem; height: 0.85rem; }
+        .details .accuracy { font-size: 0.62rem; opacity: 0.65; }
+        .details .accuracy.bad { color: var(--error); opacity: 1; font-weight: 700; }
+
+        .entry-actions { display: flex; gap: 0.15rem; flex-shrink: 0; }
+        .icon-btn {
+            all: unset;
+            cursor: pointer;
+            width: 1.9rem; height: 1.9rem;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            transition: color .15s, border-color .15s;
+        }
+        .icon-btn:hover { color: var(--accent-text); border-color: var(--accent-dim); }
+        .icon-btn.danger:hover { color: var(--error); border-color: var(--error); }
+
+        .edit-row { display: flex; flex-direction: column; gap: 0.4rem; width: 100%; }
+        .edit-row .fields { display: flex; gap: 0.4rem; }
+        .edit-row input {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            padding: 0.35rem 0.5rem;
+            border: 1px solid var(--accent-dim);
+            background: rgba(0,0,0,0.3);
+            color: var(--text-main);
+        }
+        .edit-row input[type="number"] { width: 3.4rem; }
+        .edit-row input[type="text"] { flex: 1; min-width: 0; }
+        .edit-row .actions { display: flex; gap: 0.3rem; justify-content: flex-end; }
+
+        /* Hausnummer-Drehrad */
+        .wheel-picker { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; padding: 0.3rem 0; }
+        .wheel-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+        .wheel-box { position: relative; width: 88px; height: 120px; overflow: hidden; border: 1px solid var(--accent-dim); background: rgba(0,0,0,0.35); }
+        .wheel-scroll {
+            height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch; scrollbar-width: none;
+        }
+        .wheel-scroll::-webkit-scrollbar { display: none; }
+        .wheel-pad { height: 40px; }
+        .wheel-item {
+            height: 40px; display: flex; align-items: center; justify-content: center;
+            scroll-snap-align: center; font-size: 1.15rem; color: var(--text-muted);
+        }
+        .wheel-highlight {
+            position: absolute; top: 40px; left: 0; right: 0; height: 40px;
+            border-top: 1px solid var(--accent); border-bottom: 1px solid var(--accent);
+            background: var(--accent-soft); pointer-events: none;
+        }
+        .suffix-row { display: flex; gap: 0.25rem; flex-wrap: wrap; justify-content: center; }
+        .suffix-btn {
+            all: unset; cursor: pointer; padding: 0.25rem 0.55rem; border: 1px solid var(--border);
+            font-size: 0.75rem; color: var(--text-muted); font-family: var(--mono);
+        }
+        .suffix-btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+        .empty-msg { color: var(--text-muted); text-align: center; padding: 1rem 0; font-size: 0.8rem; letter-spacing: 0.05em; }
+
+        /* ---------- Karten-Panel ---------- */
+        details.map-panel summary {
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--head);
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        details.map-panel summary::-webkit-details-marker { display: none; }
+        details.map-panel summary .chev { transition: transform .25s ease; color: var(--accent); }
+        details.map-panel[open] summary .chev { transform: rotate(180deg); }
+        #map { margin-top: 1rem; height: 15rem; width: 100%; border: 1px solid var(--border); filter: saturate(0.9); }
+        .map-fallback {
+            margin-top: 1rem; padding: 1rem; text-align: center; color: var(--text-muted);
+            font-size: 0.78rem; border: 1px dashed var(--border);
+        }
+
+        footer.legal {
+            text-align: center;
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding-top: 0.5rem;
+        }
+        footer.legal button {
+            all: unset;
+            cursor: pointer;
+            color: var(--text-muted);
+            text-decoration: underline;
+            padding: 0 0.2rem;
+        }
+        footer.legal button:hover, footer.legal button:focus-visible { color: var(--accent-text); }
+
+        /* ---------- Rechtstexte-Modal ---------- */
+        .legal-overlay {
+            display: none;
+            position: fixed; inset: 0; z-index: 999;
+            background: rgba(0,0,0,0.75);
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .legal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+        .legal-box {
+            background: var(--surface-solid);
+            border: 1px solid var(--accent-dim);
+            clip-path: var(--clip);
+            max-width: 32rem;
+            width: 100%;
+            padding: 1.4rem;
+            margin-top: 2rem;
+            position: relative;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+        .legal-box h2 { font-family: var(--head); color: var(--accent-text); font-size: 1.05rem; margin: 0 0 0.9rem; }
+        .legal-box h3 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 1rem 0 0.3rem; }
+        .legal-box a { color: var(--accent-text); }
+        .legal-close { all: unset; cursor: pointer; position: absolute; top: 1rem; right: 1rem; color: var(--text-muted); font-size: 1.1rem; }
+        .legal-close:hover { color: var(--accent-text); }
+
+        /* ---------- Druck-Bericht (Gesamtübersicht als PDF) ---------- */
+        .print-only { display: none; }
+
+        @media print {
+            *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
+            body { background: #fff !important; padding: 0; color: #000; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            main { max-width: 100%; gap: 0.5rem; }
+            .card { background: #fff !important; box-shadow: none !important; backdrop-filter: none !important; clip-path: none !important; border: 1px solid #999 !important; }
+            .card::before, .card::after { display: none !important; }
+            header { border-bottom-color: #999; }
+            .brand h1 { color: #000; }
+            .tagline { color: #444; }
+
+            #print-report h1 { font-size: 1.3rem; margin-bottom: 0.2rem; color: #000; font-family: var(--head); }
+            #print-report .print-meta { font-size: 0.8rem; color: #444; margin-bottom: 1rem; }
+            #print-report table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; font-size: 0.78rem; }
+            #print-report th, #print-report td { border: 1px solid #999; padding: 4px 8px; text-align: left; }
+            #print-report thead { background: #eee; }
+            #print-report tr { page-break-inside: avoid; }
+            #print-report .print-summary td:first-child { font-weight: 700; width: 40%; }
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <header>
+            <div class="brand">
+                <div class="brand-icon" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                </div>
+                <div>
+                    <h1 id="app-title">GPS LookUp</h1>
+                    <p class="tagline">Feldprotokoll // Standorterfassung</p>
+                </div>
+            </div>
+            <div class="mode-select no-print" role="group" aria-label="Modus auswählen" id="mode-select">
+                <button type="button" class="mode-btn" data-theme-btn="ozean" aria-pressed="true" aria-label="Modus Recon (Cyan)"><span class="dot"></span><span class="code">RECON</span></button>
+                <button type="button" class="mode-btn" data-theme-btn="atelier" aria-pressed="false" aria-label="Modus Command (Purple)"><span class="dot"></span><span class="code">CMD</span></button>
+                <button type="button" class="mode-btn" data-theme-btn="sonne" aria-pressed="false" aria-label="Modus Signal (Pink)"><span class="dot"></span><span class="code">SIGNAL</span></button>
+            </div>
+        </header>
+
+        <div class="view-toolbar no-print" role="group" aria-label="Anzeige-Einstellungen">
+            <button type="button" class="icon-btn-lg" id="scheme-toggle" aria-pressed="false" aria-label="Zu Dunkelmodus wechseln"></button>
+            <div class="scale-group" role="group" aria-label="Textgröße anpassen">
+                <button type="button" class="icon-btn-lg" onclick="adjustScale(-10)" aria-label="Schrift verkleinern">−</button>
+                <span class="scale-value" id="scale-label" aria-live="polite">100%</span>
+                <button type="button" class="icon-btn-lg" onclick="adjustScale(10)" aria-label="Schrift vergrößern">+</button>
+            </div>
+        </div>
+
+        <!-- Statistik -->
+        <section class="card no-print">
+            <h2>Telemetrie</h2>
+            <div class="stat-grid" id="stat-grid" aria-live="polite"></div>
+        </section>
+
+        <!-- Haupt-Bedienfeld -->
+        <section class="card no-print" aria-labelledby="app-title">
+            <h2 class="no-print">Erfassung</h2>
+            <div id="status" class="status-bar no-print" role="status" aria-live="polite"><span class="bar-dot" aria-hidden="true"></span>Bereit</div>
+
+            <div class="button-grid no-print" role="group" aria-label="Anzahl der eingeworfenen Zettel">
+                <button type="button" onclick="saveLocation(1)" class="btn-large" aria-label="1 Zettel eintragen">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+                    1 Zettel · Standard
+                </button>
+                <button type="button" onclick="saveLocation(2)" aria-label="2 Zettel eintragen">02 Zettel</button>
+                <button type="button" onclick="saveLocation(3)" aria-label="3 Zettel eintragen">03 Zettel</button>
+                <button type="button" onclick="saveLocation(4)" aria-label="4 Zettel eintragen">04 Zettel</button>
+                <button type="button" onclick="saveLocation(5)" aria-label="5 Zettel eintragen">05 Zettel</button>
+                <button type="button" onclick="saveLocation(6)" aria-label="6 Zettel eintragen">06 Zettel</button>
+            </div>
+
+            <div class="custom-count-row" role="group" aria-label="Andere Anzahl eintragen, z.B. Hochhaus">
+                <span class="custom-count-label">Hochhaus?</span>
+                <input type="number" min="7" max="999" step="1" id="custom-count-input" placeholder="Anzahl" aria-label="Andere Anzahl Zettel">
+                <button type="button" class="btn-ghost" onclick="saveCustomLocation()" aria-label="Eingegebene Anzahl speichern">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg> Erfassen
+                </button>
+            </div>
+
+            <div class="toolbar">
+                <button type="button" class="btn-ghost" onclick="exportCSV()" aria-label="Verlauf als CSV exportieren">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 3v13m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg> CSV
+                </button>
+                <button type="button" class="btn-ghost" onclick="exportGPX()" aria-label="Verlauf als GPX exportieren">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 3v13m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg> GPX
+                </button>
+            </div>
+
+            <div class="toolbar">
+                <button type="button" class="btn-ghost" onclick="exportBackup()" aria-label="Sicherung als JSON-Datei speichern">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 3v13m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg> Sichern
+                </button>
+                <button type="button" class="btn-ghost" onclick="document.getElementById('restore-input').click()" aria-label="Sicherung aus Datei wiederherstellen">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 21V8m0 0l-4 4m4-4l4 4"/><path d="M4 5h16"/></svg> Laden
+                </button>
+                <input type="file" id="restore-input" accept="application/json,.json" style="display:none;" aria-hidden="true" tabindex="-1">
+            </div>
+
+            <div class="toolbar">
+                <button type="button" class="btn-ghost" onclick="printReport()" aria-label="Gesamtübersicht drucken oder als PDF speichern">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><path d="M6 14h12v7H6z"/></svg> Übersicht drucken / PDF
+                </button>
+            </div>
+        </section>
+
+        <!-- Karte -->
+        <details class="card map-panel no-print" id="map-panel">
+            <summary>Kartenansicht <span class="chev" aria-hidden="true">▾</span></summary>
+            <div id="map"></div>
+            <div id="map-fallback" class="map-fallback" style="display:none;">Karte offline nicht verfügbar — Standorte werden trotzdem gespeichert.</div>
+        </details>
+
+        <!-- Historie -->
+        <section class="card no-print">
+            <h2>Log</h2>
+            <ul id="list" aria-live="polite"></ul>
+        </section>
+
+        <!-- Nur für Ausdruck/PDF -->
+        <section class="print-only" id="print-report"></section>
+
+        <footer class="legal no-print">
+            GZ-AI-Stacks · GPS LookUp · Daten bleiben lokal auf dem Gerät ·
+            <button type="button" onclick="openLegal('impressum')">Impressum</button> ·
+            <button type="button" onclick="openLegal('datenschutz')">Datenschutz</button>
+        </footer>
+    </main>
+
+    <!-- Impressum -->
+    <div class="legal-overlay no-print" id="modal-impressum" role="dialog" aria-modal="true" aria-labelledby="imp-title" onclick="if(event.target===this)closeLegal('impressum')">
+        <div class="legal-box">
+            <button class="legal-close" onclick="closeLegal('impressum')" aria-label="Impressum schließen">✕</button>
+            <h2 id="imp-title">Impressum</h2>
+            <h3>Angaben gemäß § 5 TMG</h3>
+            <p>Gerd Zimmermann<br>GZ-AI.-Stacks<br>Görlitzer Straße 10<br>91315 Höchstadt a.d. Aisch</p>
+            <h3>Kontakt</h3>
+            <p>E-Mail: <a href="mailto:gz.ai.stacks@gmail.com">gz.ai.stacks@gmail.com</a></p>
+            <h3>Verantwortlich für den Inhalt (gem. § 55 Abs. 2 RStV)</h3>
+            <p>Gerd Zimmermann (Anschrift wie oben)</p>
+            <h3>Haftungsausschluss</h3>
+            <p>GPS LookUp ist ein lokales Erfassungswerkzeug ohne eigenen Server. Für die Genauigkeit von GPS-Ortung und automatisch ermittelten Adressen (Reverse-Geocoding über einen externen Dienst) wird keine Haftung übernommen.</p>
+            <h3>EU-Streitschlichtung</h3>
+            <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">https://ec.europa.eu/consumers/odr</a>.<br>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+        </div>
+    </div>
+
+    <!-- Datenschutz -->
+    <div class="legal-overlay no-print" id="modal-datenschutz" role="dialog" aria-modal="true" aria-labelledby="ds-title" onclick="if(event.target===this)closeLegal('datenschutz')">
+        <div class="legal-box">
+            <button class="legal-close" onclick="closeLegal('datenschutz')" aria-label="Datenschutz schließen">✕</button>
+            <h2 id="ds-title">Datenschutzerklärung</h2>
+            <h3>Verantwortlicher (Art. 4 Nr. 7 DSGVO)</h3>
+            <p>Gerd Zimmermann · GZ-AI.-Stacks<br>Görlitzer Straße 10 · 91315 Höchstadt a.d. Aisch<br>E-Mail: <a href="mailto:gz.ai.stacks@gmail.com">gz.ai.stacks@gmail.com</a></p>
+            <h3>GPS-Standortdaten</h3>
+            <p>Beim Erfassen eines Eintrags fragt die App über die Geolocation-Funktion Ihres Browsers Ihren aktuellen Standort ab (Art. 6 Abs. 1 lit. a DSGVO, Einwilligung über die Browser-Berechtigungsabfrage). Die Koordinaten werden <strong>ausschließlich lokal</strong> im <code>localStorage</code> Ihres Geräts gespeichert.</p>
+            <h3>Adress-Auflösung (Reverse-Geocoding)</h3>
+            <p>Um aus GPS-Koordinaten eine Adresse anzuzeigen, sendet die App die erfassten Koordinaten an den Dienst <strong>Nominatim / OpenStreetMap</strong> (OpenStreetMap Foundation). Dabei kann die IP-Adresse an diesen Dienst übermittelt werden. Es findet keine Übertragung an GZ-AI.-Stacks selbst statt.</p>
+            <h3>Kartenansicht</h3>
+            <p>Wird die optionale Kartenansicht geöffnet, lädt die App Kartenkacheln von OpenStreetMap sowie die Bibliothek Leaflet über das CDN <code>unpkg.com</code> nach. Dabei können die üblichen technischen Verbindungsdaten (IP-Adresse) an diese Dienste übermittelt werden.</p>
+            <h3>Lokal gespeicherte Daten</h3>
+            <p>Alle erfassten Einträge (Standort, Adresse, Uhrzeit, Anzahl) verbleiben in <code>localStorage</code> auf Ihrem Gerät und werden nicht an einen eigenen Server übertragen. Export-Funktionen (CSV, GPX, JSON-Backup) speichern Dateien nur auf Ihrem eigenen Gerät.</p>
+            <h3>Speicherdauer</h3>
+            <p>Die Daten verbleiben lokal, bis Sie sie selbst löschen (einzelne Einträge in der App oder Websitedaten im Browser löschen).</p>
+            <h3>Ihre Rechte</h3>
+            <p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung sowie Datenübertragbarkeit. Da alle Daten lokal auf Ihrem Gerät liegen, können Sie diese Rechte direkt über die Lösch-/Export-Funktionen der App wahrnehmen.</p>
+        </div>
+    </div>
+
+    <script>
+        function splitLegacyAddress(addr) {
+            if (!addr) return { strasse: '', hausnummer: '', ort: '' };
+            const commaIdx = addr.indexOf(',');
+            const line1 = commaIdx >= 0 ? addr.slice(0, commaIdx).trim() : addr.trim();
+            const ort = commaIdx >= 0 ? addr.slice(commaIdx + 1).trim() : '';
+            const m = line1.match(/^(.*?)\s+(\d+\s*[a-zA-Z]?)$/);
+            if (m) return { strasse: m[1].trim(), hausnummer: m[2].replace(/\s+/, ''), ort };
+            return { strasse: line1, hausnummer: '', ort };
+        }
+
+        let entries = (JSON.parse(localStorage.getItem('flyerData')) || []).map((e, i) => {
+            let strasse = e.strasse, hausnummer = e.hausnummer, ort = e.ort;
+            if (strasse === undefined && e.address) {
+                const parts = splitLegacyAddress(e.address);
+                strasse = parts.strasse; hausnummer = parts.hausnummer; ort = parts.ort;
+            }
+            return {
+                id: e.id || (Date.now() - (1000000 - i)),
+                lat: e.lat, lon: e.lon, count: e.count, time: e.time,
+                date: e.date || null,
+                strasse: strasse || '', hausnummer: hausnummer || '', ort: ort || '',
+                accuracy: e.accuracy || null
+            };
+        });
+        let isSaving = false;
+        let editingId = null;
+        let wheelState = { num: 1, suffix: '' };
+        let mapInitialized = false;
+        let leafletMap = null;
+
+        const WHEEL_ITEM_H = 40;
+        const WHEEL_MAX = 300;
+
+        function persist() { localStorage.setItem('flyerData', JSON.stringify(entries)); }
+
+        function formatAddress(e) {
+            const line1 = [e.strasse, e.hausnummer].filter(Boolean).join(' ');
+            return [line1, e.ort].filter(Boolean).join(', ') || null;
+        }
+
+        function parseHausnummer(hn) {
+            if (!hn) return { num: null, suffix: '' };
+            const m = String(hn).trim().match(/^(\d+)\s*([a-zA-Z]?)$/);
+            if (!m) return { num: null, suffix: '' };
+            return { num: parseInt(m[1], 10), suffix: (m[2] || '').toLowerCase() };
+        }
+
+        /* ---------- Hell/Dunkel-Umschalter ---------- */
+        const SUN_ICON = '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>';
+        const MOON_ICON = '<svg class="icon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg>';
+
+        function currentScheme() {
+            return document.documentElement.getAttribute('data-scheme') ||
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        }
+
+        function updateSchemeButton() {
+            const btn = document.getElementById('scheme-toggle');
+            const isDark = currentScheme() === 'dark';
+            btn.setAttribute('aria-pressed', String(isDark));
+            btn.setAttribute('aria-label', isDark ? 'Zu Hellmodus wechseln' : 'Zu Dunkelmodus wechseln');
+            btn.innerHTML = isDark ? SUN_ICON : MOON_ICON;
+        }
+
+        function toggleScheme() {
+            const next = currentScheme() === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-scheme', next);
+            localStorage.setItem('flyerScheme', next);
+            updateSchemeButton();
+        }
+
+        const savedScheme = localStorage.getItem('flyerScheme');
+        if (savedScheme === 'light' || savedScheme === 'dark') {
+            document.documentElement.setAttribute('data-scheme', savedScheme);
+        }
+        document.getElementById('scheme-toggle').addEventListener('click', toggleScheme);
+        updateSchemeButton();
+
+        /* ---------- Textgröße ---------- */
+        function applyScale(pct) {
+            document.documentElement.style.fontSize = pct + '%';
+            document.getElementById('scale-label').textContent = pct + '%';
+        }
+        function adjustScale(delta) {
+            const current = parseInt(document.documentElement.style.fontSize, 10) || 100;
+            const next = Math.min(150, Math.max(85, current + delta));
+            applyScale(next);
+            localStorage.setItem('flyerScale', String(next));
+        }
+        const savedScale = parseInt(localStorage.getItem('flyerScale'), 10);
+        applyScale(Number.isFinite(savedScale) ? savedScale : 100);
+
+        /* ---------- Modus (Theme) ---------- */
+        let savedTheme = localStorage.getItem('flyerTheme') || 'ozean';
+        if (savedTheme === 'natur') savedTheme = 'atelier';
+        applyTheme(savedTheme, false);
+
+        document.getElementById('mode-select').addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-theme-btn]');
+            if (!btn) return;
+            applyTheme(btn.dataset.themeBtn, true);
+        });
+
+        function applyTheme(theme, save) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.querySelectorAll('[data-theme-btn]').forEach(b =>
+                b.setAttribute('aria-pressed', String(b.dataset.themeBtn === theme))
+            );
+            if (save) localStorage.setItem('flyerTheme', theme);
+            if (mapInitialized) refreshMapMarkers();
+        }
+
+        /* ---------- Helpers ---------- */
+        function todayStr() {
+            const d = new Date();
+            return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        }
+
+        function haversine(a, b) {
+            const R = 6371000;
+            const toRad = x => x * Math.PI / 180;
+            const dLat = toRad(b.lat - a.lat);
+            const dLon = toRad(b.lon - a.lon);
+            const lat1 = toRad(a.lat), lat2 = toRad(b.lat);
+            const h = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
+            return 2 * R * Math.asin(Math.sqrt(h));
+        }
+
+        const DUPLICATE_DIST_M = 15;
+        const DUPLICATE_TIME_MS = 5 * 60 * 1000;
+
+        function findPossibleDuplicate(lat, lon) {
+            const now = Date.now();
+            return entries.find(e =>
+                (now - e.id) < DUPLICATE_TIME_MS &&
+                haversine({ lat, lon }, { lat: e.lat, lon: e.lon }) < DUPLICATE_DIST_M
+            );
+        }
+
+        function formatDist(m) {
+            if (m <= 0) return '–';
+            return m >= 1000 ? (m / 1000).toFixed(2) + ' km' : Math.round(m) + ' m';
+        }
+
+        function computeStats() {
+            const today = todayStr();
+            const heute = entries.filter(e => e.date === today).reduce((s,e) => s + e.count, 0);
+            const gesamt = entries.reduce((s,e) => s + e.count, 0);
+            const orte = new Set(entries.map(e => e.lat.toFixed(4) + ',' + e.lon.toFixed(4))).size;
+
+            let streckeGesamt = 0;
+            let streckeHeute = 0;
+            for (let i = 1; i < entries.length; i++) {
+                const dist = haversine(entries[i - 1], entries[i]);
+                streckeGesamt += dist;
+                if (entries[i].date === today && entries[i - 1].date === today) streckeHeute += dist;
+            }
+
+            const todayIds = entries.filter(e => e.date === today).map(e => e.id);
+            let dauerLabel = '–';
+            if (todayIds.length >= 2) {
+                const spanMin = Math.round((Math.max(...todayIds) - Math.min(...todayIds)) / 60000);
+                const h = Math.floor(spanMin / 60), m = spanMin % 60;
+                dauerLabel = h > 0 ? `${h} Std ${m} Min` : `${m} Min`;
+            }
+
+            return { heute, gesamt, orte, streckeHeute, streckeGesamt, dauerLabel };
+        }
+
+        function updateStats() {
+            const grid = document.getElementById('stat-grid');
+            const s = computeStats();
+
+            grid.innerHTML = `
+                <div class="stat-tile"><span class="num">${s.heute}</span><span class="lbl">Heute</span></div>
+                <div class="stat-tile"><span class="num">${s.gesamt}</span><span class="lbl">Gesamt</span></div>
+                <div class="stat-tile"><span class="num">${s.orte}</span><span class="lbl">Häuser</span></div>
+                <div class="stat-tile"><span class="num">${formatDist(s.streckeHeute)}</span><span class="lbl">Strecke heute</span></div>
+                <div class="stat-tile"><span class="num">${formatDist(s.streckeGesamt)}</span><span class="lbl">Strecke gesamt</span></div>
+                <div class="stat-tile"><span class="num">${s.dauerLabel}</span><span class="lbl">Dauer heute</span></div>
+            `;
+        }
+
+        /* ---------- Liste ---------- */
+        function updateList() {
+            const listUl = document.getElementById('list');
+            if (entries.length === 0) {
+                listUl.innerHTML = '<li class="empty-msg">// Noch keine Einträge im Log.</li>';
+                updateStats();
+                buildPrintReport();
+                return;
+            }
+
+            listUl.innerHTML = '';
+            const ordered = entries.slice().reverse();
+            ordered.forEach((entry, i) => {
+                const li = document.createElement('li');
+                li.className = 'entry';
+                const idxLabel = '№ ' + String(entries.length - i).padStart(3, '0');
+
+                if (editingId === entry.id) {
+                    li.innerHTML = `
+                        <div class="edit-row">
+                            <div class="fields">
+                                <input type="number" min="1" max="999" value="${entry.count}" id="edit-count-${entry.id}" aria-label="Anzahl bearbeiten">
+                                <input type="text" value="${entry.strasse || ''}" placeholder="Straße" id="edit-strasse-${entry.id}" aria-label="Straße bearbeiten">
+                            </div>
+                            <input type="text" value="${entry.ort || ''}" placeholder="PLZ Ort" id="edit-ort-${entry.id}" aria-label="Ort bearbeiten" style="width:100%;">
+                            <div class="wheel-picker">
+                                <span class="wheel-label">Hausnummer</span>
+                                <div class="wheel-box">
+                                    <div class="wheel-highlight" aria-hidden="true"></div>
+                                    <div class="wheel-scroll" id="wheel-${entry.id}" role="listbox" aria-label="Hausnummer auswählen">${buildWheelHtml()}</div>
+                                </div>
+                                <div class="suffix-row" id="suffix-${entry.id}">
+                                    ${['', 'a', 'b', 'c', 'd'].map(s => `<button type="button" class="suffix-btn" data-suffix="${s}" aria-pressed="false">${s ? s : '–'}</button>`).join('')}
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="icon-btn" onclick="saveEdit(${entry.id})" aria-label="Änderung speichern"><svg class="icon" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></button>
+                                <button class="icon-btn" onclick="cancelEdit()" aria-label="Bearbeitung abbrechen"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const addr = formatAddress(entry);
+                    const addrHtml = addr
+                        ? `<span class="addr">${addr}</span>`
+                        : `<span class="addr unknown">Adresse unbekannt</span>`;
+                    li.innerHTML = `
+                        <span class="entry-idx">${idxLabel}</span>
+                        <span class="badge" aria-label="${entry.count} Zettel eingeworfen">${entry.count}</span>
+                        <div class="details">
+                            <div class="row">${addrHtml}</div>
+                            <div class="row"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>${entry.time}</div>
+                            <div class="row"><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>${entry.lat.toFixed(5)}, ${entry.lon.toFixed(5)}</div>
+                            ${entry.accuracy ? `<div class="row accuracy${entry.accuracy > 30 ? ' bad' : ''}">±${entry.accuracy}m</div>` : ''}
+                        </div>
+                        <div class="entry-actions">
+                            <a class="icon-btn" href="https://www.google.com/maps?q=${entry.lat},${entry.lon}" target="_blank" rel="noopener" aria-label="Standort in Karten-App öffnen">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M9 3L3 6v15l6-3 6 3 6-3V3l-6 3-6-3z"/><path d="M9 3v15M15 6v15"/></svg>
+                            </a>
+                            <button class="icon-btn" onclick="startEdit(${entry.id})" aria-label="Eintrag bearbeiten">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>
+                            </button>
+                            <button class="icon-btn danger" onclick="deleteEntry(${entry.id})" aria-label="Eintrag löschen">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m-8 0l1 13h10l1-13"/></svg>
+                            </button>
+                        </div>
+                    `;
+                }
+                listUl.appendChild(li);
+            });
+
+            updateStats();
+            if (mapInitialized) refreshMapMarkers();
+            buildPrintReport();
+        }
+
+        function buildPrintReport() {
+            const el = document.getElementById('print-report');
+            if (!el) return;
+
+            const s = computeStats();
+
+            const dates = entries.map(e => e.date).filter(Boolean).sort();
+            const zeitraum = dates.length === 0 ? '–' : (dates[0] === dates[dates.length - 1] ? dates[0] : `${dates[0]} – ${dates[dates.length - 1]}`);
+
+            const rows = entries.map((e, i) => `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${e.date || '–'}</td>
+                    <td>${e.time || '–'}</td>
+                    <td>${e.count}</td>
+                    <td>${formatAddress(e) || '–'}</td>
+                    <td>${e.accuracy ? '±' + e.accuracy + 'm' : '–'}</td>
+                </tr>`).join('');
+
+            el.innerHTML = `
+                <h1>GPS LookUp — Tourenbericht</h1>
+                <p class="print-meta">Erfassungszeitraum: ${zeitraum} · Erstellt am ${new Date().toLocaleDateString('de-DE')}</p>
+                <table class="print-summary">
+                    <tr><td>Zettel heute</td><td>${s.heute}</td></tr>
+                    <tr><td>Zettel gesamt</td><td>${s.gesamt}</td></tr>
+                    <tr><td>Anzahl Häuser</td><td>${s.orte}</td></tr>
+                    <tr><td>Strecke heute</td><td>${formatDist(s.streckeHeute)}</td></tr>
+                    <tr><td>Strecke gesamt</td><td>${formatDist(s.streckeGesamt)}</td></tr>
+                    <tr><td>Dauer heute</td><td>${s.dauerLabel}</td></tr>
+                    <tr><td>Anzahl Einträge</td><td>${entries.length}</td></tr>
+                </table>
+                <table>
+                    <thead><tr><th>#</th><th>Datum</th><th>Zeit</th><th>Anzahl</th><th>Adresse</th><th>Genauigkeit</th></tr></thead>
+                    <tbody>${rows || '<tr><td colspan="6">Keine Einträge</td></tr>'}</tbody>
+                </table>
+            `;
+        }
+
+        function printReport() {
+            if (entries.length === 0) { alert('Noch keine Einträge zum Drucken vorhanden.'); return; }
+            window.print();
+        }
+
+        function buildWheelHtml() {
+            let items = `<div class="wheel-pad"></div>`;
+            for (let n = 1; n <= WHEEL_MAX; n++) items += `<div class="wheel-item" data-num="${n}">${n}</div>`;
+            items += `<div class="wheel-pad"></div>`;
+            return items;
+        }
+
+        function startEdit(id) {
+            editingId = id;
+            const entry = entries.find(e => e.id === id);
+            const parsed = parseHausnummer(entry?.hausnummer);
+            wheelState = { num: parsed.num || 1, suffix: parsed.suffix || '' };
+            updateList();
+            setTimeout(() => initWheel(id), 0);
+        }
+        function cancelEdit() { editingId = null; updateList(); }
+
+        function initWheel(id) {
+            const wheel = document.getElementById('wheel-' + id);
+            const countInput = document.getElementById('edit-count-' + id);
+            if (!wheel) return;
+
+            wheel.scrollTop = (wheelState.num - 1) * WHEEL_ITEM_H;
+
+            let scrollTimer = null;
+            wheel.addEventListener('scroll', () => {
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(() => {
+                    const idx = Math.round(wheel.scrollTop / WHEEL_ITEM_H) + 1;
+                    wheelState.num = Math.min(WHEEL_MAX, Math.max(1, idx));
+                }, 80);
+            });
+
+            const suffixRow = document.getElementById('suffix-' + id);
+            suffixRow.querySelectorAll('.suffix-btn').forEach(btn => {
+                btn.setAttribute('aria-pressed', String(btn.dataset.suffix === wheelState.suffix));
+                btn.addEventListener('click', () => {
+                    wheelState.suffix = btn.dataset.suffix;
+                    suffixRow.querySelectorAll('.suffix-btn').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+                });
+            });
+
+            countInput?.focus();
+        }
+
+        function saveEdit(id) {
+            const countInput = document.getElementById('edit-count-' + id);
+            const strasseInput = document.getElementById('edit-strasse-' + id);
+            const ortInput = document.getElementById('edit-ort-' + id);
+            const val = parseInt(countInput.value, 10);
+            if (!Number.isFinite(val) || val < 1) return;
+            const entry = entries.find(e => e.id === id);
+            if (entry) {
+                entry.count = val;
+                entry.strasse = strasseInput.value.trim();
+                entry.ort = ortInput.value.trim();
+                entry.hausnummer = wheelState.num ? String(wheelState.num) + wheelState.suffix : '';
+            }
+            editingId = null;
+            persist();
+            updateList();
+        }
+        function deleteEntry(id) {
+            if (!confirm('Diesen Eintrag wirklich löschen?')) return;
+            entries = entries.filter(e => e.id !== id);
+            persist();
+            updateList();
+        }
+
+        /* ---------- GPS speichern ---------- */
+        function saveCustomLocation() {
+            const input = document.getElementById('custom-count-input');
+            const val = parseInt(input.value, 10);
+            if (!Number.isFinite(val) || val < 1) {
+                input.focus();
+                return;
+            }
+            saveLocation(val);
+            input.value = '';
+        }
+
+        document.getElementById('custom-count-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); saveCustomLocation(); }
+        });
+
+        function saveLocation(count) {
+            if (isSaving) return;
+
+            const statusDiv = document.getElementById('status');
+            const buttons = document.querySelectorAll('button');
+
+            isSaving = true;
+            statusDiv.classList.add('searching');
+            setStatusText(statusDiv, 'GPS wird ermittelt …');
+            buttons.forEach(b => b.disabled = true);
+
+            if (!navigator.geolocation) {
+                resetButtons(buttons, statusDiv, 'GPS nicht unterstützt');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const accuracy = position.coords.accuracy ? Math.round(position.coords.accuracy) : null;
+
+                    const dup = findPossibleDuplicate(lat, lon);
+                    if (dup) {
+                        const minutesAgo = Math.round((Date.now() - dup.id) / 60000);
+                        const wannText = minutesAgo < 1 ? 'vor weniger als einer Minute' : `vor ${minutesAgo} Minute(n)`;
+                        const proceed = confirm(`Möglicher Doppel-Eintrag: hier wurden ${wannText} bereits ${dup.count} Zettel erfasst. Trotzdem als neuen Eintrag speichern?`);
+                        if (!proceed) {
+                            resetButtons(buttons, statusDiv, 'Abgebrochen — kein neuer Eintrag');
+                            return;
+                        }
+                    }
+
+                    const now = new Date();
+                    const time = now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+                    const entry = { id: Date.now(), lat, lon, count, time, date: todayStr(), strasse: '', hausnummer: '', ort: '', accuracy };
+                    entries.push(entry);
+                    persist();
+                    updateList();
+
+                    const isInaccurate = accuracy !== null && accuracy > 30;
+                    let msg = `${count} Zettel gespeichert`;
+                    if (accuracy !== null) msg += ` · ±${accuracy}m${isInaccurate ? ' — ungenau!' : ''}`;
+                    resetButtons(buttons, statusDiv, msg, true, isInaccurate);
+                    navigator.vibrate?.(isInaccurate ? [80, 40, 80] : 120);
+
+                    reverseGeocode(lat, lon).then(addr => {
+                        if (!addr) return;
+                        entry.strasse = addr.strasse;
+                        entry.hausnummer = addr.hausnummer;
+                        entry.ort = addr.ort;
+                        persist();
+                        updateList();
+                    });
+                },
+                (error) => {
+                    let errorMsg = 'GPS-Signal Fehler';
+                    if (error.code === 1) errorMsg = 'Zugriff verweigert';
+                    resetButtons(buttons, statusDiv, errorMsg);
+                    navigator.vibrate?.([60, 60, 60]);
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        }
+
+        function setStatusText(el, text) {
+            el.innerHTML = '<span class="bar-dot" aria-hidden="true"></span>' + text;
+        }
+
+        function resetButtons(buttons, statusDiv, message, success = false, warn = false) {
+            statusDiv.classList.remove('searching');
+            statusDiv.classList.toggle('warn', warn);
+            setStatusText(statusDiv, message);
+
+            buttons.forEach(b => b.disabled = false);
+            isSaving = false;
+
+            if (success) {
+                setTimeout(() => {
+                    statusDiv.classList.remove('warn');
+                    setStatusText(statusDiv, 'Bereit für den nächsten Eintrag');
+                }, warn ? 4500 : 3000);
+            }
+        }
+
+        /* ---------- Reverse-Geocoding (Straße, schnell — Hausnummer per Drehrad) ---------- */
+        async function reverseGeocode(lat, lon) {
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&addressdetails=1&zoom=17`, {
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!res.ok) return null;
+                const data = await res.json();
+                const a = data.address || {};
+                const strasse = a.road || a.pedestrian || a.footway || '';
+                const hausnummer = a.house_number || '';
+                const ort = a.postcode ? `${a.postcode} ${a.city || a.town || a.village || a.municipality || ''}`.trim() : (a.city || a.town || a.village || '');
+                if (!strasse && !ort) return null;
+                return { strasse, hausnummer, ort };
+            } catch (e) {
+                return null;
+            }
+        }
+
+        /* ---------- Export ---------- */
+        async function download(filename, content, mime) {
+            const blob = new Blob([content], { type: mime });
+            const ext = filename.includes('.') ? '.' + filename.split('.').pop() : '';
+
+            // 1) Echter "Speichern unter"-Dialog mit Ordnerwahl (Chrome/Edge, nur bei https/localhost)
+            if (window.showSaveFilePicker) {
+                try {
+                    const handle = await window.showSaveFilePicker({
+                        suggestedName: filename,
+                        types: [{ description: 'Datei', accept: { [mime]: [ext] } }]
+                    });
+                    const writable = await handle.createWritable();
+                    await writable.write(blob);
+                    await writable.close();
+                    return;
+                } catch (err) {
+                    if (err && err.name === 'AbortError') return; // Nutzer hat abgebrochen
+                    // sonst weiter zum nächsten Fallback
+                }
+            }
+
+            // 2) Android-"Teilen"-Dialog — dort lässt sich meist direkt ein Ordner/App zum Speichern wählen
+            if (navigator.canShare) {
+                try {
+                    const file = new File([blob], filename, { type: mime });
+                    if (navigator.canShare({ files: [file] })) {
+                        await navigator.share({ files: [file], title: filename });
+                        return;
+                    }
+                } catch (err) {
+                    if (err && err.name === 'AbortError') return;
+                    // sonst weiter zum nächsten Fallback
+                }
+            }
+
+            // 3) Klassischer Download (landet automatisch im Downloads-Ordner)
+            try {
+                if (navigator.msSaveOrOpenBlob) { // alte Edge/IE
+                    navigator.msSaveOrOpenBlob(blob, filename);
+                    return;
+                }
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.rel = 'noopener';
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 400);
+            } catch (err) {
+                // Letzter Fallback: Inhalt in neuem Tab öffnen, dort manuell speichern
+                const dataUrl = 'data:' + mime + ';charset=utf-8,' + encodeURIComponent(content);
+                window.open(dataUrl, '_blank');
+            }
+        }
+
+        function exportCSV() {
+            if (entries.length === 0) { alert('Noch keine Einträge zum Exportieren vorhanden.'); return; }
+            const rows = ['Datum;Zeit;Anzahl;Adresse;Genauigkeit_m;Breitengrad;Laengengrad'];
+            entries.forEach(e => rows.push(`${e.date || ''};${e.time};${e.count};${(formatAddress(e) || '').replace(/;/g,',')};${e.accuracy || ''};${e.lat};${e.lon}`));
+            download(`gps-lookup-verlauf_${todayStr()}.csv`, rows.join('\r\n'), 'text/csv;charset=utf-8');
+        }
+
+        /* ---------- Sicherung / Wiederherstellung ---------- */
+        function exportBackup() {
+            if (entries.length === 0) { alert('Noch keine Einträge zum Sichern vorhanden.'); return; }
+            download(`gps-lookup-backup_${todayStr()}.json`, JSON.stringify(entries, null, 2), 'application/json');
+        }
+
+        document.getElementById('restore-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            e.target.value = '';
+            if (file) restoreBackup(file);
+        });
+
+        function restoreBackup(file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                let data;
+                try {
+                    data = JSON.parse(reader.result);
+                } catch (err) {
+                    alert('Datei konnte nicht gelesen werden — ist es eine GPS LookUp-Sicherung (.json)?');
+                    return;
+                }
+                if (!Array.isArray(data)) {
+                    alert('Ungültige Sicherungsdatei.');
+                    return;
+                }
+                const existingIds = new Set(entries.map(e => e.id));
+                const toAdd = data
+                    .filter(e => e && typeof e.lat === 'number' && typeof e.lon === 'number' && !existingIds.has(e.id))
+                    .map(e => ({
+                        id: e.id, lat: e.lat, lon: e.lon, count: e.count || 1, time: e.time || '',
+                        date: e.date || null, strasse: e.strasse || '', hausnummer: e.hausnummer || '', ort: e.ort || '',
+                        accuracy: e.accuracy || null
+                    }));
+                if (toAdd.length === 0) {
+                    alert('Keine neuen Einträge in dieser Sicherung gefunden — alles bereits vorhanden.');
+                    return;
+                }
+                if (!confirm(`${toAdd.length} neue Einträge aus der Sicherung gefunden. Jetzt zum Verlauf hinzufügen?`)) return;
+                entries = entries.concat(toAdd);
+                persist();
+                updateList();
+            };
+            reader.readAsText(file);
+        }
+
+        function exportGPX() {
+            if (entries.length === 0) { alert('Noch keine Einträge zum Exportieren vorhanden.'); return; }
+            const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            const points = entries.map(e => {
+                const timeTag = e.date ? `<time>${e.date}T00:00:00Z</time>` : '';
+                const nameParts = [`${e.count} Zettel`, formatAddress(e)].filter(Boolean).map(esc).join(' — ');
+                return `  <wpt lat="${e.lat}" lon="${e.lon}"><name>${nameParts}</name>${timeTag}</wpt>`;
+            }).join('\n');
+            const gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="GPS LookUp">\n${points}\n</gpx>`;
+            download(`gps-lookup-verlauf_${todayStr()}.gpx`, gpx, 'application/gpx+xml');
+        }
+
+        /* ---------- Karte (Leaflet, lazy geladen) ---------- */
+        document.getElementById('map-panel').addEventListener('toggle', function () {
+            if (this.open && !mapInitialized) initMap();
+        });
+
+        function initMap() {
+            mapInitialized = true;
+            if (typeof L === 'undefined') {
+                const css = document.createElement('link');
+                css.rel = 'stylesheet';
+                css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+                document.head.appendChild(css);
+
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                script.onload = () => buildMap();
+                script.onerror = showMapFallback;
+                document.body.appendChild(script);
+            } else {
+                buildMap();
+            }
+        }
+
+        function buildMap() {
+            try {
+                leafletMap = L.map('map');
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(leafletMap);
+                leafletMap.setView([51.1657, 10.4515], 5);
+                refreshMapMarkers();
+            } catch (e) {
+                showMapFallback();
+            }
+        }
+
+        function refreshMapMarkers() {
+            if (!leafletMap) return;
+            if (leafletMap._flyerLayer) leafletMap._flyerLayer.remove();
+            if (entries.length === 0) return;
+
+            const group = L.featureGroup();
+
+            if (entries.length > 1) {
+                const routeColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00b4ff';
+                const latlngs = entries.map(e => [e.lat, e.lon]);
+                L.polyline(latlngs, { color: routeColor, weight: 3, opacity: 0.7, dashArray: '2 8', lineCap: 'round' }).addTo(group);
+            }
+
+            entries.forEach(e => {
+                const addr = formatAddress(e);
+                const label = addr ? `${e.count} Zettel · ${addr}` : `${e.count} Zettel · ${e.time}`;
+                L.marker([e.lat, e.lon]).addTo(group).bindPopup(label);
+            });
+            group.addTo(leafletMap);
+            leafletMap._flyerLayer = group;
+            leafletMap.fitBounds(group.getBounds().pad(0.2));
+        }
+
+        function showMapFallback() {
+            document.getElementById('map').style.display = 'none';
+            document.getElementById('map-fallback').style.display = 'block';
+        }
+
+        /* ---------- Rechtstexte ---------- */
+        function openLegal(name) {
+            document.getElementById('modal-' + name).classList.add('open');
+        }
+        function closeLegal(name) {
+            document.getElementById('modal-' + name).classList.remove('open');
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            closeLegal('impressum');
+            closeLegal('datenschutz');
+        });
+
+        /* ---------- Service Worker ---------- */
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+
+        /* ---------- Start ---------- */
+        updateList();
+    </script>
+
+</body>
+</html>
