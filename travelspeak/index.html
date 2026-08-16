@@ -2642,7 +2642,9 @@ function speak(text, langCode, btn) {
   btn.innerHTML = '🔊 ...';
   utt.onend = () => { btn.innerHTML = orig; };
   utt.onerror = () => { btn.innerHTML = orig; };
-  window.speechSynthesis.speak(utt);
+  // Chrome/Edge verschlucken sonst das erste Wort: cancel() braucht kurz,
+  // bis die Engine wirklich bereit ist, bevor speak() sauber startet.
+  setTimeout(() => { window.speechSynthesis.speak(utt); }, 120);
   document.getElementById('srAlert').textContent = 'Spielt ab: ' + text;
 }
 
