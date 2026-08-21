@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeitKompass — kostenlose Arbeitszeiterfassung für Betriebe & Freelancer</title>
+<meta name="description" content="Kostenlose Arbeitszeiterfassung für Betriebe & Freelancer: Stempeluhr, Projekte/Kunden mit Stundensatz, Pause, Statistik, CSV/PDF-Export. Offline im Browser, ohne Konto, ohne Tracking.">
+<meta name="theme-color" content="#1c3a5e">
+<style>
+:root{
+  --bg:#ecdcb8; --paper:#faf3e4; --paper2:#f2e2bd; --line:#cdb27f;
+  --ink:#2b2318; --ink-soft:#6b5c42;
+  --navy:#1c3a5e; --navy-soft:#dbe3ec;
+  --brass:#a6763a; --brass-soft:#f0dfc0;
+  --ok:#3d6b4f; --ok-soft:#dfe9df;
+  --zoom:1;
+}
+:root[data-theme="dark"]{
+  --bg:#1c1712; --paper:#221b16; --paper2:#2b211a; --line:#3d2e22;
+  --ink:#f1e6d8; --ink-soft:#b8a68e;
+  --navy:#e59677; --navy-soft:#3d2c20;
+  --brass:#cc785c; --brass-soft:#3d2318;
+  --ok:#7fb494; --ok-soft:#233329;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{font-size:calc(16px * var(--zoom))}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  min-height:100vh; line-height:1.65;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(166,118,58,.32), transparent 62%),
+    radial-gradient(ellipse 70% 50% at 90% 100%, rgba(28,58,94,.28), transparent 62%);
+  padding-bottom:2rem;
+}
+a{color:var(--navy)}
+a:focus-visible, button:focus-visible{outline:2px solid var(--navy); outline-offset:2px}
+.skip-link{position:absolute; left:-999px; top:auto}
+.skip-link:focus{left:12px; top:12px; z-index:200; background:var(--paper); padding:10px 16px; border-radius:8px; box-shadow:0 4px 16px rgba(30,20,10,.2)}
+
+header{
+  position:sticky; top:0; z-index:20;
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:14px 22px; background:var(--paper); border-bottom:1px solid var(--line);
+  box-shadow:0 2px 8px rgba(40,30,15,.08);
+}
+header .brand{font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:10px}
+.toolbar{display:flex; gap:8px; align-items:center; margin-left:auto; flex-wrap:wrap}
+.tool-group{display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:var(--paper2)}
+.tool-btn{border:none; background:transparent; color:var(--ink); padding:7px 11px; cursor:pointer; font-size:.85rem}
+.tool-btn:hover{background:var(--brass-soft)}
+.tool-group .tool-btn + .tool-btn{border-left:1px solid var(--line)}
+#zoomLevel{padding:7px 4px; font-size:.75rem; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+
+main{max-width:920px; margin:0 auto; padding:0 18px}
+
+.hero{text-align:center; padding:2.6rem 1rem 1.2rem}
+.hero .emoji{font-size:3rem; margin-bottom:.5rem}
+.hero h1{font-size:clamp(1.7rem,5vw,2.5rem)}
+.hero p.tagline{color:var(--ink-soft); margin-top:.7rem; font-size:1.05rem; max-width:640px; margin-left:auto; margin-right:auto}
+.badge{display:inline-block; margin-top:1rem; background:var(--ok-soft); color:var(--ok); border:1px solid var(--ok); border-radius:20px; padding:.4rem 1rem; font-weight:700; font-size:.9rem}
+
+.screenshot-wrap{margin:1.8rem auto; max-width:760px; border-radius:12px; overflow:hidden; border:1px solid var(--line); box-shadow:0 12px 34px rgba(30,20,10,.18)}
+.screenshot-wrap img{display:block; width:100%; height:auto}
+
+.lead{max-width:680px; margin:1.6rem auto; text-align:center; font-size:1.05rem; color:var(--ink)}
+
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:2rem 0}
+.stat{background:var(--paper); border:1px solid var(--line); border-top:3px solid var(--navy); border-radius:8px; padding:16px; text-align:center; box-shadow:0 1px 4px rgba(40,30,15,.06)}
+.stat .v{font-size:1.4rem; font-weight:700; color:var(--navy)}
+:root[data-theme="dark"] .stat .v{color:var(--brass)}
+.stat .l{font-size:.82rem; color:var(--ink-soft); margin-top:.2rem}
+
+section.card{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:1.6rem 1.5rem; margin:1.4rem 0; box-shadow:0 1px 4px rgba(40,30,15,.06)}
+section.card h2{font-size:1.3rem; margin-bottom:1rem; border-left:4px solid var(--navy); padding-left:.75rem}
+.features{list-style:none; display:grid; grid-template-columns:1fr; gap:.9rem}
+@media(min-width:640px){.features{grid-template-columns:1fr 1fr}}
+.features li{display:flex; gap:.6rem; align-items:flex-start}
+.features li .ok{color:var(--ok); font-weight:700; flex-shrink:0}
+.features li strong{display:block}
+.features li span.desc{color:var(--ink-soft); font-size:.92rem}
+
+.cta-wrap{text-align:center; margin:2.4rem 0 1.6rem}
+.btn-cta{
+  display:inline-block; background:var(--navy); color:#fdf8ec; font-weight:700; text-decoration:none;
+  padding:1rem 2.2rem; border-radius:10px; font-size:1.1rem; box-shadow:0 6px 20px rgba(28,58,94,.28);
+}
+.btn-cta:hover{filter:brightness(1.15)}
+.cta-sub{margin-top:.9rem; font-size:.88rem; color:var(--ink-soft)}
+.cta-sub a{color:var(--navy); text-decoration:underline}
+
+footer{max-width:920px; margin:1.5rem auto 0; padding:1.4rem 1.2rem; border-top:1px solid var(--line); color:var(--ink-soft); font-size:.85rem; text-align:center}
+footer a{color:var(--navy); text-decoration:none}
+footer a:hover{text-decoration:underline}
+footer .links{margin-top:.5rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap}
+
+@media (max-width:600px){
+  header{flex-direction:column; align-items:flex-start}
+  .toolbar{margin-left:0}
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Zum Inhalt springen</a>
+
+<header role="banner">
+  <div class="brand"><span aria-hidden="true">🧭</span> ZeitKompass</div>
+  <div class="toolbar">
+    <div class="tool-group" role="group" aria-label="Schriftgröße">
+      <button type="button" class="tool-btn" id="zoomOut" aria-label="Schrift verkleinern">−</button>
+      <span id="zoomLevel">100%</span>
+      <button type="button" class="tool-btn" id="zoomIn" aria-label="Schrift vergrößern">+</button>
+    </div>
+    <div class="tool-group" role="group" aria-label="Darstellung">
+      <button type="button" class="tool-btn" id="themeToggle" aria-pressed="false" aria-label="Hell/Dunkel umschalten">◐ Hell/Dunkel</button>
+    </div>
+  </div>
+</header>
+
+<main id="main" role="main">
+  <div class="hero">
+    <div class="emoji" aria-hidden="true">🧭</div>
+    <h1>ZeitKompass</h1>
+    <p class="tagline">Stempeluhr starten, Projekt wählen, fertig — ZeitKompass berechnet Dauer, Pausen und Verdienst automatisch für mehrere Kunden oder Projekte. Läuft komplett offline im Browser, installierbar als App.</p>
+    <div class="badge">🎁 Komplett kostenlos — kein Konto, kein Abo</div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="img/screenshot.png" alt="Screenshot von ZeitKompass: Stempeluhr mit Projekt-Auswahl, Tages-/Wochen-/Monatsstatistik und Verdienst pro Monat auf einen Blick">
+  </div>
+
+  <div class="stats" aria-label="Eckdaten">
+    <div class="stat"><div class="v">∞</div><div class="l">Projekte/Kunden</div></div>
+    <div class="stat"><div class="v">4</div><div class="l">Zeiträume: Tage/Wochen/Monate/Jahre</div></div>
+    <div class="stat"><div class="v">0€</div><div class="l">Kostenlos, kein Abo</div></div>
+  </div>
+
+  <section class="card">
+    <h2>Alles drin fürs Abrechnen</h2>
+    <ul class="features">
+      <li><span class="ok" aria-hidden="true">✓</span><div><strong>Stempeluhr mit Halten-zum-Stoppen</strong><span class="desc">Eine Sekunde gedrückt halten zum Beenden — schützt vor versehentlichem Wegklicken, inklusive Rückgängig-Hinweis.</span></div></li>
+      <li><span class="ok" aria-hidden="true">✓</span><div><strong>Projekte & Kunden mit Stundensatz</strong><span class="desc">Beliebig viele Projekte anlegen, Verdienst wird automatisch berechnet.</span></div></li>
+      <li><span class="ok" aria-hidden="true">✓</span><div><strong>Pause doppelt erfassbar</strong><span class="desc">Live-Pause-Button während der Erfassung plus ein zusätzliches Minutenfeld — beide addieren sich.</span></div></li>
+      <li><span class="ok" aria-hidden="true">✓</span><div><strong>Rundung & Statistik-Diagramm</strong><span class="desc">Arbeitszeit auf 5/10/15 Minuten runden, Balkendiagramm nach Tagen, Wochen, Monaten oder Jahren.</span></div></li>
+      <li><span class="ok" aria-hidden="true">✓</span><div><strong>CSV-Export & Drucken/PDF</strong><span class="desc">Alle Einträge als Tabelle exportieren oder als saubere Zeitübersicht mit Summen ausdrucken.</span></div></li>
+      <li><span class="ok" aria-hidden="true">✓</span><div><strong>Kein Konto, kein Tracking</strong><span class="desc">Keine Anmeldung, keine Cloud, keine Werbung. Alles bleibt lokal auf dem Gerät.</span></div></li>
+    </ul>
+  </section>
+
+  <div class="cta-wrap">
+    <a class="btn-cta" href="./app/index.html">🎁 Jetzt kostenlos nutzen</a>
+    <div class="cta-sub">Läuft direkt im Browser, installierbar als App · <a href="./app/HANDBUCH.html">Handbuch ansehen</a></div>
+  </div>
+</main>
+
+<footer role="contentinfo">
+  <div>ZeitKompass · GZ-AI.-Stacks</div>
+  <div class="links">
+    <a href="https://www.gz-ai-stacks.de" target="_blank" rel="noopener">www.gz-ai-stacks.de</a>
+    <a href="https://www.gz-ai-stacks.de/impressum" target="_blank" rel="noopener">Impressum</a>
+    <a href="https://www.gz-ai-stacks.de/datenschutz" target="_blank" rel="noopener">Datenschutz</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var ZOOM_KEY = 'zeitkompass-handbuch-zoom';
+  var THEME_KEY = 'zeitkompass-theme';
+  var root = document.documentElement;
+
+  var zoom = parseInt(localStorage.getItem(ZOOM_KEY), 10) || 100;
+  var zoomLabel = document.getElementById('zoomLevel');
+  function applyZoom(){
+    zoom = Math.max(80, Math.min(160, zoom));
+    root.style.setProperty('--zoom', zoom / 100);
+    zoomLabel.textContent = zoom + '%';
+    localStorage.setItem(ZOOM_KEY, zoom);
+  }
+  document.getElementById('zoomIn').addEventListener('click', function(){ zoom += 10; applyZoom(); });
+  document.getElementById('zoomOut').addEventListener('click', function(){ zoom -= 10; applyZoom(); });
+  applyZoom();
+
+  var themeBtn = document.getElementById('themeToggle');
+  var savedTheme = localStorage.getItem(THEME_KEY);
+  if(savedTheme){
+    root.setAttribute('data-theme', savedTheme);
+    themeBtn.setAttribute('aria-pressed', savedTheme === 'dark' ? 'true' : 'false');
+  }
+  themeBtn.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem(THEME_KEY, next);
+    themeBtn.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>

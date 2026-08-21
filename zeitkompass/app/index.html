@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeitKompass — Arbeitszeit im Blick</title>
+<meta name="description" content="Kostenlose Arbeitszeiterfassung im Browser. Offline, ohne Konto, ohne Cloud-Zwang.">
+<meta name="theme-color" content="#1c3a5e">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{
+  --bg:#ecdcb8; --paper:#efe0c0; --paper2:#f2e2bd; --line:#cdb27f;
+  --ink:#2b2318; --ink-soft:#6b5c42;
+  --navy:#1c3a5e; --navy-soft:#dbe3ec;
+  --brass:#a6763a; --brass-soft:#f0dfc0;
+  --ok:#3d6b4f; --ok-soft:#dfe9df;
+  --warn:#a6763a; --warn-soft:#f0dfc0;
+  --err:#a83e3e; --err-soft:#f2dcdc;
+  --zoom:1;
+}
+:root[data-theme="dark"]{
+  --bg:#1c1712; --paper:#221b16; --paper2:#2b211a; --line:#3d2e22;
+  --ink:#f1e6d8; --ink-soft:#b8a68e;
+  --navy:#e59677; --navy-soft:#3d2c20;
+  --brass:#cc785c; --brass-soft:#3d2318;
+  --ok:#7fb494; --ok-soft:#233329;
+  --warn:#e0a05a; --warn-soft:#3a2c12;
+  --err:#e0796f; --err-soft:#3a2320;
+}
+@media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important} }
+*{box-sizing:border-box; margin:0; padding:0}
+html{font-size:calc(16px * var(--zoom))}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  min-height:100vh; line-height:1.55;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(166,118,58,.32), transparent 62%),
+    radial-gradient(ellipse 70% 50% at 90% 100%, rgba(28,58,94,.28), transparent 62%);
+}
+.container{max-width:1080px; margin:0 auto; padding:22px 18px 60px}
+
+.skip-link{position:absolute; left:-999px; top:auto}
+.skip-link:focus{left:12px; top:12px; z-index:200; background:var(--paper); padding:10px 16px; border-radius:8px; box-shadow:0 4px 16px rgba(30,20,10,.2)}
+
+header{
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  padding:20px 24px; margin-bottom:20px; background:var(--paper); border:1px solid var(--line); border-radius:4px;
+  box-shadow:0 2px 8px rgba(40,30,15,.08);
+}
+.brand{display:flex; align-items:center; gap:14px}
+.brand .icon{
+  width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:var(--navy-soft); font-size:1.4rem; border:1px solid var(--line);
+}
+.brand h1{font-size:1.4rem; font-weight:600; color:var(--ink)}
+.brand .sub{font-size:.78rem; color:var(--ink-soft)}
+
+.toolbar{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+.tool-group{display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:var(--paper2)}
+:root[data-theme="dark"] .tool-group{background:#332920; border-color:#4a3c2c}
+.tool-btn{border:none; background:transparent; color:var(--ink); padding:8px 12px; cursor:pointer; font-size:.9rem}
+.tool-btn:hover{background:var(--brass-soft)}
+.tool-btn:focus-visible{outline:2px solid var(--navy); outline-offset:-2px}
+.tool-group .tool-btn + .tool-btn{border-left:1px solid var(--line)}
+#zoomLevel{padding:8px 6px; font-size:.78rem; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+
+.btn-primary{
+  background:var(--navy); color:#fdf8ec; border:none; font-weight:600;
+  padding:11px 20px; border-radius:8px; cursor:pointer; font-size:.95rem;
+}
+.btn-primary:hover{filter:brightness(1.15)}
+.btn-primary:focus-visible{outline:2px solid var(--brass); outline-offset:2px}
+.btn-stop{background:var(--err)}
+.btn-pause{background:var(--warn)}
+.btn-secondary{
+  background:var(--paper2); color:var(--ink); border:1px solid var(--line); font-weight:600;
+  padding:9px 16px; border-radius:8px; cursor:pointer; font-size:.85rem;
+}
+.btn-secondary:hover{background:var(--brass-soft)}
+.btn-secondary:focus-visible{outline:2px solid var(--navy); outline-offset:2px}
+.btn-danger{color:var(--err); border-color:var(--err)}
+.btn-icon{background:transparent; border:none; cursor:pointer; color:var(--ink-soft); font-size:1rem; padding:4px 8px}
+.btn-icon:hover{color:var(--err)}
+.btn-icon:focus-visible{outline:2px solid var(--navy)}
+
+section, details.section{background:var(--paper); border:1px solid var(--line); border-radius:4px; padding:20px; margin-bottom:20px; box-shadow:0 1px 4px rgba(40,30,15,.06)}
+h2{font-size:1.05rem; margin-bottom:14px; color:var(--ink)}
+details.section summary{font-size:1.05rem; font-weight:600; color:var(--ink); cursor:pointer; list-style:none; display:flex; align-items:center; gap:8px}
+details.section summary::-webkit-details-marker{display:none}
+details.section summary::before{content:"▸"; color:var(--brass); font-size:.8rem; transition:transform .15s}
+details.section[open] summary::before{transform:rotate(90deg)}
+details.section summary:focus-visible{outline:2px solid var(--navy); outline-offset:2px}
+details.section[open] summary{margin-bottom:14px}
+details.section > *:not(summary):not(.hold-hint):not(.hint){margin-top:0}
+
+.timer-box{display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap}
+.timer-display{font-size:2.4rem; font-weight:700; font-variant-numeric:tabular-nums; color:var(--navy); min-width:180px}
+:root[data-theme="dark"] .timer-display{color:var(--brass)}
+.timer-controls{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+#timerToggle{position:relative; overflow:hidden; isolation:isolate}
+#timerToggle .hold-fill{position:absolute; left:0; top:0; bottom:0; width:0%; background:rgba(255,255,255,.4); z-index:0; pointer-events:none}
+#timerToggle.holding .hold-fill{width:100%; transition:width 900ms linear}
+#timerToggle .btn-label{position:relative; z-index:1}
+.hold-hint{font-size:.76rem; color:var(--ink-soft); margin-top:16px}
+
+.undo-toast{
+  position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(16px);
+  background:var(--ink); color:var(--bg); padding:12px 16px; border-radius:8px;
+  display:flex; gap:16px; align-items:center; font-size:.88rem;
+  opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:500;
+  box-shadow:0 8px 24px rgba(0,0,0,.35); max-width:90vw;
+}
+.undo-toast.show{opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto}
+.btn-undo{background:var(--brass); color:#fff; border:none; padding:7px 14px; border-radius:6px; cursor:pointer; font-weight:600; font-size:.85rem; flex-shrink:0}
+.btn-undo:hover{filter:brightness(1.1)}
+.btn-undo:focus-visible{outline:2px solid var(--bg); outline-offset:2px}
+.timer-form{display:flex; gap:10px; flex-wrap:wrap; align-items:center; flex:1; min-width:220px}
+
+select, input[type="text"], input[type="number"], input[type="date"], input[type="time"], input[type="color"]{
+  background:var(--paper2); border:1px solid var(--line); color:var(--ink); padding:9px 12px; border-radius:6px; font-size:.9rem;
+}
+:root[data-theme="dark"] select, :root[data-theme="dark"] input{background:#332920; border-color:#4a3c2c}
+label{font-size:.78rem; color:var(--ink-soft); display:block; margin-bottom:4px}
+.field{display:flex; flex-direction:column; gap:2px}
+
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:20px}
+.stat{background:var(--paper); border:1px solid var(--line); border-top:3px solid var(--navy); border-radius:4px; padding:16px; box-shadow:0 1px 4px rgba(40,30,15,.06)}
+:root[data-theme="dark"] .stat{background:#332920; border-color:#4a3c2c}
+.stat .num{font-size:1.6rem; font-weight:700; color:var(--navy)}
+:root[data-theme="dark"] .stat .num{color:var(--brass)}
+.stat.brass-stat{border-top-color:var(--brass)}
+.stat .lbl{font-size:.75rem; color:var(--ink-soft); margin-top:2px}
+
+.project-row{display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--line)}
+.project-row:last-child{border-bottom:none}
+.project-dot{width:14px; height:14px; border-radius:50%; flex-shrink:0}
+.project-name{font-weight:600; flex:1}
+.project-rate{font-size:.82rem; color:var(--ink-soft)}
+.project-form{display:flex; gap:10px; flex-wrap:wrap; align-items:end; margin-top:14px; padding-top:14px; border-top:1px dashed var(--line)}
+
+.manual-form{display:flex; gap:10px; flex-wrap:wrap; align-items:end}
+
+.filter-row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center}
+
+table{width:100%; border-collapse:collapse; font-size:.88rem}
+th, td{text-align:left; padding:9px 8px; border-bottom:1px solid var(--line)}
+th{color:var(--ink-soft); font-weight:600; font-size:.78rem; text-transform:uppercase; letter-spacing:.03em}
+tbody tr:hover{background:var(--brass-soft)}
+.empty{text-align:center; padding:40px 20px; color:var(--ink-soft); border:1px dashed var(--line); border-radius:4px}
+
+.day-group-header{font-weight:700; color:var(--navy); margin-top:14px; margin-bottom:4px; font-size:.9rem}
+:root[data-theme="dark"] .day-group-header{color:var(--brass)}
+
+.badge{display:inline-block; padding:2px 8px; border-radius:12px; font-size:.75rem; color:#fff}
+
+footer{text-align:center; font-size:.78rem; color:var(--ink-soft); margin-top:30px}
+.sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap}
+
+@media (max-width:640px){
+  .timer-display{font-size:1.8rem}
+  header{padding:16px}
+  .container{padding:14px 10px 40px}
+}
+
+#printArea{display:none}
+@media print{
+  body *{visibility:hidden}
+  #printArea, #printArea *{visibility:visible}
+  #printArea{display:block; position:absolute; left:0; top:0; width:100%; padding:0; color:#000; background:#fff}
+  #printArea h1{font-size:1.3rem; margin-bottom:4px}
+  #printArea .meta{font-size:.85rem; margin-bottom:14px; color:#333}
+  #printArea .meta div{margin-bottom:2px}
+  #printArea table{width:100%; border-collapse:collapse; font-size:.85rem}
+  #printArea th, #printArea td{border:1px solid #999; padding:5px 7px; text-align:left}
+  #printArea th{background:#eee}
+  #printArea tfoot td{font-weight:700; border-top:2px solid #000}
+}
+
+.forgot-banner{
+  background:var(--err-soft); border:1px solid var(--err); color:var(--err); padding:12px 16px;
+  border-radius:8px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:.88rem;
+}
+.forgot-banner .btn-icon{color:var(--err)}
+.forgot-banner{flex-wrap:wrap}
+.forgot-fix{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.forgot-fix input{background:var(--paper2); border:1px solid var(--line); color:var(--ink); padding:7px 10px; border-radius:6px; font-size:.82rem}
+
+.chart-period-row{display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap}
+.chart-period-btn{border:1px solid var(--line); background:var(--paper2); border-radius:6px; padding:6px 14px; cursor:pointer; font-size:.82rem; color:var(--ink); font-weight:600}
+.chart-period-btn:hover{background:var(--brass-soft)}
+.chart-period-btn.active{background:var(--navy); color:#fdf8ec; border-color:var(--navy)}
+:root[data-theme="dark"] .chart-period-btn.active{background:var(--brass); color:#1c1712}
+.chart-period-btn:focus-visible{outline:2px solid var(--navy); outline-offset:2px}
+
+.week-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(60px,1fr)); gap:8px; align-items:end}
+.week-bar-col{display:flex; flex-direction:column; align-items:center; gap:4px}
+.week-bar-track{width:100%; height:100px; display:flex; align-items:end; background:var(--paper2); border:1px solid var(--line); border-radius:6px; overflow:hidden}
+.week-bar{width:100%; background:var(--navy); border-radius:3px 3px 0 0; transition:height .3s}
+:root[data-theme="dark"] .week-bar{background:var(--brass)}
+.week-bar-col.today .week-bar-track{border-color:var(--brass); border-width:2px}
+.week-bar-hours{font-size:.82rem; font-weight:700; color:var(--ink)}
+.week-bar-label{font-size:.68rem; color:var(--ink-soft); text-transform:uppercase}
+.week-bar-date{font-size:.68rem; color:var(--ink-soft)}
+
+.backup-row{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Zum Inhalt springen</a>
+
+<div class="container">
+  <header>
+    <div class="brand">
+      <div class="icon" aria-hidden="true">🧭</div>
+      <div>
+        <h1>ZeitKompass</h1>
+        <div class="sub">Arbeitszeit erfassen — offline, ohne Konto</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="tool-group" role="group" aria-label="Schriftgröße">
+        <button class="tool-btn" id="zoomOut" aria-label="Schrift verkleinern">A−</button>
+        <span id="zoomLevel" aria-live="polite">100%</span>
+        <button class="tool-btn" id="zoomIn" aria-label="Schrift vergrößern">A+</button>
+      </div>
+      <button class="tool-btn" id="themeToggle" aria-label="Hell/Dunkel-Modus umschalten" style="border:1px solid var(--line); border-radius:8px; background:var(--paper2)">🌓 Hell/Dunkel</button>
+      <button class="btn-secondary" id="exportCsv" aria-label="Alle Einträge als CSV exportieren">⬇ CSV-Export</button>
+      <button class="btn-secondary" id="printBtn" aria-label="Zeitübersicht drucken oder als PDF speichern">🖨 Drucken / PDF</button>
+      <a class="btn-secondary" href="HANDBUCH.html" style="text-decoration:none; display:inline-flex; align-items:center">📖 Handbuch</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <details class="section" open>
+      <summary>Stempeluhr</summary>
+      <div class="timer-box">
+        <div>
+          <div class="timer-display" id="timerDisplay" role="timer" aria-live="off">00:00:00</div>
+          <div class="sub" id="timerStatus" style="font-size:.82rem; color:var(--ink-soft)">Keine laufende Erfassung</div>
+        </div>
+        <div class="timer-form">
+          <div class="field">
+            <label for="timerProject">Projekt/Kunde</label>
+            <select id="timerProject" aria-label="Projekt für Zeiterfassung auswählen"></select>
+          </div>
+          <div class="field">
+            <label for="timerManualBreak">Pause zusätzlich (Min.)</label>
+            <input type="number" id="timerManualBreak" min="0" step="5" value="0" style="width:90px" aria-label="Zusätzliche Pause in Minuten, wird beim Stoppen zur Live-Pause dazugerechnet">
+          </div>
+          <div class="field" style="flex:1; min-width:160px">
+            <label for="timerNote">Notiz (optional)</label>
+            <input type="text" id="timerNote" placeholder="z.B. Rechnung erstellen" aria-label="Notiz zur Zeiterfassung">
+          </div>
+        </div>
+        <div class="timer-controls">
+          <button class="btn-primary" id="timerToggle" aria-label="Zeiterfassung starten">
+            <span class="hold-fill" aria-hidden="true"></span>
+            <span class="btn-label">▶ Start</span>
+          </button>
+          <button class="btn-secondary btn-pause" id="pauseToggle" aria-label="Pause starten" disabled>⏸ Pause</button>
+        </div>
+      </div>
+      <div class="hold-hint" id="holdHint" style="display:none">Zum Stoppen Button ca. 1 Sek. gedrückt halten — schützt vor versehentlichem Stoppen.</div>
+    </details>
+
+    <div id="undoToast" class="undo-toast" role="status" aria-live="polite">
+      <span id="undoToastMsg"></span>
+      <button type="button" id="undoToastBtn" class="btn-undo">Rückgängig</button>
+    </div>
+
+    <div id="forgotBanner" class="forgot-banner" role="alert" style="display:none">
+      <span id="forgotBannerMsg"></span>
+      <div class="forgot-fix">
+        <label for="forgotEndInput" class="sr-only">Tatsächliche Endzeit</label>
+        <input type="time" id="forgotEndInput" aria-label="Tatsächliche Endzeit (Uhrzeit) eintragen">
+        <button type="button" id="forgotFixBtn" class="btn-secondary">Damit stoppen</button>
+      </div>
+      <button type="button" id="forgotDismiss" class="btn-icon" aria-label="Hinweis schließen">✕</button>
+    </div>
+
+    <div class="stats" id="statsRow" aria-label="Zusammenfassung Arbeitszeit"></div>
+
+    <details class="section">
+      <summary>Übersicht</summary>
+      <div class="chart-period-row" role="group" aria-label="Zeitraum wählen">
+        <button type="button" class="chart-period-btn" data-period="day">Tage</button>
+        <button type="button" class="chart-period-btn" data-period="week">Wochen</button>
+        <button type="button" class="chart-period-btn" data-period="month">Monate</button>
+        <button type="button" class="chart-period-btn" data-period="year">Jahre</button>
+      </div>
+      <div id="weekGrid" class="week-grid" aria-label="Stunden-Diagramm"></div>
+    </details>
+
+    <details class="section">
+      <summary>Einstellungen</summary>
+      <div class="settings-row">
+        <div class="field">
+          <label for="roundingMin">Rundung der Arbeitszeit</label>
+          <select id="roundingMin" aria-label="Rundung der berechneten Arbeitszeit">
+            <option value="0">Keine Rundung</option>
+            <option value="5">Auf 5 Minuten</option>
+            <option value="10">Auf 10 Minuten</option>
+            <option value="15">Auf 15 Minuten</option>
+          </select>
+        </div>
+      </div>
+      <div class="backup-row">
+        <button class="btn-secondary" id="backupExport">⬇ Backup exportieren</button>
+        <label class="btn-secondary" for="backupImportFile" style="cursor:pointer; display:inline-flex; align-items:center">⬆ Backup importieren
+          <input type="file" id="backupImportFile" accept="application/json" style="display:none">
+        </label>
+      </div>
+    </details>
+
+    <details class="section" open>
+      <summary>Projekte &amp; Kunden</summary>
+      <div id="projectList"></div>
+      <form class="project-form" id="projectForm">
+        <div class="field">
+          <label for="newProjectName">Name</label>
+          <input type="text" id="newProjectName" placeholder="z.B. Kunde Müller" required aria-required="true">
+        </div>
+        <div class="field">
+          <label for="newProjectRate">Stundensatz €</label>
+          <input type="number" id="newProjectRate" min="0" step="0.5" placeholder="0" style="width:100px">
+        </div>
+        <div class="field">
+          <label for="newProjectColor">Farbe</label>
+          <input type="color" id="newProjectColor" value="#1c3a5e">
+        </div>
+        <button type="submit" class="btn-secondary">+ Projekt anlegen</button>
+      </form>
+    </details>
+
+    <details class="section">
+      <summary>Zeit manuell nachtragen</summary>
+      <form class="manual-form" id="manualForm">
+        <div class="field">
+          <label for="manDate">Datum</label>
+          <input type="date" id="manDate" required aria-required="true">
+        </div>
+        <div class="field">
+          <label for="manStart">Start</label>
+          <input type="time" id="manStart" required aria-required="true">
+        </div>
+        <div class="field">
+          <label for="manEnd">Ende</label>
+          <input type="time" id="manEnd" required aria-required="true">
+        </div>
+        <div class="field">
+          <label for="manProject">Projekt</label>
+          <select id="manProject" aria-label="Projekt für manuellen Eintrag"></select>
+        </div>
+        <div class="field">
+          <label for="manBreak">Pause (Min.)</label>
+          <input type="number" id="manBreak" min="0" step="5" value="0" style="width:90px">
+        </div>
+        <div class="field" style="flex:1; min-width:160px">
+          <label for="manNote">Notiz</label>
+          <input type="text" id="manNote" placeholder="optional">
+        </div>
+        <button type="submit" class="btn-secondary">+ Eintrag hinzufügen</button>
+      </form>
+    </details>
+
+    <details class="section" open>
+      <summary>Einträge</summary>
+      <div class="filter-row">
+        <div class="field">
+          <label for="filterProject">Projekt filtern</label>
+          <select id="filterProject" aria-label="Einträge nach Projekt filtern"></select>
+        </div>
+        <div class="field">
+          <label for="filterFrom">Von</label>
+          <input type="date" id="filterFrom" aria-label="Zeitraum von">
+        </div>
+        <div class="field">
+          <label for="filterTo">Bis</label>
+          <input type="date" id="filterTo" aria-label="Zeitraum bis">
+        </div>
+        <button class="btn-secondary" id="filterReset" style="align-self:end">Filter zurücksetzen</button>
+      </div>
+      <div id="entriesContainer"></div>
+    </details>
+
+    <footer>
+      ZeitKompass — läuft komplett lokal in deinem Browser. Keine Daten verlassen dein Gerät.
+    </footer>
+  </main>
+</div>
+
+<div id="printArea" aria-hidden="true"></div>
+
+<script>
+(function(){
+  "use strict";
+  var STORAGE_KEY = "zeitkompass_data_v1";
+
+  var state = loadState();
+  var runningTimerId = null;
+
+  function loadState(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        var parsed = JSON.parse(raw);
+        if(parsed.roundingMin === undefined) parsed.roundingMin = 0;
+        if(parsed.chartPeriod === undefined) parsed.chartPeriod = "day";
+        return parsed;
+      }
+    }catch(e){}
+    return { projects: [], entries: [], running: null, zoom: 1, theme: null, roundingMin: 0, chartPeriod: "day" };
+  }
+  function saveState(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+  // ---------- Theme & Zoom ----------
+  function applyTheme(){
+    var root = document.documentElement;
+    if(state.theme === "dark") root.setAttribute("data-theme","dark");
+    else if(state.theme === "light") root.setAttribute("data-theme","light");
+    else root.removeAttribute("data-theme");
+  }
+  function applyZoom(){
+    document.documentElement.style.setProperty("--zoom", state.zoom);
+    document.getElementById("zoomLevel").textContent = Math.round(state.zoom*100) + "%";
+  }
+  document.getElementById("themeToggle").addEventListener("click", function(){
+    var cur = state.theme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    state.theme = cur === "dark" ? "light" : "dark";
+    applyTheme(); saveState();
+  });
+  document.getElementById("zoomIn").addEventListener("click", function(){
+    state.zoom = Math.min(1.6, +(state.zoom + 0.1).toFixed(2)); applyZoom(); saveState();
+  });
+  document.getElementById("zoomOut").addEventListener("click", function(){
+    state.zoom = Math.max(0.7, +(state.zoom - 0.1).toFixed(2)); applyZoom(); saveState();
+  });
+
+  // ---------- Helpers ----------
+  function pad(n){ return n < 10 ? "0"+n : ""+n; }
+  function fmtHMS(seconds){
+    seconds = Math.max(0, Math.floor(seconds));
+    var h = Math.floor(seconds/3600), m = Math.floor((seconds%3600)/60), s = seconds%60;
+    return pad(h)+":"+pad(m)+":"+pad(s);
+  }
+  function fmtHours(seconds){ return (seconds/3600).toFixed(2); }
+  function todayStr(){ var d = new Date(); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function projectById(id){ return state.projects.find(function(p){ return p.id === id; }); }
+  function entryDurationSeconds(e){
+    var start = new Date(e.date+"T"+e.start+":00");
+    var end = new Date(e.date+"T"+e.end+":00");
+    var diff = (end - start)/1000;
+    if(diff < 0) diff += 24*3600;
+    diff -= (e.breakMin||0) * 60;
+    diff = Math.max(0, diff);
+    if(state.roundingMin > 0){
+      var stepSec = state.roundingMin * 60;
+      diff = Math.round(diff/stepSec) * stepSec;
+    }
+    return diff;
+  }
+  function startOfWeek(d){
+    var date = new Date(d); var day = (date.getDay()+6)%7;
+    date.setDate(date.getDate()-day); date.setHours(0,0,0,0); return date;
+  }
+
+  // ---------- Rendering: Projects ----------
+  function renderProjectSelects(){
+    var selects = [document.getElementById("timerProject"), document.getElementById("manProject"), document.getElementById("filterProject")];
+    var filterSelect = document.getElementById("filterProject");
+    selects.forEach(function(sel){
+      var isFilter = sel === filterSelect;
+      var prevVal = sel.value;
+      sel.innerHTML = "";
+      if(isFilter){
+        var optAll = document.createElement("option");
+        optAll.value = ""; optAll.textContent = "Alle Projekte";
+        sel.appendChild(optAll);
+      }
+      if(state.projects.length === 0 && !isFilter){
+        var opt = document.createElement("option");
+        opt.value = ""; opt.textContent = "— erst Projekt anlegen —";
+        sel.appendChild(opt);
+      }
+      state.projects.forEach(function(p){
+        var o = document.createElement("option");
+        o.value = p.id; o.textContent = p.name + (p.rate ? " (" + p.rate + " €/h)" : "");
+        sel.appendChild(o);
+      });
+      if(prevVal && [...sel.options].some(function(o){return o.value===prevVal;})) sel.value = prevVal;
+    });
+  }
+
+  function renderProjectList(){
+    var container = document.getElementById("projectList");
+    container.innerHTML = "";
+    if(state.projects.length === 0){
+      var empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "Noch keine Projekte angelegt.";
+      container.appendChild(empty);
+      return;
+    }
+    state.projects.forEach(function(p){
+      var row = document.createElement("div");
+      row.className = "project-row";
+      row.innerHTML =
+        '<span class="project-dot" style="background:'+p.color+'" aria-hidden="true"></span>' +
+        '<span class="project-name">'+escapeHtml(p.name)+'</span>' +
+        '<span class="project-rate">'+(p.rate ? p.rate+" €/h" : "kein Satz")+'</span>' +
+        '<button class="btn-icon" data-del-project="'+p.id+'" aria-label="Projekt '+escapeHtml(p.name)+' löschen">🗑</button>';
+      container.appendChild(row);
+    });
+    container.querySelectorAll("[data-del-project]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var id = btn.getAttribute("data-del-project");
+        if(!confirm("Projekt und zugehörige Zuordnung wirklich löschen? Einträge bleiben erhalten, verlieren aber die Projekt-Zuordnung.")) return;
+        state.projects = state.projects.filter(function(p){ return p.id !== id; });
+        saveState(); renderAll();
+      });
+    });
+  }
+
+  document.getElementById("projectForm").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var name = document.getElementById("newProjectName").value.trim();
+    if(!name) return;
+    var rate = parseFloat(document.getElementById("newProjectRate").value) || 0;
+    var color = document.getElementById("newProjectColor").value || "#1c3a5e";
+    state.projects.push({ id: uid(), name: name, rate: rate, color: color });
+    saveState();
+    ev.target.reset();
+    document.getElementById("newProjectColor").value = "#1c3a5e";
+    renderAll();
+  });
+
+  // ---------- Timer ----------
+  var pageTitle = document.title;
+  var toggleBtn = document.getElementById("timerToggle");
+  var toggleLabel = toggleBtn.querySelector(".btn-label");
+  var holdHint = document.getElementById("holdHint");
+  var HOLD_MS = 900;
+  var holdTimer = null;
+  var stoppedViaHold = false;
+  var lastStop = null; // { entryId, restore: {startedAt, pauseAccumMs} }
+  var undoTimer = null;
+
+  function renderTimer(){
+    var display = document.getElementById("timerDisplay");
+    var status = document.getElementById("timerStatus");
+    var pauseBtn = document.getElementById("pauseToggle");
+    if(state.running){
+      var elapsed = (Date.now() - state.running.startedAt) / 1000;
+      var pausedMs = state.running.pauseAccumMs || 0;
+      if(state.running.pauseStartedAt) pausedMs += (Date.now() - state.running.pauseStartedAt);
+      var netSeconds = elapsed - pausedMs/1000;
+      var hms = fmtHMS(netSeconds);
+      display.textContent = hms;
+      document.title = "⏱ " + hms + " · " + pageTitle;
+      var proj = projectById(state.running.projectId);
+      status.textContent = state.running.pauseStartedAt
+        ? "Pause seit " + new Date(state.running.pauseStartedAt).toLocaleTimeString("de-DE")
+        : "Läuft seit " + new Date(state.running.startedAt).toLocaleTimeString("de-DE") + (proj ? " — " + proj.name : "");
+      toggleLabel.textContent = "■ Stop";
+      toggleBtn.classList.add("btn-stop");
+      toggleBtn.setAttribute("aria-label","Zeiterfassung stoppen (gedrückt halten)");
+      holdHint.style.display = "block";
+      pauseBtn.disabled = false;
+      pauseBtn.textContent = state.running.pauseStartedAt ? "▶ Pause beenden" : "⏸ Pause";
+    } else {
+      display.textContent = "00:00:00";
+      document.title = pageTitle;
+      status.textContent = "Keine laufende Erfassung";
+      toggleLabel.textContent = "▶ Start";
+      toggleBtn.classList.remove("btn-stop");
+      toggleBtn.setAttribute("aria-label","Zeiterfassung starten");
+      holdHint.style.display = "none";
+      pauseBtn.disabled = true;
+      pauseBtn.textContent = "⏸ Pause";
+    }
+  }
+  function tick(){
+    if(state.running) renderTimer();
+  }
+
+  function doStart(){
+    var projectId = document.getElementById("timerProject").value;
+    var note = document.getElementById("timerNote").value.trim();
+    state.running = { projectId: projectId, note: note, startedAt: Date.now(), pauseAccumMs: 0, pauseStartedAt: null };
+    saveState(); renderAll();
+  }
+  function doStop(overrideEnd){
+    var manualBreakField = document.getElementById("timerManualBreak");
+    var manualBreakMin = parseInt(manualBreakField.value,10) || 0;
+    var pausedMs = state.running.pauseAccumMs || 0;
+    if(state.running.pauseStartedAt) pausedMs += (Date.now() - state.running.pauseStartedAt);
+    var end = overrideEnd || new Date();
+    var startDate = new Date(state.running.startedAt);
+    var dateStr = startDate.getFullYear()+"-"+pad(startDate.getMonth()+1)+"-"+pad(startDate.getDate());
+    var newEntry = {
+      id: uid(),
+      projectId: state.running.projectId,
+      date: dateStr,
+      start: pad(startDate.getHours())+":"+pad(startDate.getMinutes()),
+      end: pad(end.getHours())+":"+pad(end.getMinutes()),
+      breakMin: Math.round(pausedMs/60000) + manualBreakMin,
+      note: state.running.note || ""
+    };
+    state.entries.push(newEntry);
+    lastStop = { entryId: newEntry.id, restore: { startedAt: state.running.startedAt, pauseAccumMs: pausedMs }, manualBreakMin: manualBreakMin };
+    state.running = null;
+    manualBreakField.value = "0";
+    saveState(); renderAll();
+    showUndoToast("Gestoppt um " + newEntry.end + " Uhr");
+  }
+
+  function cancelHold(){
+    if(holdTimer){ clearTimeout(holdTimer); holdTimer = null; }
+    toggleBtn.classList.remove("holding");
+  }
+  toggleBtn.addEventListener("pointerdown", function(){
+    if(!state.running) return;
+    toggleBtn.classList.add("holding");
+    holdTimer = setTimeout(function(){
+      toggleBtn.classList.remove("holding");
+      holdTimer = null;
+      stoppedViaHold = true;
+      doStop();
+    }, HOLD_MS);
+  });
+  ["pointerup","pointerleave","pointercancel"].forEach(function(ev){
+    toggleBtn.addEventListener(ev, cancelHold);
+  });
+  toggleBtn.addEventListener("click", function(){
+    if(stoppedViaHold){ stoppedViaHold = false; return; }
+    if(!state.running) doStart();
+    // Ist state.running true, passiert bei Klick nichts — nur Halten stoppt.
+  });
+  document.getElementById("pauseToggle").addEventListener("click", function(){
+    if(!state.running) return;
+    if(state.running.pauseStartedAt){
+      state.running.pauseAccumMs = (state.running.pauseAccumMs||0) + (Date.now() - state.running.pauseStartedAt);
+      state.running.pauseStartedAt = null;
+    } else {
+      state.running.pauseStartedAt = Date.now();
+    }
+    saveState(); renderTimer();
+  });
+
+  // ---------- Rückgängig-Hinweis ----------
+  function showUndoToast(message){
+    var toast = document.getElementById("undoToast");
+    document.getElementById("undoToastMsg").textContent = message;
+    toast.classList.add("show");
+    if(undoTimer) clearTimeout(undoTimer);
+    undoTimer = setTimeout(function(){ hideUndoToast(); }, 8000);
+  }
+  function hideUndoToast(){
+    document.getElementById("undoToast").classList.remove("show");
+    lastStop = null;
+    if(undoTimer){ clearTimeout(undoTimer); undoTimer = null; }
+  }
+  document.getElementById("undoToastBtn").addEventListener("click", function(){
+    if(!lastStop) return;
+    var removed = state.entries.find(function(e){ return e.id === lastStop.entryId; });
+    state.entries = state.entries.filter(function(e){ return e.id !== lastStop.entryId; });
+    state.running = {
+      projectId: removed ? removed.projectId : "",
+      note: removed ? removed.note : "",
+      startedAt: lastStop.restore.startedAt,
+      pauseAccumMs: lastStop.restore.pauseAccumMs,
+      pauseStartedAt: null
+    };
+    document.getElementById("timerManualBreak").value = lastStop.manualBreakMin || 0;
+    hideUndoToast();
+    saveState(); renderAll();
+  });
+
+  // ---------- Manual entry ----------
+  document.getElementById("manDate").value = todayStr();
+  document.getElementById("manualForm").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var date = document.getElementById("manDate").value;
+    var start = document.getElementById("manStart").value;
+    var end = document.getElementById("manEnd").value;
+    if(!date || !start || !end) return;
+    state.entries.push({
+      id: uid(),
+      projectId: document.getElementById("manProject").value,
+      date: date, start: start, end: end,
+      breakMin: parseInt(document.getElementById("manBreak").value,10) || 0,
+      note: document.getElementById("manNote").value.trim()
+    });
+    saveState();
+    ev.target.reset();
+    document.getElementById("manDate").value = todayStr();
+    document.getElementById("manBreak").value = 0;
+    renderAll();
+  });
+
+  // ---------- Filters ----------
+  document.getElementById("filterReset").addEventListener("click", function(){
+    document.getElementById("filterProject").value = "";
+    document.getElementById("filterFrom").value = "";
+    document.getElementById("filterTo").value = "";
+    renderEntries();
+  });
+  ["filterProject","filterFrom","filterTo"].forEach(function(id){
+    document.getElementById(id).addEventListener("change", renderEntries);
+  });
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function getFilteredEntries(){
+    var projId = document.getElementById("filterProject").value;
+    var from = document.getElementById("filterFrom").value;
+    var to = document.getElementById("filterTo").value;
+    return state.entries.filter(function(e){
+      if(projId && e.projectId !== projId) return false;
+      if(from && e.date < from) return false;
+      if(to && e.date > to) return false;
+      return true;
+    }).sort(function(a,b){ return (b.date+b.start).localeCompare(a.date+a.start); });
+  }
+
+  function renderEntries(){
+    var container = document.getElementById("entriesContainer");
+    var entries = getFilteredEntries();
+    container.innerHTML = "";
+    if(entries.length === 0){
+      var empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "Keine Einträge für diese Auswahl.";
+      container.appendChild(empty);
+      return;
+    }
+    var groups = {};
+    var order = [];
+    entries.forEach(function(e){
+      if(!groups[e.date]){ groups[e.date] = []; order.push(e.date); }
+      groups[e.date].push(e);
+    });
+    order.forEach(function(date){
+      var heading = document.createElement("div");
+      heading.className = "day-group-header";
+      var dObj = new Date(date+"T00:00:00");
+      heading.textContent = dObj.toLocaleDateString("de-DE", { weekday:"long", day:"2-digit", month:"2-digit", year:"numeric" });
+      container.appendChild(heading);
+
+      var table = document.createElement("table");
+      table.innerHTML = "<thead><tr><th>Projekt</th><th>Start</th><th>Ende</th><th>Pause</th><th>Dauer</th><th>Notiz</th><th></th></tr></thead>";
+      var tbody = document.createElement("tbody");
+      groups[date].forEach(function(e){
+        var proj = projectById(e.projectId);
+        var seconds = entryDurationSeconds(e);
+        var tr = document.createElement("tr");
+        tr.innerHTML =
+          "<td>" + (proj ? '<span class="badge" style="background:'+proj.color+'">'+escapeHtml(proj.name)+"</span>" : '<span style="color:var(--ink-soft))">ohne Projekt</span>') + "</td>" +
+          "<td>" + e.start + "</td>" +
+          "<td>" + e.end + "</td>" +
+          "<td>" + (e.breakMin||0) + " Min.</td>" +
+          "<td>" + fmtHMS(seconds) + "</td>" +
+          "<td>" + escapeHtml(e.note||"") + "</td>" +
+          '<td><button class="btn-icon" data-del-entry="'+e.id+'" aria-label="Eintrag löschen">🗑</button></td>';
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      container.appendChild(table);
+    });
+    container.querySelectorAll("[data-del-entry]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var id = btn.getAttribute("data-del-entry");
+        state.entries = state.entries.filter(function(e){ return e.id !== id; });
+        saveState(); renderEntries(); renderStats();
+      });
+    });
+  }
+
+  // ---------- Stats ----------
+  function sumSecondsSince(sinceDate){
+    return state.entries.filter(function(e){ return new Date(e.date+"T00:00:00") >= sinceDate; })
+      .reduce(function(acc,e){ return acc + entryDurationSeconds(e); }, 0);
+  }
+  function sumEarningsSince(sinceDate){
+    return state.entries.filter(function(e){ return new Date(e.date+"T00:00:00") >= sinceDate; })
+      .reduce(function(acc,e){
+        var proj = projectById(e.projectId);
+        var hours = entryDurationSeconds(e)/3600;
+        return acc + (proj && proj.rate ? hours*proj.rate : 0);
+      }, 0);
+  }
+  function renderStats(){
+    var today = new Date(); today.setHours(0,0,0,0);
+    var weekStart = startOfWeek(new Date());
+    var monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    var todaySec = sumSecondsSince(today);
+    var weekSec = sumSecondsSince(weekStart);
+    var monthSec = sumSecondsSince(monthStart);
+    var monthEarn = sumEarningsSince(monthStart);
+
+    var row = document.getElementById("statsRow");
+    row.innerHTML =
+      statCard("Heute", fmtHours(todaySec)+" h") +
+      statCard("Diese Woche", fmtHours(weekSec)+" h") +
+      statCard("Dieser Monat", fmtHours(monthSec)+" h") +
+      statCard("Verdienst (Monat)", monthEarn.toLocaleString("de-DE",{minimumFractionDigits:2, maximumFractionDigits:2})+" €", true);
+  }
+  function statCard(label, num, brass){
+    return '<div class="stat'+(brass?' brass-stat':'')+'"><div class="num">'+num+'</div><div class="lbl">'+label+'</div></div>';
+  }
+
+  // ---------- Wochendiagramm ----------
+  var MONTH_NAMES_SHORT = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+  function fmtDateStr(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function sumHoursInRange(fromStr, toStr){
+    return state.entries.filter(function(e){ return e.date >= fromStr && e.date <= toStr; })
+      .reduce(function(acc,e){ return acc + entryDurationSeconds(e); }, 0) / 3600;
+  }
+  function computeChartBuckets(mode){
+    var now = new Date();
+    var buckets = [];
+    if(mode === "week"){
+      for(var w=7; w>=0; w--){
+        var ws = startOfWeek(now); ws.setDate(ws.getDate() - w*7);
+        var we = new Date(ws); we.setDate(we.getDate()+6);
+        buckets.push({
+          label: pad(ws.getDate())+"."+pad(ws.getMonth()+1)+".",
+          sub: "–"+pad(we.getDate())+"."+pad(we.getMonth()+1)+".",
+          hours: sumHoursInRange(fmtDateStr(ws), fmtDateStr(we)),
+          isCurrent: w === 0
+        });
+      }
+    } else if(mode === "month"){
+      for(var m=11; m>=0; m--){
+        var md = new Date(now.getFullYear(), now.getMonth()-m, 1);
+        var monthEnd = new Date(md.getFullYear(), md.getMonth()+1, 0);
+        buckets.push({
+          label: MONTH_NAMES_SHORT[md.getMonth()],
+          sub: (""+md.getFullYear()).slice(2),
+          hours: sumHoursInRange(fmtDateStr(md), fmtDateStr(monthEnd)),
+          isCurrent: m === 0
+        });
+      }
+    } else if(mode === "year"){
+      for(var y=4; y>=0; y--){
+        var yr = now.getFullYear() - y;
+        buckets.push({
+          label: ""+yr, sub: "",
+          hours: sumHoursInRange(yr+"-01-01", yr+"-12-31"),
+          isCurrent: y === 0
+        });
+      }
+    } else {
+      var weekStart = startOfWeek(now);
+      var dayLabels = ["Mo","Di","Mi","Do","Fr","Sa","So"];
+      var todayStr2 = todayStr();
+      for(var i=0; i<7; i++){
+        var d = new Date(weekStart);
+        d.setDate(d.getDate()+i);
+        var dStr = fmtDateStr(d);
+        buckets.push({
+          label: dayLabels[i], sub: pad(d.getDate())+"."+pad(d.getMonth()+1)+".",
+          hours: sumHoursInRange(dStr, dStr),
+          isCurrent: dStr === todayStr2
+        });
+      }
+    }
+    return buckets;
+  }
+  function renderWeekChart(){
+    var container = document.getElementById("weekGrid");
+    var mode = state.chartPeriod || "day";
+    document.querySelectorAll(".chart-period-btn").forEach(function(btn){
+      btn.classList.toggle("active", btn.getAttribute("data-period") === mode);
+    });
+    var buckets = computeChartBuckets(mode);
+    var maxHours = Math.max(0.01, Math.max.apply(null, buckets.map(function(b){ return b.hours; })));
+    container.innerHTML = buckets.map(function(b){
+      var pct = Math.min(100, Math.round((b.hours/maxHours)*100));
+      return '<div class="week-bar-col'+(b.isCurrent?' today':'')+'">' +
+        '<div class="week-bar-hours">'+b.hours.toFixed(1)+' h</div>' +
+        '<div class="week-bar-track"><div class="week-bar" style="height:'+pct+'%"></div></div>' +
+        '<div class="week-bar-label">'+b.label+'</div>' +
+        '<div class="week-bar-date">'+b.sub+'</div>' +
+      '</div>';
+    }).join("");
+  }
+  document.querySelectorAll(".chart-period-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      state.chartPeriod = btn.getAttribute("data-period");
+      saveState(); renderWeekChart();
+    });
+  });
+
+  // ---------- Rundung ----------
+  var roundingSelect = document.getElementById("roundingMin");
+  roundingSelect.value = state.roundingMin || 0;
+  roundingSelect.addEventListener("change", function(){
+    state.roundingMin = parseInt(roundingSelect.value,10) || 0;
+    saveState(); renderAll();
+  });
+
+  // ---------- Backup Export/Import ----------
+  document.getElementById("backupExport").addEventListener("click", function(){
+    var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "zeitkompass-backup-"+todayStr()+".json";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+  document.getElementById("backupImportFile").addEventListener("change", function(ev){
+    var file = ev.target.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      var imported;
+      try{ imported = JSON.parse(reader.result); }catch(e){ alert("Diese Datei ist kein gültiges ZeitKompass-Backup."); return; }
+      if(!imported || !Array.isArray(imported.entries)){ alert("Diese Datei ist kein gültiges ZeitKompass-Backup."); return; }
+      if(!confirm("Backup einspielen? Das überschreibt alle aktuellen Daten in dieser App.")) return;
+      state = imported;
+      if(state.roundingMin === undefined) state.roundingMin = 0;
+      saveState();
+      applyTheme(); applyZoom(); renderAll();
+    };
+    reader.readAsText(file);
+    ev.target.value = "";
+  });
+
+  // ---------- Vergessen auszustempeln ----------
+  function buildOverrideEndFromTime(timeStr){
+    var parts = timeStr.split(":");
+    var d = new Date(state.running.startedAt);
+    d.setHours(parseInt(parts[0],10), parseInt(parts[1],10), 0, 0);
+    if(d.getTime() <= state.running.startedAt) d.setDate(d.getDate()+1);
+    return d;
+  }
+  var forgotWarningShown = false;
+  function checkForgotWarning(){
+    var banner = document.getElementById("forgotBanner");
+    if(state.running){
+      var hoursSince = (Date.now() - state.running.startedAt) / 3600000;
+      if(hoursSince > 12){
+        document.getElementById("forgotBannerMsg").textContent =
+          "⚠️ Du bist seit " + hoursSince.toFixed(1) + " Std. eingestempelt — hast du vergessen zu stoppen?";
+        if(!forgotWarningShown){
+          var suggestedEnd = new Date(state.running.startedAt + 8*3600000);
+          document.getElementById("forgotEndInput").value = pad(suggestedEnd.getHours())+":"+pad(suggestedEnd.getMinutes());
+          forgotWarningShown = true;
+        }
+        banner.style.display = "flex";
+        return;
+      }
+    }
+    forgotWarningShown = false;
+    banner.style.display = "none";
+  }
+  document.getElementById("forgotDismiss").addEventListener("click", function(){
+    document.getElementById("forgotBanner").style.display = "none";
+  });
+  document.getElementById("forgotFixBtn").addEventListener("click", function(){
+    var val = document.getElementById("forgotEndInput").value;
+    if(!val){ alert("Bitte eine Endzeit auswählen."); return; }
+    var endDate = buildOverrideEndFromTime(val);
+    doStop(endDate);
+    document.getElementById("forgotBanner").style.display = "none";
+    forgotWarningShown = false;
+  });
+
+  // ---------- CSV Export ----------
+  document.getElementById("exportCsv").addEventListener("click", function(){
+    var rows = [["Datum","Projekt","Start","Ende","Pause (Min.)","Dauer (h)","Stundensatz","Verdienst","Notiz"]];
+    state.entries.slice().sort(function(a,b){ return (a.date+a.start).localeCompare(b.date+b.start); }).forEach(function(e){
+      var proj = projectById(e.projectId);
+      var hours = entryDurationSeconds(e)/3600;
+      var rate = proj ? proj.rate||0 : 0;
+      rows.push([
+        e.date, proj ? proj.name : "", e.start, e.end, e.breakMin||0,
+        hours.toFixed(2), rate.toFixed(2), (hours*rate).toFixed(2), e.note||""
+      ]);
+    });
+    var csv = rows.map(function(r){
+      return r.map(function(cell){
+        var s = String(cell).replace(/"/g,'""');
+        return /[",;\n]/.test(s) ? '"'+s+'"' : s;
+      }).join(";");
+    }).join("\r\n");
+    var blob = new Blob(["﻿"+csv], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "zeitkompass-export-"+todayStr()+".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  // ---------- Drucken / PDF ----------
+  document.getElementById("printBtn").addEventListener("click", function(){
+    var entries = getFilteredEntries().slice().sort(function(a,b){ return (a.date+a.start).localeCompare(b.date+b.start); });
+    var from = document.getElementById("filterFrom").value;
+    var to = document.getElementById("filterTo").value;
+    var periodLabel = (from || to)
+      ? "Zeitraum: " + (from ? new Date(from+"T00:00:00").toLocaleDateString("de-DE") : "Anfang") + " – " + (to ? new Date(to+"T00:00:00").toLocaleDateString("de-DE") : "Heute")
+      : "Zeitraum: alle Einträge";
+    var filterProjId = document.getElementById("filterProject").value;
+    var filterProj = filterProjId ? projectById(filterProjId) : null;
+
+    var totalHours = 0, totalEarn = 0;
+    var rowsHtml = entries.map(function(e){
+      var proj = projectById(e.projectId);
+      var hours = entryDurationSeconds(e)/3600;
+      var rate = proj ? proj.rate||0 : 0;
+      var earn = hours*rate;
+      totalHours += hours; totalEarn += earn;
+      var dObj = new Date(e.date+"T00:00:00");
+      var dateLabel = dObj.toLocaleDateString("de-DE", { weekday:"short", day:"2-digit", month:"2-digit", year:"numeric" });
+      return "<tr><td>"+dateLabel+"</td><td>"+(proj?escapeHtml(proj.name):"—")+"</td><td>"+e.start+"</td><td>"+e.end+"</td>"+
+        "<td>"+(e.breakMin||0)+" Min.</td><td>"+hours.toFixed(2)+" h</td><td>"+rate.toFixed(2)+" €/h</td>"+
+        "<td>"+earn.toFixed(2)+" €</td><td>"+escapeHtml(e.note||"")+"</td></tr>";
+    }).join("");
+
+    if(entries.length === 0){
+      rowsHtml = '<tr><td colspan="9" style="text-align:center; padding:20px">Keine Einträge für diesen Zeitraum.</td></tr>';
+    }
+
+    document.getElementById("printArea").innerHTML =
+      "<h1>ZeitKompass — Zeitübersicht</h1>" +
+      '<div class="meta">' +
+        (filterProj ? "<div><strong>Projekt/Kunde:</strong> " + escapeHtml(filterProj.name) + "</div>" : "") +
+        "<div><strong>" + periodLabel + "</strong></div>" +
+        "<div>Erstellt am: " + new Date().toLocaleDateString("de-DE") + "</div>" +
+      "</div>" +
+      "<table><thead><tr><th>Datum</th><th>Projekt</th><th>Start</th><th>Ende</th><th>Pause</th><th>Dauer</th><th>Satz</th><th>Verdienst</th><th>Notiz</th></tr></thead>" +
+      "<tbody>" + rowsHtml + "</tbody>" +
+      "<tfoot><tr><td colspan=\"5\">Summe</td><td>" + totalHours.toFixed(2) + " h</td><td></td>" +
+      "<td>" + totalEarn.toLocaleString("de-DE",{minimumFractionDigits:2, maximumFractionDigits:2}) + " €</td><td></td></tr></tfoot></table>";
+
+    window.print();
+  });
+
+  // ---------- Render all ----------
+  function renderAll(){
+    renderProjectSelects();
+    renderProjectList();
+    renderTimer();
+    renderEntries();
+    renderStats();
+    renderWeekChart();
+  }
+
+  applyTheme();
+  applyZoom();
+  renderAll();
+  checkForgotWarning();
+  window.setInterval(tick, 1000);
+  window.setInterval(checkForgotWarning, 60000);
+
+  window.addEventListener("beforeunload", function(){
+    if(state.running) saveState();
+  });
+
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    });
+  }
+})();
+</script>
+</body>
+</html>

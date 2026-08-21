@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeitKompass Mitarbeiter — Arbeitszeit &amp; Überstunden</title>
+<meta name="description" content="Kostenlose Stempeluhr für Angestellte: Kommen/Gehen, Pausen, Soll/Ist, Überstunden-Konto. Offline, ohne Konto.">
+<meta name="theme-color" content="#1c3a5e">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{
+  --bg:#ecdcb8; --paper:#efe0c0; --paper2:#f2e2bd; --line:#cdb27f;
+  --ink:#2b2318; --ink-soft:#6b5c42;
+  --navy:#1c3a5e; --navy-soft:#dbe3ec;
+  --brass:#a6763a; --brass-soft:#f0dfc0;
+  --ok:#3d6b4f; --ok-soft:#dfe9df;
+  --warn:#a6763a; --warn-soft:#f0dfc0;
+  --err:#a83e3e; --err-soft:#f2dcdc;
+  --reduction:#7a3fa0; --reduction-soft:#e9dcf2;
+  --zoom:1;
+}
+:root[data-theme="dark"]{
+  --bg:#1c1712; --paper:#221b16; --paper2:#2b211a; --line:#3d2e22;
+  --ink:#f1e6d8; --ink-soft:#b8a68e;
+  --navy:#e59677; --navy-soft:#3d2c20;
+  --brass:#cc785c; --brass-soft:#3d2318;
+  --ok:#7fb494; --ok-soft:#233329;
+  --warn:#e0a05a; --warn-soft:#3a2c12;
+  --err:#e0796f; --err-soft:#3a2320;
+  --reduction:#c98ee8; --reduction-soft:#33223d;
+}
+@media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important} }
+*{box-sizing:border-box; margin:0; padding:0}
+html{font-size:calc(16px * var(--zoom))}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  min-height:100vh; line-height:1.55;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(166,118,58,.32), transparent 62%),
+    radial-gradient(ellipse 70% 50% at 90% 100%, rgba(28,58,94,.28), transparent 62%);
+}
+.container{max-width:1080px; margin:0 auto; padding:22px 18px 60px}
+
+.skip-link{position:absolute; left:-999px; top:auto}
+.skip-link:focus{left:12px; top:12px; z-index:200; background:var(--paper); padding:10px 16px; border-radius:8px; box-shadow:0 4px 16px rgba(30,20,10,.2)}
+
+header{
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  padding:20px 24px; margin-bottom:20px; background:var(--paper); border:1px solid var(--line); border-radius:4px;
+  box-shadow:0 2px 8px rgba(40,30,15,.08);
+}
+.brand{display:flex; align-items:center; gap:14px}
+.brand .icon{
+  width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:var(--navy-soft); font-size:1.4rem; border:1px solid var(--line);
+}
+.brand h1{font-size:1.4rem; font-weight:600; color:var(--ink)}
+.brand .sub{font-size:.78rem; color:var(--ink-soft)}
+
+.toolbar{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+.tool-group{display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:var(--paper2)}
+:root[data-theme="dark"] .tool-group{background:#332920; border-color:#4a3c2c}
+.tool-btn{border:none; background:transparent; color:var(--ink); padding:8px 12px; cursor:pointer; font-size:.9rem}
+.tool-btn:hover{background:var(--brass-soft)}
+.tool-btn:focus-visible{outline:2px solid var(--navy); outline-offset:-2px}
+.tool-group .tool-btn + .tool-btn{border-left:1px solid var(--line)}
+#zoomLevel{padding:8px 6px; font-size:.78rem; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+
+.btn-primary{
+  background:var(--navy); color:#fdf8ec; border:none; font-weight:600;
+  padding:11px 20px; border-radius:8px; cursor:pointer; font-size:.95rem;
+}
+.btn-primary:hover{filter:brightness(1.15)}
+.btn-primary:focus-visible{outline:2px solid var(--brass); outline-offset:2px}
+.btn-stop{background:var(--err)}
+.btn-pause{background:var(--warn)}
+.btn-secondary{
+  background:var(--paper2); color:var(--ink); border:1px solid var(--line); font-weight:600;
+  padding:9px 16px; border-radius:8px; cursor:pointer; font-size:.85rem;
+}
+.btn-secondary:hover{background:var(--brass-soft)}
+.btn-secondary:focus-visible{outline:2px solid var(--navy); outline-offset:2px}
+.btn-icon{background:transparent; border:none; cursor:pointer; color:var(--ink-soft); font-size:1rem; padding:4px 8px}
+.btn-icon:hover{color:var(--err)}
+.btn-icon:focus-visible{outline:2px solid var(--navy)}
+
+section, details.section{background:var(--paper); border:1px solid var(--line); border-radius:4px; padding:20px; margin-bottom:20px; box-shadow:0 1px 4px rgba(40,30,15,.06)}
+h2{font-size:1.05rem; margin-bottom:14px; color:var(--ink)}
+details.section summary{font-size:1.05rem; font-weight:600; color:var(--ink); cursor:pointer; list-style:none; display:flex; align-items:center; gap:8px}
+details.section summary::-webkit-details-marker{display:none}
+details.section summary::before{content:"▸"; color:var(--brass); font-size:.8rem; transition:transform .15s}
+details.section[open] summary::before{transform:rotate(90deg)}
+details.section summary:focus-visible{outline:2px solid var(--navy); outline-offset:2px}
+details.section[open] summary{margin-bottom:14px}
+details.section > *:not(summary):not(.hold-hint):not(.hint){margin-top:0}
+
+.timer-box{display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap}
+.timer-display{font-size:2.4rem; font-weight:700; font-variant-numeric:tabular-nums; color:var(--navy); min-width:180px}
+:root[data-theme="dark"] .timer-display{color:var(--brass)}
+.timer-controls{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+#timerToggle{position:relative; overflow:hidden; isolation:isolate}
+#timerToggle .hold-fill{position:absolute; left:0; top:0; bottom:0; width:0%; background:rgba(255,255,255,.4); z-index:0; pointer-events:none}
+#timerToggle.holding .hold-fill{width:100%; transition:width 900ms linear}
+#timerToggle .btn-label{position:relative; z-index:1}
+.hold-hint{font-size:.76rem; color:var(--ink-soft); margin-top:16px}
+
+.undo-toast{
+  position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(16px);
+  background:var(--ink); color:var(--bg); padding:12px 16px; border-radius:8px;
+  display:flex; gap:16px; align-items:center; font-size:.88rem;
+  opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:500;
+  box-shadow:0 8px 24px rgba(0,0,0,.35); max-width:90vw;
+}
+.undo-toast.show{opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto}
+.btn-undo{background:var(--brass); color:#fff; border:none; padding:7px 14px; border-radius:6px; cursor:pointer; font-weight:600; font-size:.85rem; flex-shrink:0}
+.btn-undo:hover{filter:brightness(1.1)}
+.btn-undo:focus-visible{outline:2px solid var(--bg); outline-offset:2px}
+
+select, input[type="text"], input[type="number"], input[type="date"], input[type="time"]{
+  background:var(--paper2); border:1px solid var(--line); color:var(--ink); padding:9px 12px; border-radius:6px; font-size:.9rem;
+}
+:root[data-theme="dark"] select, :root[data-theme="dark"] input{background:#332920; border-color:#4a3c2c}
+label{font-size:.78rem; color:var(--ink-soft); display:block; margin-bottom:4px}
+.field{display:flex; flex-direction:column; gap:2px}
+
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:20px}
+.stat{background:var(--paper); border:1px solid var(--line); border-top:3px solid var(--navy); border-radius:4px; padding:16px; box-shadow:0 1px 4px rgba(40,30,15,.06)}
+:root[data-theme="dark"] .stat{background:#332920; border-color:#4a3c2c}
+.stat .num{font-size:1.6rem; font-weight:700; color:var(--navy)}
+:root[data-theme="dark"] .stat .num{color:var(--brass)}
+.stat.ok-stat{border-top-color:var(--ok)}
+.stat.ok-stat .num{color:var(--ok)}
+.stat.warn-stat{border-top-color:var(--err)}
+.stat.warn-stat .num{color:var(--err)}
+.stat .lbl{font-size:.75rem; color:var(--ink-soft); margin-top:2px}
+
+.settings-row{display:flex; gap:14px; flex-wrap:wrap; align-items:end}
+
+.manual-form{display:flex; gap:10px; flex-wrap:wrap; align-items:end}
+.filter-row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center}
+
+table{width:100%; border-collapse:collapse; font-size:.88rem}
+th, td{text-align:left; padding:9px 8px; border-bottom:1px solid var(--line)}
+th{color:var(--ink-soft); font-weight:600; font-size:.78rem; text-transform:uppercase; letter-spacing:.03em}
+tbody tr:hover{background:var(--brass-soft)}
+.empty{text-align:center; padding:40px 20px; color:var(--ink-soft); border:1px dashed var(--line); border-radius:4px}
+
+.pos{color:var(--ok); font-weight:600}
+.neg{color:var(--err); font-weight:600}
+
+.hint{font-size:.78rem; color:var(--ink-soft); margin-top:18px; padding:10px 12px; background:var(--paper2); border-radius:6px; border:1px solid var(--line)}
+
+footer{text-align:center; font-size:.78rem; color:var(--ink-soft); margin-top:30px}
+
+@media (max-width:640px){
+  .timer-display{font-size:1.8rem}
+  header{padding:16px}
+  .container{padding:14px 10px 40px}
+}
+
+#printArea{display:none}
+@media print{
+  body *{visibility:hidden}
+  #printArea, #printArea *{visibility:visible}
+  #printArea{display:block; position:absolute; left:0; top:0; width:100%; padding:0; color:#000; background:#fff}
+  #printArea h1{font-size:1.3rem; margin-bottom:4px}
+  #printArea .meta{font-size:.85rem; margin-bottom:14px; color:#333}
+  #printArea .meta div{margin-bottom:2px}
+  #printArea table{width:100%; border-collapse:collapse; font-size:.85rem}
+  #printArea th, #printArea td{border:1px solid #999; padding:5px 7px; text-align:left}
+  #printArea th{background:#eee}
+  #printArea tfoot td{font-weight:700; border-top:2px solid #000}
+  #printArea .sign-row{margin-top:50px; display:flex; justify-content:space-between; font-size:.85rem}
+  #printArea .sign-line{border-top:1px solid #000; width:220px; padding-top:4px; text-align:center}
+}
+
+.forgot-banner{
+  background:var(--err-soft); border:1px solid var(--err); color:var(--err); padding:12px 16px;
+  border-radius:8px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:.88rem;
+}
+.forgot-banner .btn-icon{color:var(--err)}
+.forgot-banner{flex-wrap:wrap}
+.sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap}
+.forgot-fix{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.forgot-fix input{background:var(--paper2); border:1px solid var(--line); color:var(--ink); padding:7px 10px; border-radius:6px; font-size:.82rem}
+
+.chart-period-row{display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap}
+.chart-period-btn{border:1px solid var(--line); background:var(--paper2); border-radius:6px; padding:6px 14px; cursor:pointer; font-size:.82rem; color:var(--ink); font-weight:600}
+.chart-period-btn:hover{background:var(--brass-soft)}
+.chart-period-btn.active{background:var(--navy); color:#fdf8ec; border-color:var(--navy)}
+:root[data-theme="dark"] .chart-period-btn.active{background:var(--brass); color:#1c1712}
+.chart-period-btn:focus-visible{outline:2px solid var(--navy); outline-offset:2px}
+
+.week-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(60px,1fr)); gap:8px; align-items:end}
+.week-bar-col{display:flex; flex-direction:column; align-items:center; gap:4px}
+.week-bar-track{width:100%; height:100px; display:flex; align-items:end; background:var(--paper2); border:1px solid var(--line); border-radius:6px; overflow:hidden}
+.week-bar{width:100%; background:var(--navy); border-radius:3px 3px 0 0; transition:height .3s}
+:root[data-theme="dark"] .week-bar{background:var(--brass)}
+.week-bar-col.today .week-bar-track{border-color:var(--brass); border-width:2px}
+.week-bar-hours{font-size:.82rem; font-weight:700; color:var(--ink)}
+.week-bar-label{font-size:.68rem; color:var(--ink-soft); text-transform:uppercase}
+.week-bar-date{font-size:.68rem; color:var(--ink-soft)}
+
+.backup-row{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
+
+.cal-nav{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px}
+.cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px}
+.cal-weekday{font-size:.68rem; color:var(--ink-soft); text-align:center; text-transform:uppercase; padding-bottom:2px}
+.cal-day{aspect-ratio:1; border:1px solid var(--line); border-left:4px solid var(--line); border-radius:6px; padding:5px; font-size:.72rem; display:flex; flex-direction:column; justify-content:space-between; background:var(--paper2)}
+.cal-day.empty{border-color:transparent; background:transparent}
+.cal-day .d-num{font-weight:700}
+.cal-day .d-hours{color:var(--ink-soft)}
+.cal-day.today{border-color:var(--brass); border-width:2px; border-left-width:4px}
+.cal-day.ok{background:var(--ok-soft); border-left-color:var(--ok)}
+.cal-day.neg{background:var(--err-soft); border-left-color:var(--err)}
+.cal-day.absence{background:var(--brass-soft); border-left-color:var(--brass)}
+.cal-day.holiday{background:var(--navy-soft); border-left-color:var(--navy)}
+.cal-day.reduction{background:var(--reduction-soft); border-left-color:var(--reduction)}
+.cal-day.holiday-auto{background:var(--navy-soft); opacity:.75; border-left-color:var(--navy); border-left-style:dashed}
+.cal-day .d-holiday-tag{font-size:.62rem; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.cal-day .d-bar-track{height:4px; background:var(--line); border-radius:2px; overflow:hidden; margin-top:3px}
+.cal-day .d-bar{height:100%; background:var(--ok)}
+.cal-day.neg .d-bar{background:var(--err)}
+.cal-day.reduction .d-bar{background:var(--reduction)}
+.cal-legend{display:flex; gap:14px; flex-wrap:wrap; font-size:.78rem; color:var(--ink-soft); margin-top:14px}
+.cal-legend span.dot{display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; vertical-align:middle}
+
+.job-chip{display:inline-flex; align-items:center; gap:8px; background:var(--paper2); border:1px solid var(--line); border-radius:20px; padding:6px 8px 6px 14px; font-size:.85rem}
+.job-chip button{background:none; border:none; color:var(--err); cursor:pointer; font-size:.9rem; padding:2px 4px}
+.tpl-day-btn{border:1px solid var(--line); background:var(--paper2); border-radius:6px; padding:8px 12px; cursor:pointer; font-size:.85rem; color:var(--ink); font-weight:600}
+.tpl-day-btn.active{background:var(--navy); color:#fdf8ec; border-color:var(--navy)}
+:root[data-theme="dark"] .tpl-day-btn.active{background:var(--brass); color:#1c1712}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Zum Inhalt springen</a>
+
+<div class="container">
+  <header>
+    <div class="brand">
+      <div class="icon" aria-hidden="true">🧭</div>
+      <div>
+        <h1>ZeitKompass Mitarbeiter</h1>
+        <div class="sub">Kommen, Gehen, Pause — Überstunden im Blick</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="tool-group" role="group" aria-label="Schriftgröße">
+        <button class="tool-btn" id="zoomOut" aria-label="Schrift verkleinern">A−</button>
+        <span id="zoomLevel" aria-live="polite">100%</span>
+        <button class="tool-btn" id="zoomIn" aria-label="Schrift vergrößern">A+</button>
+      </div>
+      <button class="tool-btn" id="themeToggle" aria-label="Hell/Dunkel-Modus umschalten" style="border:1px solid var(--line); border-radius:8px; background:var(--paper2)">🌓 Hell/Dunkel</button>
+      <button class="btn-secondary" id="exportCsv" aria-label="Alle Einträge als CSV exportieren">⬇ CSV-Export</button>
+      <button class="btn-secondary" id="printBtn" aria-label="Stundennachweis drucken oder als PDF speichern">🖨 Drucken / PDF</button>
+      <a class="btn-secondary" href="HANDBUCH.html" style="text-decoration:none; display:inline-flex; align-items:center">📖 Handbuch</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <details class="section" open>
+      <summary>Stempeluhr</summary>
+      <div class="timer-box">
+        <div>
+          <div class="timer-display" id="timerDisplay" role="timer" aria-live="off">00:00:00</div>
+          <div class="sub" id="timerStatus" style="font-size:.82rem; color:var(--ink-soft)">Nicht eingestempelt</div>
+        </div>
+        <div class="field">
+          <label for="timerManualBreak">Pause zusätzlich (Min.)</label>
+          <input type="number" id="timerManualBreak" min="0" step="5" value="0" style="width:90px" aria-label="Zusätzliche Pause in Minuten, wird beim Ausstempeln zur Live-Pause dazugerechnet">
+        </div>
+        <div class="field" style="flex:1; min-width:180px">
+          <label for="timerNote">Notiz zum Tag (optional)</label>
+          <input type="text" id="timerNote" placeholder="z.B. Homeoffice, Kundentermin" aria-label="Notiz zum heutigen Arbeitstag">
+        </div>
+        <div class="timer-controls">
+          <button class="btn-primary" id="timerToggle" aria-label="Einstempeln">
+            <span class="hold-fill" aria-hidden="true"></span>
+            <span class="btn-label">▶ Kommen</span>
+          </button>
+          <button class="btn-secondary btn-pause" id="pauseToggle" aria-label="Pause starten" disabled>⏸ Pause</button>
+        </div>
+      </div>
+      <div class="hold-hint" id="holdHint" style="display:none">Zum Ausstempeln Button ca. 1 Sek. gedrückt halten — schützt vor versehentlichem Stoppen.</div>
+      <div class="hint">Hinweis (ArbZG): ab 6 Std. Arbeitszeit sind 30 Min. Pause vorgeschrieben, ab 9 Std. 45 Min. — bitte selbst im Blick behalten, die App rechnet nur, was du als Pause einträgst.</div>
+    </details>
+
+    <div id="undoToast" class="undo-toast" role="status" aria-live="polite">
+      <span id="undoToastMsg"></span>
+      <button type="button" id="undoToastBtn" class="btn-undo">Rückgängig</button>
+    </div>
+
+    <div id="forgotBanner" class="forgot-banner" role="alert" style="display:none">
+      <span id="forgotBannerMsg"></span>
+      <div class="forgot-fix">
+        <label for="forgotEndInput" class="sr-only">Tatsächliche Endzeit</label>
+        <input type="time" id="forgotEndInput" aria-label="Tatsächliche Endzeit (Uhrzeit) eintragen">
+        <button type="button" id="forgotFixBtn" class="btn-secondary">Damit stoppen</button>
+      </div>
+      <button type="button" id="forgotDismiss" class="btn-icon" aria-label="Hinweis schließen">✕</button>
+    </div>
+
+    <div class="stats" id="statsRow" aria-label="Zusammenfassung Arbeitszeit"></div>
+
+    <details class="section">
+      <summary>Übersicht</summary>
+      <div class="chart-period-row" role="group" aria-label="Zeitraum wählen">
+        <button type="button" class="chart-period-btn" data-period="day">Tage</button>
+        <button type="button" class="chart-period-btn" data-period="week">Wochen</button>
+        <button type="button" class="chart-period-btn" data-period="month">Monate</button>
+        <button type="button" class="chart-period-btn" data-period="year">Jahre</button>
+      </div>
+      <div id="weekGrid" class="week-grid" aria-label="Stunden-Diagramm"></div>
+    </details>
+
+    <details class="section">
+      <summary>Kalender</summary>
+      <div class="cal-nav">
+        <button type="button" class="btn-secondary" id="calPrev" aria-label="Vorheriger Monat">‹ Zurück</button>
+        <div id="calLabel" style="font-weight:600"></div>
+        <button type="button" class="btn-secondary" id="calNext" aria-label="Nächster Monat">Weiter ›</button>
+      </div>
+      <div id="calGrid" class="cal-grid" aria-label="Monatskalender"></div>
+      <div class="cal-legend">
+        <span><span class="dot" style="background:var(--ok-soft); border:2px solid var(--ok)"></span>Plus</span>
+        <span><span class="dot" style="background:var(--err-soft); border:2px solid var(--err)"></span>Minus</span>
+        <span><span class="dot" style="background:var(--brass-soft); border:2px solid var(--brass)"></span>Urlaub/Krank</span>
+        <span><span class="dot" style="background:var(--navy-soft); border:2px solid var(--navy)"></span>Feiertag</span>
+        <span><span class="dot" style="background:var(--reduction-soft); border:2px solid var(--reduction)"></span>Überstundenabbau</span>
+      </div>
+    </details>
+
+    <details class="section">
+      <summary>Einstellungen</summary>
+      <div class="settings-row">
+        <div class="field">
+          <label for="employeeName">Name</label>
+          <input type="text" id="employeeName" placeholder="Vor- und Nachname" style="width:200px">
+        </div>
+        <div class="field">
+          <label for="workDays">Arbeitstage pro Woche</label>
+          <input type="number" id="workDays" min="1" max="7" step="1" style="width:90px">
+        </div>
+        <div class="field">
+          <label for="targetHours">Soll-Arbeitszeit pro Tag (Std.)</label>
+          <input type="number" id="targetHours" min="0" max="24" step="0.25" style="width:110px">
+        </div>
+        <div class="field">
+          <label for="roundingMin">Rundung der Arbeitszeit</label>
+          <select id="roundingMin" aria-label="Rundung der berechneten Arbeitszeit">
+            <option value="0">Keine Rundung</option>
+            <option value="5">Auf 5 Minuten</option>
+            <option value="10">Auf 10 Minuten</option>
+            <option value="15">Auf 15 Minuten</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="startBalance">Start-Überstundensaldo (Std.)</label>
+          <input type="number" id="startBalance" step="0.25" style="width:120px" aria-label="Überstundensaldo, das schon vor Nutzung dieser App bestand">
+        </div>
+        <div class="field">
+          <label for="vacationDaysPerYear">Urlaubstage pro Jahr</label>
+          <input type="number" id="vacationDaysPerYear" min="0" step="1" style="width:90px">
+        </div>
+      </div>
+      <div class="settings-row" style="margin-top:14px">
+        <div class="field">
+          <label for="bundesland">Bundesland (für Feiertage)</label>
+          <select id="bundesland">
+            <option value="">— nicht ausgewählt —</option>
+            <option value="BW">Baden-Württemberg</option>
+            <option value="BY">Bayern</option>
+            <option value="BE">Berlin</option>
+            <option value="BB">Brandenburg</option>
+            <option value="HB">Bremen</option>
+            <option value="HH">Hamburg</option>
+            <option value="HE">Hessen</option>
+            <option value="MV">Mecklenburg-Vorpommern</option>
+            <option value="NI">Niedersachsen</option>
+            <option value="NW">Nordrhein-Westfalen</option>
+            <option value="RP">Rheinland-Pfalz</option>
+            <option value="SL">Saarland</option>
+            <option value="SN">Sachsen</option>
+            <option value="ST">Sachsen-Anhalt</option>
+            <option value="SH">Schleswig-Holstein</option>
+            <option value="TH">Thüringen</option>
+          </select>
+        </div>
+        <button type="button" class="btn-secondary" id="addHolidaysBtn">📅 Feiertage dieses Jahr eintragen</button>
+        <div class="field">
+          <label for="reminderTime">Erinnerung fürs Einstempeln</label>
+          <input type="time" id="reminderTime" style="width:110px">
+        </div>
+        <div class="field" style="justify-content:flex-end">
+          <label style="display:flex; align-items:center; gap:6px; margin-bottom:0"><input type="checkbox" id="reminderEnabled" style="width:auto"> Aktiv</label>
+        </div>
+      </div>
+      <div class="settings-row" style="margin-top:14px">
+        <div class="field" style="justify-content:flex-end">
+          <label style="display:flex; align-items:center; gap:6px; margin-bottom:0"><input type="checkbox" id="multiJobToggle" style="width:auto"> Mehrere Arbeitgeber/Jobs</label>
+        </div>
+      </div>
+      <div id="jobManager" style="display:none; margin-top:10px">
+        <div class="settings-row">
+          <div class="field">
+            <label for="newJobName">Neuer Job</label>
+            <input type="text" id="newJobName" placeholder="z.B. Hauptjob, Nebenjob" style="width:200px">
+          </div>
+          <button type="button" class="btn-secondary" id="addJobBtn">+ Job hinzufügen</button>
+        </div>
+        <div id="jobList" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px"></div>
+      </div>
+      <div class="backup-row">
+        <button class="btn-secondary" id="backupExport">⬇ Backup exportieren</button>
+        <label class="btn-secondary" for="backupImportFile" style="cursor:pointer; display:inline-flex; align-items:center">⬆ Backup importieren
+          <input type="file" id="backupImportFile" accept="application/json" style="display:none">
+        </label>
+      </div>
+    </details>
+
+    <details class="section">
+      <summary>Wochenvorlage</summary>
+      <div class="settings-row" id="templateDaysRow" role="group" aria-label="Wochentage der Vorlage"></div>
+      <div class="settings-row" style="margin-top:14px">
+        <div class="field">
+          <label for="templateStart">Kommen</label>
+          <input type="time" id="templateStart" style="width:110px">
+        </div>
+        <div class="field">
+          <label for="templateEnd">Gehen</label>
+          <input type="time" id="templateEnd" style="width:110px">
+        </div>
+        <div class="field">
+          <label for="templateBreak">Pause (Min.)</label>
+          <input type="number" id="templateBreak" min="0" step="5" style="width:90px">
+        </div>
+        <div class="field">
+          <label for="templateWeekStart">Beliebiger Tag der Zielwoche</label>
+          <input type="date" id="templateWeekStart">
+        </div>
+        <button type="button" class="btn-secondary" id="applyTemplateBtn">📋 Vorlage für diese Woche eintragen</button>
+      </div>
+      <div class="hint">Trägt für die angehakten Wochentage der Woche, in der das Datum liegt, automatisch Kommen/Gehen/Pause ein. Tage, an denen schon ein Eintrag existiert, werden übersprungen.</div>
+    </details>
+
+    <details class="section">
+      <summary>Zeit manuell nachtragen</summary>
+      <div class="shift-presets" role="group" aria-label="Schicht-Vorlagen" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px">
+        <button type="button" class="btn-secondary" data-shift-start="06:00" data-shift-end="14:00">🌅 Früh 06–14</button>
+        <button type="button" class="btn-secondary" data-shift-start="14:00" data-shift-end="22:00">🌇 Spät 14–22</button>
+        <button type="button" class="btn-secondary" data-shift-start="22:00" data-shift-end="06:00">🌙 Nacht 22–06</button>
+      </div>
+      <form class="manual-form" id="manualForm">
+        <div class="field">
+          <label for="manDate">Datum</label>
+          <input type="date" id="manDate" required aria-required="true">
+        </div>
+        <div class="field" id="manDateToField" style="display:none">
+          <label for="manDateTo">Bis (mehrere Tage)</label>
+          <input type="date" id="manDateTo">
+        </div>
+        <div class="field" id="manJobField" style="display:none">
+          <label for="manJob">Job</label>
+          <select id="manJob" style="width:150px"></select>
+        </div>
+        <div class="field">
+          <label for="manType">Art</label>
+          <select id="manType" style="width:150px">
+            <option value="work">Arbeit</option>
+            <option value="vacation">Urlaub</option>
+            <option value="sick">Krankheit</option>
+            <option value="overtime_reduction">Überstundenabbau</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="manStart">Kommen</label>
+          <input type="time" id="manStart">
+        </div>
+        <div class="field">
+          <label for="manEnd">Gehen</label>
+          <input type="time" id="manEnd">
+        </div>
+        <div class="field">
+          <label for="manBreak">Pause (Min.)</label>
+          <input type="number" id="manBreak" min="0" step="5" value="0" style="width:90px">
+        </div>
+        <div class="field" style="flex:1; min-width:160px">
+          <label for="manNote">Notiz</label>
+          <input type="text" id="manNote" placeholder="optional">
+        </div>
+        <button type="submit" class="btn-secondary">+ Eintrag hinzufügen</button>
+      </form>
+    </details>
+
+    <details class="section" open>
+      <summary>Einträge</summary>
+      <div class="filter-row">
+        <div class="field">
+          <label for="filterFrom">Von</label>
+          <input type="date" id="filterFrom" aria-label="Zeitraum von">
+        </div>
+        <div class="field">
+          <label for="filterTo">Bis</label>
+          <input type="date" id="filterTo" aria-label="Zeitraum bis">
+        </div>
+        <div class="field" id="filterJobField" style="display:none">
+          <label for="filterJob">Job</label>
+          <select id="filterJob" aria-label="Nach Job filtern"><option value="">Alle Jobs</option></select>
+        </div>
+        <button class="btn-secondary" id="filterReset" style="align-self:end">Filter zurücksetzen</button>
+        <div class="field" style="margin-left:auto">
+          <label for="yearPrintYear">Jahresabschluss (Jahr)</label>
+          <input type="number" id="yearPrintYear" style="width:90px">
+        </div>
+        <button type="button" class="btn-secondary" id="yearPrintBtn" style="align-self:end">📄 Jahresabschluss drucken</button>
+      </div>
+      <div id="entriesContainer"></div>
+    </details>
+
+    <footer>
+      ZeitKompass Mitarbeiter — läuft komplett lokal in deinem Browser. Keine Daten verlassen dein Gerät.
+    </footer>
+  </main>
+</div>
+
+<div id="printArea" aria-hidden="true"></div>
+
+<script>
+(function(){
+  "use strict";
+  var STORAGE_KEY = "zeitkompass_mitarbeiter_data_v1";
+
+  var state = loadState();
+
+  function loadState(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        var parsed = JSON.parse(raw);
+        if(parsed.targetHours === undefined) parsed.targetHours = 8;
+        if(parsed.workDays === undefined) parsed.workDays = 5;
+        if(parsed.employeeName === undefined) parsed.employeeName = "";
+        if(parsed.roundingMin === undefined) parsed.roundingMin = 0;
+        if(parsed.chartPeriod === undefined) parsed.chartPeriod = "day";
+        if(parsed.startBalanceHours === undefined) parsed.startBalanceHours = 0;
+        if(parsed.vacationDaysPerYear === undefined) parsed.vacationDaysPerYear = 30;
+        if(parsed.bundesland === undefined) parsed.bundesland = "";
+        if(parsed.reminderEnabled === undefined) parsed.reminderEnabled = false;
+        if(parsed.reminderTime === undefined) parsed.reminderTime = "09:00";
+        if(parsed.calendarMonth === undefined) parsed.calendarMonth = null;
+        if(parsed.multiJobEnabled === undefined) parsed.multiJobEnabled = false;
+        if(parsed.jobs === undefined) parsed.jobs = [];
+        if(parsed.weekTemplate === undefined) parsed.weekTemplate = { days: [true,true,true,true,true,false,false], start: "08:00", end: "16:00", breakMin: 30 };
+        return parsed;
+      }
+    }catch(e){}
+    return {
+      entries: [], running: null, zoom: 1, theme: null, targetHours: 8, workDays: 5, employeeName: "",
+      roundingMin: 0, chartPeriod: "day", startBalanceHours: 0, vacationDaysPerYear: 30, bundesland: "",
+      reminderEnabled: false, reminderTime: "09:00", calendarMonth: null,
+      multiJobEnabled: false, jobs: [],
+      weekTemplate: { days: [true,true,true,true,true,false,false], start: "08:00", end: "16:00", breakMin: 30 }
+    };
+  }
+  function saveState(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+  // ---------- Theme & Zoom ----------
+  function applyTheme(){
+    var root = document.documentElement;
+    if(state.theme === "dark") root.setAttribute("data-theme","dark");
+    else if(state.theme === "light") root.setAttribute("data-theme","light");
+    else root.removeAttribute("data-theme");
+  }
+  function applyZoom(){
+    document.documentElement.style.setProperty("--zoom", state.zoom);
+    document.getElementById("zoomLevel").textContent = Math.round(state.zoom*100) + "%";
+  }
+  document.getElementById("themeToggle").addEventListener("click", function(){
+    var cur = state.theme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    state.theme = cur === "dark" ? "light" : "dark";
+    applyTheme(); saveState();
+  });
+  document.getElementById("zoomIn").addEventListener("click", function(){
+    state.zoom = Math.min(1.6, +(state.zoom + 0.1).toFixed(2)); applyZoom(); saveState();
+  });
+  document.getElementById("zoomOut").addEventListener("click", function(){
+    state.zoom = Math.max(0.7, +(state.zoom - 0.1).toFixed(2)); applyZoom(); saveState();
+  });
+
+  // ---------- Helpers ----------
+  function pad(n){ return n < 10 ? "0"+n : ""+n; }
+  function fmtHMS(seconds){
+    seconds = Math.max(0, Math.floor(seconds));
+    var h = Math.floor(seconds/3600), m = Math.floor((seconds%3600)/60), s = seconds%60;
+    return pad(h)+":"+pad(m)+":"+pad(s);
+  }
+  function fmtHours(seconds){ return (seconds/3600).toFixed(2); }
+  function fmtSigned(hours){
+    var s = hours >= 0 ? "+" : "−";
+    return s + Math.abs(hours).toFixed(2) + " h";
+  }
+  function todayStr(){ var d = new Date(); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function isAbsence(e){ return e.type === "vacation" || e.type === "sick" || e.type === "holiday"; }
+  function hasNoTimes(e){ return e.type && e.type !== "work"; }
+  function typeLabel(t){
+    return t === "vacation" ? "Urlaub" : t === "sick" ? "Krankheit" : t === "holiday" ? "Feiertag" :
+      t === "overtime_reduction" ? "Überstundenabbau" : "Arbeit";
+  }
+  function entryNetSeconds(e){
+    if(e.type === "overtime_reduction") return 0;
+    if(isAbsence(e)) return state.targetHours * 3600;
+    var start = new Date(e.date+"T"+e.start+":00");
+    var end = new Date(e.date+"T"+e.end+":00");
+    var diff = (end - start)/1000;
+    if(diff < 0) diff += 24*3600;
+    diff -= (e.breakMin||0) * 60;
+    diff = Math.max(0, diff);
+    if(state.roundingMin > 0){
+      var stepSec = state.roundingMin * 60;
+      diff = Math.round(diff/stepSec) * stepSec;
+    }
+    return diff;
+  }
+  function startOfWeek(d){
+    var date = new Date(d); var day = (date.getDay()+6)%7;
+    date.setDate(date.getDate()-day); date.setHours(0,0,0,0); return date;
+  }
+  function countWorkedDaysSince(sinceDate){
+    var days = new Set();
+    state.entries.forEach(function(e){
+      if(new Date(e.date+"T00:00:00") >= sinceDate) days.add(e.date);
+    });
+    return days.size;
+  }
+
+  // ---------- Settings ----------
+  var targetInput = document.getElementById("targetHours");
+  var workDaysInput = document.getElementById("workDays");
+  var nameInput = document.getElementById("employeeName");
+  targetInput.value = state.targetHours;
+  workDaysInput.value = state.workDays;
+  nameInput.value = state.employeeName || "";
+  targetInput.addEventListener("change", function(){
+    state.targetHours = parseFloat(targetInput.value) || 0;
+    saveState(); renderStats();
+  });
+  workDaysInput.addEventListener("change", function(){
+    state.workDays = parseInt(workDaysInput.value,10) || 5;
+    saveState(); renderStats();
+  });
+  nameInput.addEventListener("change", function(){
+    state.employeeName = nameInput.value.trim();
+    saveState();
+  });
+  var roundingSelect = document.getElementById("roundingMin");
+  roundingSelect.value = state.roundingMin || 0;
+  roundingSelect.addEventListener("change", function(){
+    state.roundingMin = parseInt(roundingSelect.value,10) || 0;
+    saveState(); renderAll();
+  });
+
+  var startBalanceInput = document.getElementById("startBalance");
+  var vacationDaysInput = document.getElementById("vacationDaysPerYear");
+  var bundeslandSelect = document.getElementById("bundesland");
+  var reminderTimeInput = document.getElementById("reminderTime");
+  var reminderEnabledInput = document.getElementById("reminderEnabled");
+  startBalanceInput.value = state.startBalanceHours;
+  vacationDaysInput.value = state.vacationDaysPerYear;
+  bundeslandSelect.value = state.bundesland || "";
+  reminderTimeInput.value = state.reminderTime || "09:00";
+  reminderEnabledInput.checked = !!state.reminderEnabled;
+  startBalanceInput.addEventListener("change", function(){
+    state.startBalanceHours = parseFloat(startBalanceInput.value) || 0;
+    saveState(); renderStats();
+  });
+  vacationDaysInput.addEventListener("change", function(){
+    state.vacationDaysPerYear = parseInt(vacationDaysInput.value,10) || 0;
+    saveState(); renderStats();
+  });
+  bundeslandSelect.addEventListener("change", function(){
+    state.bundesland = bundeslandSelect.value;
+    saveState();
+  });
+  reminderTimeInput.addEventListener("change", function(){
+    state.reminderTime = reminderTimeInput.value || "09:00";
+    saveState();
+  });
+  reminderEnabledInput.addEventListener("change", function(){
+    state.reminderEnabled = reminderEnabledInput.checked;
+    saveState();
+    if(state.reminderEnabled && "Notification" in window && Notification.permission === "default"){
+      Notification.requestPermission();
+    }
+  });
+
+  // ---------- Mehrere Arbeitgeber/Jobs ----------
+  var multiJobToggle = document.getElementById("multiJobToggle");
+  var jobManager = document.getElementById("jobManager");
+  var manJobField = document.getElementById("manJobField");
+  var manJobSelect = document.getElementById("manJob");
+  var filterJobField = document.getElementById("filterJobField");
+  var filterJobSelect = document.getElementById("filterJob");
+  multiJobToggle.checked = !!state.multiJobEnabled;
+
+  function applyMultiJobVisibility(){
+    var on = !!state.multiJobEnabled;
+    jobManager.style.display = on ? "block" : "none";
+    manJobField.style.display = on ? "flex" : "none";
+    filterJobField.style.display = on ? "flex" : "none";
+  }
+  function jobName(jobId){
+    var job = state.jobs.filter(function(j){ return j.id === jobId; })[0];
+    return job ? job.name : "";
+  }
+  function renderJobList(){
+    var list = document.getElementById("jobList");
+    list.innerHTML = state.jobs.map(function(j){
+      return '<span class="job-chip">'+escapeHtml(j.name)+' <button type="button" data-del-job="'+j.id+'" aria-label="Job '+escapeHtml(j.name)+' löschen">✕</button></span>';
+    }).join("");
+    list.querySelectorAll("[data-del-job]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var id = btn.getAttribute("data-del-job");
+        state.jobs = state.jobs.filter(function(j){ return j.id !== id; });
+        saveState(); renderJobList(); refreshJobSelects(); renderEntries();
+      });
+    });
+  }
+  function refreshJobSelects(){
+    var opts = state.jobs.map(function(j){ return '<option value="'+j.id+'">'+escapeHtml(j.name)+'</option>'; }).join("");
+    manJobSelect.innerHTML = opts;
+    filterJobSelect.innerHTML = '<option value="">Alle Jobs</option>' + opts;
+  }
+  multiJobToggle.addEventListener("change", function(){
+    state.multiJobEnabled = multiJobToggle.checked;
+    saveState(); applyMultiJobVisibility(); renderEntries();
+  });
+  document.getElementById("addJobBtn").addEventListener("click", function(){
+    var input = document.getElementById("newJobName");
+    var name = input.value.trim();
+    if(!name) return;
+    state.jobs.push({ id: uid(), name: name });
+    input.value = "";
+    saveState(); renderJobList(); refreshJobSelects();
+  });
+  filterJobSelect.addEventListener("change", renderEntries);
+  renderJobList();
+  refreshJobSelects();
+  applyMultiJobVisibility();
+
+  // ---------- Feiertage ----------
+  function easterDate(year){
+    var a=year%19, b=Math.floor(year/100), c=year%100, d=Math.floor(b/4), e=b%4,
+        f=Math.floor((b+8)/25), g=Math.floor((b-f+1)/3),
+        h=(19*a+b-d-g+15)%30, i=Math.floor(c/4), k=c%4,
+        l=(32+2*e+2*i-h-k)%7, m=Math.floor((a+11*h+22*l)/451),
+        month=Math.floor((h+l-7*m+114)/31), day=((h+l-7*m+114)%31)+1;
+    return new Date(year, month-1, day);
+  }
+  function addDays(d,n){ var r = new Date(d); r.setDate(r.getDate()+n); return r; }
+  function getHolidays(year, bl){
+    var easter = easterDate(year);
+    var list = [
+      {date: year+"-01-01", name:"Neujahr"},
+      {date: fmtDateStr(addDays(easter,-2)), name:"Karfreitag"},
+      {date: fmtDateStr(addDays(easter,1)), name:"Ostermontag"},
+      {date: year+"-05-01", name:"Tag der Arbeit"},
+      {date: fmtDateStr(addDays(easter,39)), name:"Christi Himmelfahrt"},
+      {date: fmtDateStr(addDays(easter,50)), name:"Pfingstmontag"},
+      {date: year+"-10-03", name:"Tag der Deutschen Einheit"},
+      {date: year+"-12-25", name:"1. Weihnachtstag"},
+      {date: year+"-12-26", name:"2. Weihnachtstag"}
+    ];
+    if(["BW","BY","ST"].indexOf(bl)>=0) list.push({date: year+"-01-06", name:"Heilige Drei Könige"});
+    if(["BW","BY","HE","NW","RP","SL"].indexOf(bl)>=0) list.push({date: fmtDateStr(addDays(easter,60)), name:"Fronleichnam"});
+    if(bl==="SL") list.push({date: year+"-08-15", name:"Mariä Himmelfahrt"});
+    if(bl==="TH") list.push({date: year+"-09-20", name:"Weltkindertag"});
+    if(["BB","MV","SN","ST","TH","HB","HH","NI","SH"].indexOf(bl)>=0) list.push({date: year+"-10-31", name:"Reformationstag"});
+    if(["BW","BY","NW","RP","SL"].indexOf(bl)>=0) list.push({date: year+"-11-01", name:"Allerheiligen"});
+    if(bl==="SN"){
+      var nov23 = new Date(year,10,23);
+      var offset = (nov23.getDay() - 3 + 7) % 7;
+      list.push({date: fmtDateStr(addDays(nov23,-offset)), name:"Buß- und Bettag"});
+    }
+    if(bl==="BE") list.push({date: year+"-03-08", name:"Internationaler Frauentag"});
+    if(bl==="BB"){
+      list.push({date: fmtDateStr(easter), name:"Ostersonntag"});
+      list.push({date: fmtDateStr(addDays(easter,49)), name:"Pfingstsonntag"});
+    }
+    return list;
+  }
+  document.getElementById("addHolidaysBtn").addEventListener("click", function(){
+    if(!state.bundesland){ alert("Bitte zuerst ein Bundesland auswählen."); return; }
+    var year = new Date().getFullYear();
+    var holidays = getHolidays(year, state.bundesland);
+    var existing = {};
+    state.entries.forEach(function(e){ existing[e.date] = true; });
+    var added = 0;
+    holidays.forEach(function(h){
+      var dow = new Date(h.date+"T00:00:00").getDay();
+      if(dow === 0 || dow === 6) return;
+      if(existing[h.date]) return;
+      state.entries.push({ id: uid(), date: h.date, type: "holiday", start: "", end: "", breakMin: 0, note: h.name });
+      existing[h.date] = true;
+      added++;
+    });
+    saveState(); renderAll();
+    alert(added + " Feiertage für " + year + " eingetragen.");
+  });
+
+  // ---------- Erinnerung fürs Einstempeln ----------
+  var reminderShownDate = null;
+  function checkReminder(){
+    if(!state.reminderEnabled || !state.reminderTime) return;
+    if(state.running) return;
+    var todayS = todayStr();
+    if(reminderShownDate === todayS) return;
+    var now = new Date();
+    var hm = pad(now.getHours())+":"+pad(now.getMinutes());
+    if(hm < state.reminderTime) return;
+    if(state.entries.some(function(e){ return e.date === todayS; })) { reminderShownDate = todayS; return; }
+    reminderShownDate = todayS;
+    if("Notification" in window && Notification.permission === "granted"){
+      new Notification("ZeitKompass Mitarbeiter", { body: "Nicht vergessen einzustempeln!" });
+    }
+  }
+
+  // ---------- Backup Export/Import ----------
+  document.getElementById("backupExport").addEventListener("click", function(){
+    var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "zeitkompass-mitarbeiter-backup-"+todayStr()+".json";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+  document.getElementById("backupImportFile").addEventListener("change", function(ev){
+    var file = ev.target.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      var imported;
+      try{ imported = JSON.parse(reader.result); }catch(e){ alert("Diese Datei ist kein gültiges ZeitKompass-Backup."); return; }
+      if(!imported || !Array.isArray(imported.entries)){ alert("Diese Datei ist kein gültiges ZeitKompass-Backup."); return; }
+      if(!confirm("Backup einspielen? Das überschreibt alle aktuellen Daten in dieser App.")) return;
+      state = imported;
+      if(state.roundingMin === undefined) state.roundingMin = 0;
+      if(state.targetHours === undefined) state.targetHours = 8;
+      if(state.workDays === undefined) state.workDays = 5;
+      if(state.employeeName === undefined) state.employeeName = "";
+      if(state.startBalanceHours === undefined) state.startBalanceHours = 0;
+      if(state.vacationDaysPerYear === undefined) state.vacationDaysPerYear = 30;
+      if(state.bundesland === undefined) state.bundesland = "";
+      if(state.reminderEnabled === undefined) state.reminderEnabled = false;
+      if(state.reminderTime === undefined) state.reminderTime = "09:00";
+      if(state.calendarMonth === undefined) state.calendarMonth = null;
+      if(state.multiJobEnabled === undefined) state.multiJobEnabled = false;
+      if(state.jobs === undefined) state.jobs = [];
+      if(state.weekTemplate === undefined) state.weekTemplate = { days: [true,true,true,true,true,false,false], start: "08:00", end: "16:00", breakMin: 30 };
+      saveState();
+      targetInput.value = state.targetHours;
+      workDaysInput.value = state.workDays;
+      nameInput.value = state.employeeName;
+      roundingSelect.value = state.roundingMin;
+      startBalanceInput.value = state.startBalanceHours;
+      vacationDaysInput.value = state.vacationDaysPerYear;
+      bundeslandSelect.value = state.bundesland;
+      reminderTimeInput.value = state.reminderTime;
+      reminderEnabledInput.checked = !!state.reminderEnabled;
+      multiJobToggle.checked = !!state.multiJobEnabled;
+      renderJobList();
+      applyMultiJobVisibility();
+      applyTheme(); applyZoom(); renderAll();
+    };
+    reader.readAsText(file);
+    ev.target.value = "";
+  });
+
+  // ---------- Vergessen auszustempeln ----------
+  function buildOverrideEndFromTime(timeStr){
+    var parts = timeStr.split(":");
+    var d = new Date(state.running.startedAt);
+    d.setHours(parseInt(parts[0],10), parseInt(parts[1],10), 0, 0);
+    if(d.getTime() <= state.running.startedAt) d.setDate(d.getDate()+1);
+    return d;
+  }
+  var forgotWarningShown = false;
+  function checkForgotWarning(){
+    var banner = document.getElementById("forgotBanner");
+    if(state.running){
+      var hoursSince = (Date.now() - state.running.startedAt) / 3600000;
+      if(hoursSince > 12){
+        document.getElementById("forgotBannerMsg").textContent =
+          "⚠️ Du bist seit " + hoursSince.toFixed(1) + " Std. eingestempelt — hast du vergessen auszustempeln?";
+        if(!forgotWarningShown){
+          var suggestedEnd = new Date(state.running.startedAt + state.targetHours*3600000);
+          document.getElementById("forgotEndInput").value = pad(suggestedEnd.getHours())+":"+pad(suggestedEnd.getMinutes());
+          forgotWarningShown = true;
+        }
+        banner.style.display = "flex";
+        return;
+      }
+    }
+    forgotWarningShown = false;
+    banner.style.display = "none";
+  }
+  document.getElementById("forgotDismiss").addEventListener("click", function(){
+    document.getElementById("forgotBanner").style.display = "none";
+  });
+  document.getElementById("forgotFixBtn").addEventListener("click", function(){
+    var val = document.getElementById("forgotEndInput").value;
+    if(!val){ alert("Bitte eine Endzeit auswählen."); return; }
+    var endDate = buildOverrideEndFromTime(val);
+    doStop(endDate);
+    document.getElementById("forgotBanner").style.display = "none";
+    forgotWarningShown = false;
+  });
+
+  // ---------- Wochendiagramm ----------
+  var MONTH_NAMES_SHORT = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+  function fmtDateStr(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function sumHoursInRange(fromStr, toStr){
+    return state.entries.filter(function(e){ return e.date >= fromStr && e.date <= toStr; })
+      .reduce(function(acc,e){ return acc + entryNetSeconds(e); }, 0) / 3600;
+  }
+  function computeChartBuckets(mode){
+    var now = new Date();
+    var buckets = [];
+    if(mode === "week"){
+      for(var w=7; w>=0; w--){
+        var ws = startOfWeek(now); ws.setDate(ws.getDate() - w*7);
+        var we = new Date(ws); we.setDate(we.getDate()+6);
+        buckets.push({
+          label: pad(ws.getDate())+"."+pad(ws.getMonth()+1)+".",
+          sub: "–"+pad(we.getDate())+"."+pad(we.getMonth()+1)+".",
+          hours: sumHoursInRange(fmtDateStr(ws), fmtDateStr(we)),
+          isCurrent: w === 0
+        });
+      }
+    } else if(mode === "month"){
+      for(var m=11; m>=0; m--){
+        var md = new Date(now.getFullYear(), now.getMonth()-m, 1);
+        var monthEnd = new Date(md.getFullYear(), md.getMonth()+1, 0);
+        buckets.push({
+          label: MONTH_NAMES_SHORT[md.getMonth()],
+          sub: (""+md.getFullYear()).slice(2),
+          hours: sumHoursInRange(fmtDateStr(md), fmtDateStr(monthEnd)),
+          isCurrent: m === 0
+        });
+      }
+    } else if(mode === "year"){
+      for(var y=4; y>=0; y--){
+        var yr = now.getFullYear() - y;
+        buckets.push({
+          label: ""+yr, sub: "",
+          hours: sumHoursInRange(yr+"-01-01", yr+"-12-31"),
+          isCurrent: y === 0
+        });
+      }
+    } else {
+      var weekStart = startOfWeek(now);
+      var dayLabels = ["Mo","Di","Mi","Do","Fr","Sa","So"];
+      var todayStr2 = todayStr();
+      for(var i=0; i<7; i++){
+        var d = new Date(weekStart);
+        d.setDate(d.getDate()+i);
+        var dStr = fmtDateStr(d);
+        buckets.push({
+          label: dayLabels[i], sub: pad(d.getDate())+"."+pad(d.getMonth()+1)+".",
+          hours: sumHoursInRange(dStr, dStr),
+          isCurrent: dStr === todayStr2
+        });
+      }
+    }
+    return buckets;
+  }
+  function renderWeekChart(){
+    var container = document.getElementById("weekGrid");
+    var mode = state.chartPeriod || "day";
+    document.querySelectorAll(".chart-period-btn").forEach(function(btn){
+      btn.classList.toggle("active", btn.getAttribute("data-period") === mode);
+    });
+    var buckets = computeChartBuckets(mode);
+    var maxHours = Math.max(0.01, Math.max.apply(null, buckets.map(function(b){ return b.hours; })));
+    container.innerHTML = buckets.map(function(b){
+      var pct = Math.min(100, Math.round((b.hours/maxHours)*100));
+      return '<div class="week-bar-col'+(b.isCurrent?' today':'')+'">' +
+        '<div class="week-bar-hours">'+b.hours.toFixed(1)+' h</div>' +
+        '<div class="week-bar-track"><div class="week-bar" style="height:'+pct+'%"></div></div>' +
+        '<div class="week-bar-label">'+b.label+'</div>' +
+        '<div class="week-bar-date">'+b.sub+'</div>' +
+      '</div>';
+    }).join("");
+  }
+  document.querySelectorAll(".chart-period-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      state.chartPeriod = btn.getAttribute("data-period");
+      saveState(); renderWeekChart();
+    });
+  });
+
+  // ---------- Timer ----------
+  var pageTitle = document.title;
+  var toggleBtn = document.getElementById("timerToggle");
+  var toggleLabel = toggleBtn.querySelector(".btn-label");
+  var holdHint = document.getElementById("holdHint");
+  var HOLD_MS = 900;
+  var holdTimer = null;
+  var stoppedViaHold = false;
+  var lastStop = null; // { entryId, restore: {startedAt}, manualBreakMin }
+  var undoTimer = null;
+
+  function renderTimer(){
+    var display = document.getElementById("timerDisplay");
+    var status = document.getElementById("timerStatus");
+    var pauseBtn = document.getElementById("pauseToggle");
+    if(state.running){
+      var elapsed = (Date.now() - state.running.startedAt) / 1000;
+      var pausedMs = state.running.pauseAccumMs || 0;
+      if(state.running.pauseStartedAt) pausedMs += (Date.now() - state.running.pauseStartedAt);
+      var netSeconds = elapsed - pausedMs/1000;
+      var hms = fmtHMS(netSeconds);
+      display.textContent = hms;
+      document.title = "⏱ " + hms + " · " + pageTitle;
+      status.textContent = state.running.pauseStartedAt
+        ? "Pause seit " + new Date(state.running.pauseStartedAt).toLocaleTimeString("de-DE")
+        : "Eingestempelt seit " + new Date(state.running.startedAt).toLocaleTimeString("de-DE");
+      toggleLabel.textContent = "■ Gehen";
+      toggleBtn.classList.add("btn-stop");
+      toggleBtn.setAttribute("aria-label","Ausstempeln (gedrückt halten)");
+      holdHint.style.display = "block";
+      pauseBtn.disabled = false;
+      pauseBtn.textContent = state.running.pauseStartedAt ? "▶ Pause beenden" : "⏸ Pause";
+    } else {
+      display.textContent = "00:00:00";
+      document.title = pageTitle;
+      status.textContent = "Nicht eingestempelt";
+      toggleLabel.textContent = "▶ Kommen";
+      toggleBtn.classList.remove("btn-stop");
+      toggleBtn.setAttribute("aria-label","Einstempeln");
+      holdHint.style.display = "none";
+      pauseBtn.disabled = true;
+      pauseBtn.textContent = "⏸ Pause";
+    }
+  }
+  function tick(){
+    if(state.running) renderTimer();
+  }
+
+  function doStart(){
+    state.running = { startedAt: Date.now(), pauseAccumMs: 0, pauseStartedAt: null };
+    saveState(); renderAll();
+  }
+  function doStop(overrideEnd){
+    var noteField = document.getElementById("timerNote");
+    var manualBreakField = document.getElementById("timerManualBreak");
+    var manualBreakMin = parseInt(manualBreakField.value,10) || 0;
+    var pausedMs = state.running.pauseAccumMs || 0;
+    if(state.running.pauseStartedAt) pausedMs += (Date.now() - state.running.pauseStartedAt);
+    var end = overrideEnd || new Date();
+    var startDate = new Date(state.running.startedAt);
+    var dateStr = startDate.getFullYear()+"-"+pad(startDate.getMonth()+1)+"-"+pad(startDate.getDate());
+    var newEntry = {
+      id: uid(),
+      date: dateStr,
+      start: pad(startDate.getHours())+":"+pad(startDate.getMinutes()),
+      end: pad(end.getHours())+":"+pad(end.getMinutes()),
+      breakMin: Math.round(pausedMs/60000) + manualBreakMin,
+      note: noteField.value.trim()
+    };
+    state.entries.push(newEntry);
+    lastStop = { entryId: newEntry.id, restore: { startedAt: state.running.startedAt, pauseAccumMs: pausedMs }, manualBreakMin: manualBreakMin };
+    state.running = null;
+    noteField.value = "";
+    manualBreakField.value = "0";
+    saveState(); renderAll();
+    showUndoToast("Ausgestempelt um " + newEntry.end + " Uhr");
+  }
+
+  function cancelHold(){
+    if(holdTimer){ clearTimeout(holdTimer); holdTimer = null; }
+    toggleBtn.classList.remove("holding");
+  }
+  toggleBtn.addEventListener("pointerdown", function(){
+    if(!state.running) return;
+    toggleBtn.classList.add("holding");
+    holdTimer = setTimeout(function(){
+      toggleBtn.classList.remove("holding");
+      holdTimer = null;
+      stoppedViaHold = true;
+      doStop();
+    }, HOLD_MS);
+  });
+  ["pointerup","pointerleave","pointercancel"].forEach(function(ev){
+    toggleBtn.addEventListener(ev, cancelHold);
+  });
+  toggleBtn.addEventListener("click", function(){
+    if(stoppedViaHold){ stoppedViaHold = false; return; }
+    if(!state.running) doStart();
+    // Ist state.running true, passiert bei Klick nichts — nur Halten stoppt.
+  });
+  document.getElementById("pauseToggle").addEventListener("click", function(){
+    if(!state.running) return;
+    if(state.running.pauseStartedAt){
+      state.running.pauseAccumMs = (state.running.pauseAccumMs||0) + (Date.now() - state.running.pauseStartedAt);
+      state.running.pauseStartedAt = null;
+    } else {
+      state.running.pauseStartedAt = Date.now();
+    }
+    saveState(); renderTimer();
+  });
+
+  // ---------- Rückgängig-Hinweis ----------
+  function showUndoToast(message){
+    var toast = document.getElementById("undoToast");
+    document.getElementById("undoToastMsg").textContent = message;
+    toast.classList.add("show");
+    if(undoTimer) clearTimeout(undoTimer);
+    undoTimer = setTimeout(function(){ hideUndoToast(); }, 8000);
+  }
+  function hideUndoToast(){
+    document.getElementById("undoToast").classList.remove("show");
+    lastStop = null;
+    if(undoTimer){ clearTimeout(undoTimer); undoTimer = null; }
+  }
+  document.getElementById("undoToastBtn").addEventListener("click", function(){
+    if(!lastStop) return;
+    state.entries = state.entries.filter(function(e){ return e.id !== lastStop.entryId; });
+    state.running = { startedAt: lastStop.restore.startedAt, pauseAccumMs: lastStop.restore.pauseAccumMs, pauseStartedAt: null };
+    document.getElementById("timerManualBreak").value = lastStop.manualBreakMin || 0;
+    hideUndoToast();
+    saveState(); renderAll();
+  });
+
+  // ---------- Manual entry ----------
+  document.getElementById("manDate").value = todayStr();
+  var manTypeSelect = document.getElementById("manType");
+  var manStartInput = document.getElementById("manStart");
+  var manEndInput = document.getElementById("manEnd");
+  var manBreakInput = document.getElementById("manBreak");
+  var manDateToField = document.getElementById("manDateToField");
+  var manDateToInput = document.getElementById("manDateTo");
+  manTypeSelect.addEventListener("change", function(){
+    var isWork = manTypeSelect.value === "work";
+    manStartInput.disabled = !isWork;
+    manEndInput.disabled = !isWork;
+    manBreakInput.disabled = !isWork;
+    manDateToField.style.display = isWork ? "none" : "flex";
+    if(isWork) manDateToInput.value = "";
+  });
+  document.querySelectorAll(".shift-presets [data-shift-start]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      manTypeSelect.value = "work";
+      manStartInput.disabled = false; manEndInput.disabled = false; manBreakInput.disabled = false;
+      manStartInput.value = btn.getAttribute("data-shift-start");
+      manEndInput.value = btn.getAttribute("data-shift-end");
+    });
+  });
+  document.getElementById("manualForm").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var date = document.getElementById("manDate").value;
+    var dateTo = manDateToInput.value;
+    var type = manTypeSelect.value;
+    var start = manStartInput.value;
+    var end = manEndInput.value;
+    var jobId = state.multiJobEnabled ? (manJobSelect.value || null) : null;
+    var note = document.getElementById("manNote").value.trim();
+    if(!date) return;
+    if(type === "work" && (!start || !end)) return;
+
+    var dates = [date];
+    if(type !== "work" && dateTo && dateTo > date){
+      dates = [];
+      var cur = new Date(date+"T00:00:00");
+      var last = new Date(dateTo+"T00:00:00");
+      while(cur <= last){
+        var dow = cur.getDay();
+        if(dow !== 0 && dow !== 6) dates.push(fmtDateStr(cur));
+        cur.setDate(cur.getDate()+1);
+      }
+    }
+    var existing = {};
+    state.entries.forEach(function(e){ existing[e.date] = true; });
+    var added = 0;
+    dates.forEach(function(d){
+      if(existing[d]) return;
+      state.entries.push({
+        id: uid(),
+        date: d,
+        type: type,
+        jobId: jobId,
+        start: type === "work" ? start : "",
+        end: type === "work" ? end : "",
+        breakMin: type === "work" ? (parseInt(manBreakInput.value,10) || 0) : 0,
+        note: note
+      });
+      existing[d] = true;
+      added++;
+    });
+    saveState();
+    ev.target.reset();
+    document.getElementById("manDate").value = todayStr();
+    manDateToInput.value = "";
+    manDateToField.style.display = "none";
+    manBreakInput.value = 0;
+    manStartInput.disabled = false; manEndInput.disabled = false; manBreakInput.disabled = false;
+    renderAll();
+    if(dates.length > 1) alert(added + " Tage eingetragen (Wochenenden übersprungen, bestehende Tage nicht doppelt angelegt).");
+  });
+
+  // ---------- Filters ----------
+  document.getElementById("filterReset").addEventListener("click", function(){
+    document.getElementById("filterFrom").value = "";
+    document.getElementById("filterTo").value = "";
+    renderEntries();
+  });
+  ["filterFrom","filterTo"].forEach(function(id){
+    document.getElementById(id).addEventListener("change", renderEntries);
+  });
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function getFilteredEntries(){
+    var from = document.getElementById("filterFrom").value;
+    var to = document.getElementById("filterTo").value;
+    var job = state.multiJobEnabled ? filterJobSelect.value : "";
+    return state.entries.filter(function(e){
+      if(from && e.date < from) return false;
+      if(to && e.date > to) return false;
+      if(job && e.jobId !== job) return false;
+      return true;
+    }).sort(function(a,b){ return (b.date+(b.start||"")).localeCompare(a.date+(a.start||"")); });
+  }
+
+  function renderEntries(){
+    var container = document.getElementById("entriesContainer");
+    var entries = getFilteredEntries();
+    container.innerHTML = "";
+    if(entries.length === 0){
+      var empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "Keine Einträge für diese Auswahl.";
+      container.appendChild(empty);
+      return;
+    }
+    var showJobCol = !!state.multiJobEnabled;
+    var table = document.createElement("table");
+    table.innerHTML = "<thead><tr><th>Datum</th>" + (showJobCol ? "<th>Job</th>" : "") +
+      "<th>Art</th><th>Kommen</th><th>Gehen</th><th>Pause</th><th>Ist</th><th>Soll</th><th>Saldo</th><th>Notiz</th><th></th></tr></thead>";
+    var tbody = document.createElement("tbody");
+    entries.forEach(function(e){
+      var netSec = entryNetSeconds(e);
+      var netHours = netSec/3600;
+      var diff = netHours - state.targetHours;
+      var dObj = new Date(e.date+"T00:00:00");
+      var dateLabel = dObj.toLocaleDateString("de-DE", { weekday:"short", day:"2-digit", month:"2-digit", year:"numeric" });
+      var tr = document.createElement("tr");
+      tr.innerHTML =
+        "<td>" + dateLabel + "</td>" +
+        (showJobCol ? "<td>" + escapeHtml(jobName(e.jobId)) + "</td>" : "") +
+        "<td>" + typeLabel(e.type) + "</td>" +
+        "<td>" + (e.start || "—") + "</td>" +
+        "<td>" + (e.end || "—") + "</td>" +
+        "<td>" + (hasNoTimes(e) ? "—" : (e.breakMin||0) + " Min.") + "</td>" +
+        "<td>" + netHours.toFixed(2) + " h</td>" +
+        "<td>" + state.targetHours.toFixed(2) + " h</td>" +
+        '<td class="' + (diff >= 0 ? "pos" : "neg") + '">' + fmtSigned(diff) + "</td>" +
+        "<td>" + escapeHtml(e.note||"") + "</td>" +
+        '<td><button class="btn-icon" data-del-entry="'+e.id+'" aria-label="Eintrag löschen">🗑</button></td>';
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    container.appendChild(table);
+    container.querySelectorAll("[data-del-entry]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var id = btn.getAttribute("data-del-entry");
+        state.entries = state.entries.filter(function(e){ return e.id !== id; });
+        saveState(); renderEntries(); renderStats();
+      });
+    });
+  }
+
+  // ---------- Stats ----------
+  function sumNetSecondsSince(sinceDate){
+    return state.entries.filter(function(e){ return new Date(e.date+"T00:00:00") >= sinceDate; })
+      .reduce(function(acc,e){ return acc + entryNetSeconds(e); }, 0);
+  }
+  function renderStats(){
+    var today = new Date(); today.setHours(0,0,0,0);
+    var weekStart = startOfWeek(new Date());
+    var monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+    var yearStart = new Date(today.getFullYear(), 0, 1);
+
+    var todaySec = sumNetSecondsSince(today);
+    var weekHours = sumNetSecondsSince(weekStart)/3600;
+    var monthHours = sumNetSecondsSince(monthStart)/3600;
+
+    var weekTargetHours = state.targetHours * state.workDays;
+    var weekSaldo = weekHours - weekTargetHours;
+
+    var yearWorkedDays = countWorkedDaysSince(yearStart);
+    var yearTargetHours = yearWorkedDays * state.targetHours;
+    var yearHours = sumNetSecondsSince(yearStart)/3600;
+    var yearSaldo = yearHours - yearTargetHours + (state.startBalanceHours||0);
+
+    var yearNow = today.getFullYear();
+    var vacationTaken = state.entries.filter(function(e){
+      return e.type === "vacation" && e.date.slice(0,4) === (""+yearNow);
+    }).length;
+    var vacationLeft = (state.vacationDaysPerYear||0) - vacationTaken;
+
+    var row = document.getElementById("statsRow");
+    row.innerHTML =
+      statCard("Heute", fmtHours(todaySec)+" h") +
+      statCard("Diese Woche", weekHours.toFixed(2)+" h") +
+      statCard("Dieser Monat", monthHours.toFixed(2)+" h") +
+      statCard("Überstunden-Saldo (Jahr)", fmtSigned(yearSaldo), true, yearSaldo>=0) +
+      statCard("Resturlaub " + yearNow, vacationLeft + " Tage", true, vacationLeft>=0);
+  }
+  function statCard(label, num, signed, positive){
+    var cls = signed ? (positive ? "ok-stat" : "warn-stat") : "";
+    return '<div class="stat '+cls+'"><div class="num">'+num+'</div><div class="lbl">'+label+'</div></div>';
+  }
+
+  // ---------- CSV Export ----------
+  document.getElementById("exportCsv").addEventListener("click", function(){
+    var rows = [["Datum","Job","Art","Kommen","Gehen","Pause (Min.)","Ist-Stunden","Soll-Stunden","Saldo","Notiz"]];
+    state.entries.slice().sort(function(a,b){ return (a.date+(a.start||"")).localeCompare(b.date+(b.start||"")); }).forEach(function(e){
+      var netHours = entryNetSeconds(e)/3600;
+      var diff = netHours - state.targetHours;
+      rows.push([
+        e.date, jobName(e.jobId), typeLabel(e.type), e.start||"", e.end||"", e.breakMin||0,
+        netHours.toFixed(2), state.targetHours.toFixed(2), diff.toFixed(2), e.note||""
+      ]);
+    });
+    var csv = rows.map(function(r){
+      return r.map(function(cell){
+        var s = String(cell).replace(/"/g,'""');
+        return /[",;\n]/.test(s) ? '"'+s+'"' : s;
+      }).join(";");
+    }).join("\r\n");
+    var blob = new Blob(["﻿"+csv], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "zeitkompass-mitarbeiter-export-"+todayStr()+".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  // ---------- Drucken / PDF ----------
+  document.getElementById("printBtn").addEventListener("click", function(){
+    var entries = getFilteredEntries().slice().sort(function(a,b){ return (a.date+(a.start||"")).localeCompare(b.date+(b.start||"")); });
+    var from = document.getElementById("filterFrom").value;
+    var to = document.getElementById("filterTo").value;
+    var periodLabel = (from || to)
+      ? "Zeitraum: " + (from ? new Date(from+"T00:00:00").toLocaleDateString("de-DE") : "Anfang") + " – " + (to ? new Date(to+"T00:00:00").toLocaleDateString("de-DE") : "Heute")
+      : "Zeitraum: alle Einträge";
+
+    var totalNetHours = 0, totalTargetHours = 0;
+    var rowsHtml = entries.map(function(e){
+      var netHours = entryNetSeconds(e)/3600;
+      var diff = netHours - state.targetHours;
+      totalNetHours += netHours;
+      totalTargetHours += state.targetHours;
+      var dObj = new Date(e.date+"T00:00:00");
+      var dateLabel = dObj.toLocaleDateString("de-DE", { weekday:"short", day:"2-digit", month:"2-digit", year:"numeric" });
+      return "<tr><td>"+dateLabel+"</td><td>"+typeLabel(e.type)+"</td><td>"+(e.start||"—")+"</td><td>"+(e.end||"—")+"</td><td>"+(hasNoTimes(e)?"—":(e.breakMin||0)+" Min.")+"</td>"+
+        "<td>"+netHours.toFixed(2)+" h</td><td>"+state.targetHours.toFixed(2)+" h</td>"+
+        "<td>"+(diff>=0?"+":"−")+Math.abs(diff).toFixed(2)+" h</td><td>"+escapeHtml(e.note||"")+"</td></tr>";
+    }).join("");
+
+    if(entries.length === 0){
+      rowsHtml = '<tr><td colspan="9" style="text-align:center; padding:20px">Keine Einträge für diesen Zeitraum.</td></tr>';
+    }
+
+    var totalDiff = totalNetHours - totalTargetHours;
+    var name = state.employeeName || "—";
+
+    document.getElementById("printArea").innerHTML =
+      "<h1>Stundennachweis</h1>" +
+      '<div class="meta">' +
+        "<div><strong>Name:</strong> " + escapeHtml(name) + "</div>" +
+        "<div><strong>" + periodLabel + "</strong></div>" +
+        "<div>Soll-Arbeitszeit: " + state.targetHours.toFixed(2) + " h/Tag, " + state.workDays + " Arbeitstage/Woche</div>" +
+        "<div>Erstellt am: " + new Date().toLocaleDateString("de-DE") + "</div>" +
+      "</div>" +
+      "<table><thead><tr><th>Datum</th><th>Art</th><th>Kommen</th><th>Gehen</th><th>Pause</th><th>Ist</th><th>Soll</th><th>Saldo</th><th>Notiz</th></tr></thead>" +
+      "<tbody>" + rowsHtml + "</tbody>" +
+      "<tfoot><tr><td colspan=\"5\">Summe</td><td>" + totalNetHours.toFixed(2) + " h</td><td>" + totalTargetHours.toFixed(2) + " h</td>" +
+      "<td>" + (totalDiff>=0?"+":"−") + Math.abs(totalDiff).toFixed(2) + " h</td><td></td></tr></tfoot></table>" +
+      '<div class="sign-row"><div class="sign-line">Datum, Unterschrift Mitarbeiter</div><div class="sign-line">Datum, Unterschrift Vorgesetzte/r</div></div>';
+
+    window.print();
+  });
+
+  // ---------- Kalender ----------
+  var MONTH_NAMES_FULL = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  function currentYm(){ var n = new Date(); return n.getFullYear()+"-"+pad(n.getMonth()+1); }
+  function shiftYm(ym, delta){
+    var parts = ym.split("-");
+    var d = new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1+delta, 1);
+    return d.getFullYear()+"-"+pad(d.getMonth()+1);
+  }
+  function renderCalendar(){
+    var ym = state.calendarMonth || currentYm();
+    var parts = ym.split("-");
+    var year = parseInt(parts[0],10), month = parseInt(parts[1],10)-1;
+    document.getElementById("calLabel").textContent = MONTH_NAMES_FULL[month] + " " + year;
+
+    var entriesByDate = {};
+    state.entries.forEach(function(e){ (entriesByDate[e.date] = entriesByDate[e.date] || []).push(e); });
+
+    var liveHolidays = {};
+    if(state.bundesland){
+      getHolidays(year, state.bundesland).forEach(function(h){ liveHolidays[h.date] = h.name; });
+    }
+
+    var first = new Date(year, month, 1);
+    var startOffset = (first.getDay()+6)%7;
+    var daysInMonth = new Date(year, month+1, 0).getDate();
+    var todayS = todayStr();
+
+    var html = ["Mo","Di","Mi","Do","Fr","Sa","So"].map(function(d){ return '<div class="cal-weekday">'+d+'</div>'; }).join("");
+    for(var i=0; i<startOffset; i++) html += '<div class="cal-day empty"></div>';
+    for(var day=1; day<=daysInMonth; day++){
+      var dStr = year+"-"+pad(month+1)+"-"+pad(day);
+      var dayEntries = entriesByDate[dStr] || [];
+      var cls = "cal-day";
+      var content = "";
+      var title = "";
+      if(dStr === todayS) cls += " today";
+      if(dayEntries.length){
+        var holidayEntry = dayEntries.filter(function(e){ return e.type === "holiday"; })[0];
+        var hasAbsence = dayEntries.some(function(e){ return e.type === "vacation" || e.type === "sick"; });
+        var hasReduction = dayEntries.some(function(e){ return e.type === "overtime_reduction"; });
+        var netHours = dayEntries.reduce(function(a,e){ return a + entryNetSeconds(e); }, 0)/3600;
+        var barPct = Math.max(4, Math.min(100, Math.round((netHours/state.targetHours)*100) || 0));
+        if(holidayEntry){ cls += " holiday"; title = holidayEntry.note || "Feiertag"; }
+        else if(hasAbsence) cls += " absence";
+        else if(hasReduction) cls += " reduction";
+        else cls += (netHours - state.targetHours >= 0) ? " ok" : " neg";
+        content = '<div class="d-hours">'+netHours.toFixed(1)+'h</div>' +
+          '<div class="d-bar-track"><div class="d-bar" style="width:'+barPct+'%"></div></div>';
+        if(title) content = '<div class="d-holiday-tag">🎉 '+escapeHtml(title)+'</div>' + content;
+      } else if(liveHolidays[dStr]){
+        var dow = new Date(dStr+"T00:00:00").getDay();
+        if(dow !== 0 && dow !== 6){
+          cls += " holiday-auto";
+          title = liveHolidays[dStr];
+          content = '<div class="d-holiday-tag">🎉 '+escapeHtml(title)+'</div>';
+        }
+      }
+      html += '<div class="'+cls+'"'+(title ? ' title="'+escapeHtml(title)+'"' : '')+'><div class="d-num">'+day+'</div>'+content+'</div>';
+    }
+    document.getElementById("calGrid").innerHTML = html;
+  }
+  document.getElementById("calPrev").addEventListener("click", function(){
+    state.calendarMonth = shiftYm(state.calendarMonth || currentYm(), -1);
+    saveState(); renderCalendar();
+  });
+  document.getElementById("calNext").addEventListener("click", function(){
+    state.calendarMonth = shiftYm(state.calendarMonth || currentYm(), 1);
+    saveState(); renderCalendar();
+  });
+
+  // ---------- Wochenvorlage ----------
+  var DAY_NAMES_SHORT = ["Mo","Di","Mi","Do","Fr","Sa","So"];
+  var templateStartInput = document.getElementById("templateStart");
+  var templateEndInput = document.getElementById("templateEnd");
+  var templateBreakInput = document.getElementById("templateBreak");
+  var templateWeekStartInput = document.getElementById("templateWeekStart");
+  templateStartInput.value = state.weekTemplate.start;
+  templateEndInput.value = state.weekTemplate.end;
+  templateBreakInput.value = state.weekTemplate.breakMin;
+  templateWeekStartInput.value = todayStr();
+
+  function renderTemplateDays(){
+    var row = document.getElementById("templateDaysRow");
+    row.innerHTML = DAY_NAMES_SHORT.map(function(name, i){
+      return '<button type="button" class="tpl-day-btn' + (state.weekTemplate.days[i] ? " active" : "") + '" data-tpl-day="' + i + '">' + name + '</button>';
+    }).join("");
+    row.querySelectorAll("[data-tpl-day]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = parseInt(btn.getAttribute("data-tpl-day"),10);
+        state.weekTemplate.days[i] = !state.weekTemplate.days[i];
+        saveState(); renderTemplateDays();
+      });
+    });
+  }
+  renderTemplateDays();
+  [templateStartInput, templateEndInput, templateBreakInput].forEach(function(input){
+    input.addEventListener("change", function(){
+      state.weekTemplate.start = templateStartInput.value || "08:00";
+      state.weekTemplate.end = templateEndInput.value || "16:00";
+      state.weekTemplate.breakMin = parseInt(templateBreakInput.value,10) || 0;
+      saveState();
+    });
+  });
+  document.getElementById("applyTemplateBtn").addEventListener("click", function(){
+    var anchor = templateWeekStartInput.value || todayStr();
+    var monday = startOfWeek(new Date(anchor+"T00:00:00"));
+    var existing = {};
+    state.entries.forEach(function(e){ existing[e.date] = true; });
+    var added = 0;
+    for(var i=0; i<7; i++){
+      if(!state.weekTemplate.days[i]) continue;
+      var d = new Date(monday); d.setDate(d.getDate()+i);
+      var dStr = fmtDateStr(d);
+      if(existing[dStr]) continue;
+      state.entries.push({
+        id: uid(), date: dStr, type: "work",
+        jobId: state.multiJobEnabled ? (manJobSelect.value || null) : null,
+        start: state.weekTemplate.start, end: state.weekTemplate.end,
+        breakMin: state.weekTemplate.breakMin, note: ""
+      });
+      existing[dStr] = true;
+      added++;
+    }
+    saveState(); renderAll();
+    alert(added + " Tage aus der Wochenvorlage eingetragen.");
+  });
+
+  // ---------- Jahresabschluss drucken ----------
+  document.getElementById("yearPrintYear").value = new Date().getFullYear();
+  document.getElementById("yearPrintBtn").addEventListener("click", function(){
+    var year = parseInt(document.getElementById("yearPrintYear").value,10) || new Date().getFullYear();
+    var entries = state.entries.filter(function(e){ return e.date.slice(0,4) === (""+year); })
+      .slice().sort(function(a,b){ return (a.date+(a.start||"")).localeCompare(b.date+(b.start||"")); });
+
+    var totalNetHours = 0, totalTargetHours = 0;
+    var rowsHtml = entries.map(function(e){
+      var netHours = entryNetSeconds(e)/3600;
+      var diff = netHours - state.targetHours;
+      totalNetHours += netHours;
+      totalTargetHours += state.targetHours;
+      var dObj = new Date(e.date+"T00:00:00");
+      var dateLabel = dObj.toLocaleDateString("de-DE", { weekday:"short", day:"2-digit", month:"2-digit", year:"numeric" });
+      return "<tr><td>"+dateLabel+"</td><td>"+typeLabel(e.type)+"</td><td>"+(e.start||"—")+"</td><td>"+(e.end||"—")+"</td><td>"+(hasNoTimes(e)?"—":(e.breakMin||0)+" Min.")+"</td>"+
+        "<td>"+netHours.toFixed(2)+" h</td><td>"+state.targetHours.toFixed(2)+" h</td>"+
+        "<td>"+(diff>=0?"+":"−")+Math.abs(diff).toFixed(2)+" h</td><td>"+escapeHtml(e.note||"")+"</td></tr>";
+    }).join("");
+
+    if(entries.length === 0){
+      rowsHtml = '<tr><td colspan="9" style="text-align:center; padding:20px">Keine Einträge für '+year+'.</td></tr>';
+    }
+
+    var totalDiff = totalNetHours - totalTargetHours;
+    var name = state.employeeName || "—";
+
+    document.getElementById("printArea").innerHTML =
+      "<h1>Jahresabschluss " + year + "</h1>" +
+      '<div class="meta">' +
+        "<div><strong>Name:</strong> " + escapeHtml(name) + "</div>" +
+        "<div>Soll-Arbeitszeit: " + state.targetHours.toFixed(2) + " h/Tag, " + state.workDays + " Arbeitstage/Woche</div>" +
+        "<div>Start-Überstundensaldo: " + fmtSigned(state.startBalanceHours||0) + "</div>" +
+        "<div>Erstellt am: " + new Date().toLocaleDateString("de-DE") + "</div>" +
+      "</div>" +
+      "<table><thead><tr><th>Datum</th><th>Art</th><th>Kommen</th><th>Gehen</th><th>Pause</th><th>Ist</th><th>Soll</th><th>Saldo</th><th>Notiz</th></tr></thead>" +
+      "<tbody>" + rowsHtml + "</tbody>" +
+      "<tfoot><tr><td colspan=\"5\">Jahressumme</td><td>" + totalNetHours.toFixed(2) + " h</td><td>" + totalTargetHours.toFixed(2) + " h</td>" +
+      "<td>" + (totalDiff>=0?"+":"−") + Math.abs(totalDiff).toFixed(2) + " h</td><td></td></tr>" +
+      "<tr><td colspan=\"7\">Gesamtsaldo inkl. Start-Saldo</td><td colspan=\"2\">" + fmtSigned(totalDiff + (state.startBalanceHours||0)) + "</td></tr></tfoot></table>" +
+      '<div class="sign-row"><div class="sign-line">Datum, Unterschrift Mitarbeiter</div><div class="sign-line">Datum, Unterschrift Vorgesetzte/r</div></div>';
+
+    window.print();
+  });
+
+  // ---------- Render all ----------
+  function renderAll(){
+    renderTimer();
+    renderEntries();
+    renderStats();
+    renderWeekChart();
+    renderCalendar();
+  }
+
+  applyTheme();
+  applyZoom();
+  renderAll();
+  checkForgotWarning();
+  checkReminder();
+  window.setInterval(tick, 1000);
+  window.setInterval(checkForgotWarning, 60000);
+  window.setInterval(checkReminder, 60000);
+
+  window.addEventListener("beforeunload", function(){
+    if(state.running) saveState();
+  });
+
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    });
+  }
+})();
+</script>
+</body>
+</html>

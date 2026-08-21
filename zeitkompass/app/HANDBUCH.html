@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧭 ZeitKompass — Handbuch</title>
+<style>
+:root{
+  --bg:#ecdcb8; --paper:#faf3e4; --paper2:#f2e2bd; --line:#cdb27f;
+  --ink:#2b2318; --ink-soft:#6b5c42;
+  --navy:#1c3a5e; --navy-soft:#dbe3ec;
+  --brass:#a6763a; --brass-soft:#f0dfc0;
+  --ok:#3d6b4f; --ok-soft:#dfe9df;
+  --warn:#a6763a; --warn-soft:#f0dfc0;
+  --err:#a83e3e; --err-soft:#f2dcdc;
+  --zoom:1;
+}
+:root[data-theme="dark"]{
+  --bg:#1c1712; --paper:#221b16; --paper2:#2b211a; --line:#3d2e22;
+  --ink:#f1e6d8; --ink-soft:#b8a68e;
+  --navy:#e59677; --navy-soft:#3d2c20;
+  --brass:#cc785c; --brass-soft:#3d2318;
+  --ok:#7fb494; --ok-soft:#233329;
+  --warn:#e0a05a; --warn-soft:#3a2c12;
+  --err:#e0796f; --err-soft:#3a2320;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{font-size:calc(16px * var(--zoom))}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  min-height:100vh; line-height:1.65;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(166,118,58,.32), transparent 62%),
+    radial-gradient(ellipse 70% 50% at 90% 100%, rgba(28,58,94,.28), transparent 62%),
+    radial-gradient(ellipse 100% 80% at 50% 40%, rgba(166,118,58,.12), transparent 72%);
+  padding-bottom:3rem;
+}
+:root[data-theme="dark"] body{
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(204,120,92,.30), transparent 62%),
+    radial-gradient(ellipse 70% 50% at 90% 100%, rgba(229,150,119,.22), transparent 62%),
+    radial-gradient(ellipse 100% 80% at 50% 40%, rgba(204,120,92,.10), transparent 72%);
+}
+.serif{font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif}
+a{color:var(--navy)}
+a:focus-visible, button:focus-visible{outline:2px solid var(--navy); outline-offset:2px}
+
+.skip-link{position:absolute; left:-999px; top:auto}
+.skip-link:focus{left:12px; top:12px; z-index:200; background:var(--paper); padding:10px 16px; border-radius:8px; box-shadow:0 4px 16px rgba(30,20,10,.2)}
+
+header{
+  position:sticky; top:0; z-index:20;
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:14px 22px; background:var(--paper); border-bottom:1px solid var(--line);
+  box-shadow:0 2px 8px rgba(40,30,15,.08);
+}
+header .brand{font-weight:700; font-size:1.15rem; display:flex; align-items:center; gap:10px}
+header .sub{font-size:.8rem; color:var(--ink-soft)}
+.toolbar{display:flex; gap:8px; align-items:center; margin-left:auto; flex-wrap:wrap}
+.tool-group{display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:var(--paper2)}
+.tool-btn{border:none; background:transparent; color:var(--ink); padding:7px 11px; cursor:pointer; font-size:.85rem}
+.tool-btn:hover{background:var(--brass-soft)}
+.tool-group .tool-btn + .tool-btn{border-left:1px solid var(--line)}
+#zoomLevel{padding:7px 4px; font-size:.75rem; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+.btn-primary{
+  background:var(--navy); color:#fdf8ec; border:none; font-weight:600; text-decoration:none;
+  padding:9px 16px; border-radius:8px; cursor:pointer; font-size:.85rem; display:inline-block;
+}
+.btn-primary:hover{filter:brightness(1.15)}
+
+main{max-width:900px; margin:0 auto; padding:0 18px}
+.hero{text-align:center; padding:2.4rem 1rem 1.2rem}
+.hero .emoji{font-size:3rem; margin-bottom:.4rem}
+.hero h1{font-size:clamp(1.8rem,5vw,2.6rem)}
+.hero p{color:var(--ink-soft); margin-top:.6rem}
+
+nav.toc{background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:1.2rem 1.4rem; margin:1.4rem 0}
+nav.toc h2{font-size:.95rem; color:var(--brass); text-transform:uppercase; letter-spacing:1px; margin-bottom:.7rem}
+nav.toc ol{list-style:none; display:grid; grid-template-columns:1fr; gap:.35rem; counter-reset:toc}
+@media(min-width:560px){nav.toc ol{grid-template-columns:1fr 1fr}}
+nav.toc li{counter-increment:toc}
+nav.toc a{display:block; text-decoration:none; color:var(--ink); padding:.4rem .6rem; border-radius:6px}
+nav.toc a::before{content:counter(toc) "."; color:var(--brass); font-weight:700; margin-right:.5rem}
+nav.toc a:hover{background:var(--brass-soft)}
+
+section.card{background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:1.5rem 1.4rem; margin:1.2rem 0; box-shadow:0 1px 4px rgba(40,30,15,.06)}
+section.card h2{font-size:1.35rem; margin-bottom:.8rem; border-left:4px solid var(--navy); padding-left:.75rem}
+section.card h3{font-size:1.05rem; margin:1.1rem 0 .4rem; color:var(--brass)}
+section.card p{margin:.55rem 0}
+section.card ul, section.card ol{margin:.55rem 0 .55rem 1.3rem}
+section.card li{margin:.3rem 0}
+strong{color:var(--navy)}
+:root[data-theme="dark"] strong{color:var(--brass)}
+code{background:var(--brass-soft); border:1px solid var(--line); border-radius:.4rem; padding:.1rem .45rem; font-family:Consolas,monospace; color:var(--brass); font-size:.9em}
+
+.callout{border-radius:8px; padding:.9rem 1.05rem; margin:1rem 0; border:1px solid var(--line); display:flex; gap:.7rem; align-items:flex-start}
+.callout .ic{font-size:1.3rem; flex:0 0 auto; line-height:1}
+.callout.info{background:var(--navy-soft)}
+.callout.tip{background:var(--ok-soft)}
+.callout.warn{background:var(--warn-soft)}
+
+.totop{display:inline-block; margin-top:.6rem; color:var(--navy); text-decoration:none; font-size:.85rem}
+.totop:hover{text-decoration:underline}
+
+footer{max-width:900px; margin:2rem auto 0; padding:1.4rem 1.2rem; border-top:1px solid var(--line); color:var(--ink-soft); font-size:.85rem; text-align:center}
+footer a{color:var(--navy); text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+@media (max-width:600px){
+  header{flex-direction:column; align-items:flex-start}
+  .toolbar{margin-left:0}
+}
+</style>
+</head>
+<body>
+<a href="#inhalt" class="skip-link">Zum Inhalt springen</a>
+
+<header role="banner">
+  <div class="brand"><span aria-hidden="true">🧭</span> <span class="serif">ZeitKompass</span></div>
+  <div class="sub">Handbuch</div>
+  <div class="toolbar">
+    <div class="tool-group" role="group" aria-label="Schriftgröße">
+      <button type="button" class="tool-btn" id="zoomOut" aria-label="Schrift verkleinern">−</button>
+      <span id="zoomLevel">100%</span>
+      <button type="button" class="tool-btn" id="zoomIn" aria-label="Schrift vergrößern">+</button>
+    </div>
+    <div class="tool-group" role="group" aria-label="Darstellung">
+      <button type="button" class="tool-btn" id="themeToggle" aria-pressed="false" aria-label="Hell/Dunkel umschalten">◐ Hell/Dunkel</button>
+    </div>
+    <a class="btn-primary" href="./index.html">← Zur App</a>
+  </div>
+</header>
+
+<main id="main" role="main" aria-label="Handbuch-Inhalt">
+  <div class="hero">
+    <div class="emoji" aria-hidden="true">🧭</div>
+    <h1 class="serif">ZeitKompass</h1>
+    <p>Arbeitszeiterfassung für Betriebe &amp; Freelancer · 100&nbsp;% offline · keine Anmeldung · kein Tracking</p>
+  </div>
+
+  <nav class="toc" id="inhalt" aria-label="Inhaltsverzeichnis">
+    <h2>Inhalt</h2>
+    <ol>
+      <li><a href="#was">Was ist ZeitKompass?</a></li>
+      <li><a href="#start">Erster Start</a></li>
+      <li><a href="#projekte">Projekte &amp; Kunden anlegen</a></li>
+      <li><a href="#stempeluhr">Die Stempeluhr</a></li>
+      <li><a href="#pause">Pause erfassen</a></li>
+      <li><a href="#manuell">Zeit manuell nachtragen</a></li>
+      <li><a href="#uebersicht">Statistik &amp; Diagramm</a></li>
+      <li><a href="#rundung">Rundung der Arbeitszeit</a></li>
+      <li><a href="#vergessen">Vergessen auszustempeln</a></li>
+      <li><a href="#export">CSV-Export &amp; Drucken</a></li>
+      <li><a href="#backup">Backup &amp; Wiederherstellen</a></li>
+      <li><a href="#daten">Daten &amp; Sicherheit</a></li>
+      <li><a href="#faq">Häufige Fragen</a></li>
+    </ol>
+  </nav>
+
+  <section class="card" id="was">
+    <h2>🧭 Was ist ZeitKompass?</h2>
+    <p><strong>ZeitKompass</strong> ist eine kostenlose Arbeitszeiterfassung für Betriebe, Freelancer und alle, die mehrere Kunden oder Projekte abrechnen. Stempeluhr starten, Projekt wählen, fertig — die App berechnet Dauer, Pausen und Verdienst automatisch.</p>
+    <h3>Das Besondere</h3>
+    <ul>
+      <li><strong>Kein Abo, kein Konto:</strong> einfach öffnen und loslegen.</li>
+      <li><strong>100&nbsp;% offline:</strong> alle Daten bleiben auf deinem Gerät, nichts wird irgendwohin gesendet.</li>
+      <li><strong>Mehrere Projekte/Kunden</strong> mit eigenem Stundensatz und Farbe.</li>
+      <li><strong>Halten-zum-Stoppen:</strong> schützt vor versehentlichem Beenden der Zeiterfassung.</li>
+      <li><strong>Statistik-Diagramm</strong> nach Tagen, Wochen, Monaten oder Jahren.</li>
+    </ul>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="start">
+    <h2>🚀 Erster Start</h2>
+    <ol>
+      <li>Öffne die Datei <code>index.html</code> per Doppelklick — am besten in Chrome, Edge, Firefox oder Safari.</li>
+      <li>Die App startet mit einer leeren Übersicht. Kein Login, kein Freischaltcode nötig.</li>
+      <li>Lege zuerst unter „Projekte &amp; Kunden" mindestens einen Eintrag an, damit du die Stempeluhr starten kannst.</li>
+    </ol>
+    <div class="callout tip"><span class="ic">💡</span><div><strong>Tipp:</strong> Öffne <code>index.html</code> künftig immer aus demselben Ordner heraus — deine Daten hängen am Browser, nicht am Speicherort der Datei.</div></div>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="projekte">
+    <h2>👥 Projekte &amp; Kunden anlegen</h2>
+    <p>Unter „Projekte &amp; Kunden" trägst du für jeden Kunden bzw. jedes Projekt ein:</p>
+    <ul>
+      <li><strong>Name:</strong> z.&nbsp;B. „Kunde Müller".</li>
+      <li><strong>Stundensatz (€):</strong> optional, wird für die Verdienst-Berechnung genutzt — 0, wenn keine Abrechnung nötig ist.</li>
+      <li><strong>Farbe:</strong> zur schnellen Wiedererkennung in der Einträge-Liste.</li>
+    </ul>
+    <p>Über das 🗑-Symbol entfernst du ein Projekt wieder — bereits erfasste Einträge bleiben erhalten, verlieren aber die Zuordnung.</p>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="stempeluhr">
+    <h2>⏱ Die Stempeluhr</h2>
+    <p>Projekt auswählen, optional eine Notiz eintragen, dann auf <strong>„▶ Start"</strong> klicken — die Zeit läuft. Zum Beenden hältst du den Button <strong>„■ Stop"</strong> etwa eine Sekunde gedrückt.</p>
+    <div class="callout info"><span class="ic">ℹ</span><div>Ein normaler, kurzer Klick auf „Stop" tut absichtlich nichts — nur Gedrückthalten beendet die Erfassung. Das schützt davor, die Zeit aus Versehen mit einem Wegklick zu stoppen.</div></div>
+    <p>Nach dem Stoppen erscheint kurz ein <strong>„Rückgängig"</strong>-Hinweis, falls du doch zu früh dran warst — er stellt den Timer mit der ursprünglichen Startzeit wieder her.</p>
+    <p>Der Tab-Titel im Browser zeigt die laufende Zeit live an, auch wenn du gerade in einem anderen Tab arbeitest.</p>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="pause">
+    <h2>☕ Pause erfassen</h2>
+    <p>Zwei Wege, die sich kombinieren lassen:</p>
+    <ul>
+      <li><strong>Live-Pause-Button:</strong> „⏸ Pause" während die Uhr läuft — die pausierte Zeit wird automatisch von der Dauer abgezogen.</li>
+      <li><strong>Zusätzliches Minutenfeld:</strong> „Pause zusätzlich (Min.)" direkt an der Stempeluhr — z.&nbsp;B. wenn du dich nachträglich erinnerst, dass du eine Pause gemacht hast, ohne den Button gedrückt zu haben.</li>
+    </ul>
+    <p>Beide Werte werden beim Stoppen addiert und landen gemeinsam im <code>Pause</code>-Feld des Eintrags.</p>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="manuell">
+    <h2>📝 Zeit manuell nachtragen</h2>
+    <p>Unter „Zeit manuell nachtragen" trägst du einen kompletten Eintrag direkt ein — Datum, Start, Ende, Projekt, Pause in Minuten und eine Notiz. Praktisch für vergessene Tage oder Zeiten, die nicht live erfasst wurden.</p>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="uebersicht">
+    <h2>📊 Statistik &amp; Diagramm</h2>
+    <p>Die vier Kacheln oben zeigen Heute, Diese Woche, Dieser Monat und den Verdienst im aktuellen Monat.</p>
+    <p>Unter „Übersicht" wählst du per Klick den Zeitraum des Balkendiagramms:</p>
+    <ul>
+      <li><strong>Tage:</strong> die aktuelle Woche, ein Balken pro Tag.</li>
+      <li><strong>Wochen:</strong> die letzten 8 Wochen.</li>
+      <li><strong>Monate:</strong> die letzten 12 Monate.</li>
+      <li><strong>Jahre:</strong> die letzten 5 Jahre.</li>
+    </ul>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="rundung">
+    <h2>🔁 Rundung der Arbeitszeit</h2>
+    <p>Unter „Einstellungen" stellst du eine Rundung der berechneten Arbeitszeit ein — keine, 5, 10 oder 15 Minuten. Die Rundung wirkt sich auf Statistik, Einträge-Liste, CSV-Export und Ausdruck gleichermaßen aus, da manche Betriebe die Arbeitszeit auf ein festes Raster runden.</p>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="vergessen">
+    <h2>⚠️ Vergessen auszustempeln</h2>
+    <p>Läuft die Stempeluhr länger als 12 Stunden, erscheint ein Hinweis-Banner mit einem vorausgefüllten Zeitfeld für die tatsächliche Feierabend-Zeit. Zeit korrigieren, auf „Damit stoppen" klicken — der Eintrag wird rückwirkend mit der richtigen Endzeit gespeichert.</p>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="export">
+    <h2>⬇ CSV-Export &amp; Drucken</h2>
+    <p><strong>CSV-Export</strong> lädt alle Einträge als Tabelle herunter (Excel/LibreOffice-kompatibel), inklusive Projekt, Pause, Dauer, Stundensatz und Verdienst.</p>
+    <p><strong>Drucken/PDF</strong> erzeugt eine saubere Zeitübersicht mit Summen — respektiert dabei die aktuell gesetzten Filter (Projekt, Zeitraum). Im Druckdialog kann als „Drucker" auch „Als PDF speichern" gewählt werden.</p>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="backup">
+    <h2>💾 Backup &amp; Wiederherstellen</h2>
+    <p>Unter „Einstellungen" sicherst du mit <strong>„⬇ Backup exportieren"</strong> alle Projekte und Einträge als JSON-Datei. Mit <strong>„⬆ Backup importieren"</strong> spielst du diese Datei auf einem anderen Gerät wieder ein.</p>
+    <div class="callout warn"><span class="ic">⚠</span><div><strong>Achtung:</strong> Ein Import überschreibt alle aktuell in der App gespeicherten Daten unwiderruflich.</div></div>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="daten">
+    <h2>🔐 Daten &amp; Sicherheit</h2>
+    <p>Alle Daten werden ausschließlich im <strong>lokalen Speicher deines Browsers</strong> (LocalStorage) auf diesem Gerät abgelegt. Es gibt keinen Server, kein Konto, keine Cloud-Synchronisierung.</p>
+    <div class="callout warn"><span class="ic">⚠</span><div><strong>Achtung:</strong> Löschst du den Browser-Verlauf/die Website-Daten oder wechselst du das Gerät, gehen deine Einträge verloren, sofern du vorher kein Backup exportiert hast.</div></div>
+    <a class="totop" href="#main">↑ Nach oben</a>
+  </section>
+
+  <section class="card" id="faq">
+    <h2>❓ Häufige Fragen</h2>
+    <h3>Wo werden meine Daten gespeichert?</h3>
+    <p>Ausschließlich lokal in deinem Browser. Nichts geht ins Internet, nichts wird an einen Server gesendet.</p>
+
+    <h3>Funktioniert die App auf dem Handy?</h3>
+    <p>Ja. Öffne <code>index.html</code> im Browser deines Smartphones — die Ansicht passt sich automatisch an.</p>
+
+    <h3>Kann ich mehrere Geräte synchronisieren?</h3>
+    <p>Keine automatische Synchronisierung — bewusst so, ZeitKompass speichert rein lokal ohne Konto und Server. Über Backup-Export/-Import überträgst du deine Daten manuell auf ein anderes Gerät.</p>
+
+    <h3>Warum stoppt die Uhr nicht bei einem normalen Klick?</h3>
+    <p>Das ist Absicht: nur ein etwa einsekündiges Gedrückthalten des Stop-Buttons beendet die Erfassung. So verhinderst du versehentliches Stoppen, z.&nbsp;B. durch einen Wegklick.</p>
+
+    <h3>Was mache ich, wenn ich vergessen habe auszustempeln?</h3>
+    <p>Nach 12 Stunden Laufzeit erscheint automatisch ein Hinweis mit Korrektur-Feld — dort trägst du die echte Endzeit ein und stoppst rückwirkend korrekt.</p>
+  </section>
+</main>
+
+<footer role="contentinfo">
+  <div>ZeitKompass · GZ-AI.-Stacks · <a href="https://www.gz-ai-stacks.de" target="_blank" rel="noopener">www.gz-ai-stacks.de</a></div>
+  <div style="margin-top:.5rem; font-size:.78rem">© Gerd Zimmermann GZ-AI.-Stacks</div>
+</footer>
+
+<script>
+(function(){
+  var ZOOM_KEY = 'zeitkompass-handbuch-zoom';
+  var THEME_KEY = 'zeitkompass-theme';
+  var root = document.documentElement;
+
+  var zoom = parseInt(localStorage.getItem(ZOOM_KEY), 10) || 100;
+  var zoomLabel = document.getElementById('zoomLevel');
+  function applyZoom(){
+    zoom = Math.max(80, Math.min(160, zoom));
+    root.style.setProperty('--zoom', zoom / 100);
+    zoomLabel.textContent = zoom + '%';
+    localStorage.setItem(ZOOM_KEY, zoom);
+  }
+  document.getElementById('zoomIn').addEventListener('click', function(){ zoom += 10; applyZoom(); });
+  document.getElementById('zoomOut').addEventListener('click', function(){ zoom -= 10; applyZoom(); });
+  applyZoom();
+
+  var themeBtn = document.getElementById('themeToggle');
+  var savedTheme = localStorage.getItem(THEME_KEY);
+  if(savedTheme){
+    root.setAttribute('data-theme', savedTheme);
+    themeBtn.setAttribute('aria-pressed', savedTheme === 'dark' ? 'true' : 'false');
+  }
+  themeBtn.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem(THEME_KEY, next);
+    themeBtn.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
