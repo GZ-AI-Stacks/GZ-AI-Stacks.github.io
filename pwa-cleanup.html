@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PWA-Aufräumen — gz-ai-stacks.de</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0a0f0a; color: #d8f5d0; margin: 0; padding: 24px; line-height: 1.6; }
+  h1 { color: #00FFAA; font-size: 1.3rem; }
+  p { color: #8fae87; }
+  button { display: block; width: 100%; max-width: 420px; margin: 20px 0; padding: 16px; font-size: 1.05rem; border-radius: 8px; border: 1px solid #1f3320; background: #10160f; color: #d8f5d0; cursor: pointer; }
+  button:active { background: #1f3320; }
+  #status { white-space: pre-wrap; background: #10160f; border: 1px solid #1f3320; border-radius: 8px; padding: 14px; margin-top: 20px; font-family: monospace; font-size: 0.85rem; min-height: 40px; }
+  .warn { color: #ffa500; }
+  .ok { color: #00FFAA; }
+</style>
+</head>
+<body>
+<h1>PWA-Aufräumen</h1>
+<p>Löscht nur den <strong>Service Worker</strong> und den <strong>Offline-Cache</strong> dieser Seite (gz-ai-stacks.de). Deine gespeicherten App-Daten (localStorage) werden NICHT angefasst — andere Tools/Eingaben bleiben unberührt.</p>
+
+<button id="btn" type="button">Service Worker + Cache jetzt löschen</button>
+
+<div id="status">Noch nichts gemacht.</div>
+
+<script>
+document.getElementById('btn').addEventListener('click', async function () {
+  var status = document.getElementById('status');
+  var lines = [];
+  function log(t) { lines.push(t); status.textContent = lines.join('\n'); }
+
+  log('Starte...');
+
+  try {
+    if ('serviceWorker' in navigator) {
+      var regs = await navigator.serviceWorker.getRegistrations();
+      log(regs.length + ' Service Worker gefunden.');
+      for (var i = 0; i < regs.length; i++) {
+        await regs[i].unregister();
+        log('Service Worker ' + (i + 1) + ' entfernt: ' + (regs[i].scope || ''));
+      }
+    } else {
+      log('Service Worker API nicht verfügbar.');
+    }
+  } catch (e) {
+    log('Fehler bei Service Worker: ' + e.message);
+  }
+
+  try {
+    if ('caches' in window) {
+      var keys = await caches.keys();
+      log(keys.length + ' Cache-Speicher gefunden.');
+      for (var j = 0; j < keys.length; j++) {
+        await caches.delete(keys[j]);
+        log('Cache entfernt: ' + keys[j]);
+      }
+    } else {
+      log('Cache API nicht verfügbar.');
+    }
+  } catch (e2) {
+    log('Fehler bei Cache: ' + e2.message);
+  }
+
+  log('');
+  log('Fertig. Bitte diesen Tab schließen und die Seite neu aufrufen.');
+});
+</script>
+</body>
+</html>
