@@ -1,0 +1,19 @@
+{
+  "name": "Hofgarten-Almanach — Amish-Anbautechniken",
+  "short_name": "Hofgarten",
+  "description": "Interaktiver Garten-Guide mit Flächenrechner, Fruchtfolge-Planer, Aussaatkalender und Mischkultur-Finder nach Amish-inspirierten Anbautechniken, mit ehrlichen Herkunftsangaben je Kapitel.",
+  "lang": "de",
+  "start_url": "./AmishSecrets.html",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f6ecd9",
+  "theme_color": "#6b4423",
+  "categories": ["lifestyle", "productivity"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
