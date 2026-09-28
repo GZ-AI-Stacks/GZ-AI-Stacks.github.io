@@ -25,7 +25,7 @@
 <priority>0.8</priority>
 </url>
 <url>
-<loc>https://www.gz-ai-stacks.de/abc-fuchs/</loc>
+<loc>https://www.gz-ai-stacks.de/ABC-Fuchs/</loc>
 <priority>0.8</priority>
 </url>
 <url>
@@ -33,7 +33,7 @@
 <priority>0.8</priority>
 </url>
 <url>
-<loc>https://www.gz-ai-stacks.de/flow-board/</loc>
+<loc>https://www.gz-ai-stacks.de/Flow-Board/</loc>
 <priority>0.8</priority>
 </url>
 <url>
@@ -85,6 +85,10 @@
 <priority>0.8</priority>
 </url>
 <url>
+<loc>https://www.gz-ai-stacks.de/notfallmappe-digital/</loc>
+<priority>0.8</priority>
+</url>
+<url>
 <loc>https://www.gz-ai-stacks.de/ratgeber/</loc>
 <priority>0.6</priority>
 </url>
@@ -102,6 +106,10 @@
 </url>
 <url>
 <loc>https://www.gz-ai-stacks.de/ratgeber/blackout-vorsorge-checkliste/</loc>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>https://www.gz-ai-stacks.de/ratgeber/notfallordner-checkliste/</loc>
 <priority>0.6</priority>
 </url>
 </urlset>

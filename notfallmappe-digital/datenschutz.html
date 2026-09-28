@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Datenschutzerklärung von Notfallmappe Digital — offline-first, keine Server, keine Konten, kein Tracking.">
+<title>Notfallmappe Digital — Datenschutz</title>
+<style>
+:root{
+  --bg:#ddd0b0; --paper:#fffaf2; --paper2:#f0e2c2; --line:#c9b98f;
+  --ink:#2e2a22; --ink-soft:#736a56; --green:#3f6b52; --green-soft:#dde9e0; --warn:#b5652f; --warn-soft:#f3e2cf;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.65; font-size:16px}
+.serif{font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif}
+.skip{position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden}
+.skip:focus{left:8px; top:8px; width:auto; height:auto; background:var(--paper); color:var(--ink); padding:8px 14px; z-index:100; font-weight:bold; border-radius:6px}
+header{background:var(--paper); border-bottom:1px solid var(--line); padding:24px 32px}
+header .brand{display:flex; align-items:center; gap:14px; max-width:820px; margin:0 auto}
+header .icon{width:42px; height:42px; border-radius:50%; background:var(--green-soft); display:flex; align-items:center; justify-content:center; font-size:1.4rem; border:1px solid var(--line)}
+header h1{margin:0; font-size:1.4rem; color:var(--ink); font-weight:600}
+header .tag{color:var(--ink-soft); font-size:.85rem; margin-top:2px}
+main{padding:32px 24px; max-width:820px; margin:0 auto}
+h2{font-size:1.1rem; color:var(--green); margin-top:2.1rem; margin-bottom:.5rem; padding-bottom:.5rem; border-bottom:1px solid var(--line)}
+h2:first-child{margin-top:0}
+p{margin:10px 0}
+a{color:var(--green)}
+a:focus, button:focus{outline:2px solid var(--green); outline-offset:2px}
+ul{margin:10px 0; padding-left:22px}
+li{margin:6px 0}
+code{font-family:Consolas,'Cascadia Mono',monospace; font-size:.9em; background:var(--paper2); padding:2px 6px; border-radius:4px}
+.box{background:var(--green-soft); border-radius:6px; padding:16px 20px; margin:18px 0}
+.box.warn{background:var(--warn-soft)}
+.box h4{margin:0 0 6px; font-size:.8rem; letter-spacing:.5px; text-transform:uppercase; color:var(--green); font-weight:700}
+.box.warn h4{color:var(--warn)}
+.back{display:inline-block; margin-top:32px; color:var(--green); text-decoration:none; font-size:.9rem; font-weight:600}
+.back:hover, .back:focus{text-decoration:underline}
+footer{border-top:1px solid var(--line); padding:24px 32px; color:var(--ink-soft); font-size:.8rem; text-align:center; margin-top:50px}
+@media (max-width:600px){main{padding:24px 16px}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}
+@media (prefers-color-scheme: dark){
+  body:not(.force-light){
+    --bg:#332c1f; --paper:#26211a; --paper2:#3d3526; --line:#4a4030; --ink:#f1e8d8; --ink-soft:#b6a888;
+    --green:#7fb494; --green-soft:#233329; --warn:#e0a05a; --warn-soft:#3a2c12;
+  }
+}
+</style>
+</head>
+<body>
+<a href="#content" class="skip">Zum Inhalt springen</a>
+<header role="banner">
+  <div class="brand">
+    <span class="icon" aria-hidden="true">🗂️</span>
+    <div>
+      <h1 class="serif">Notfallmappe Digital</h1>
+      <div class="tag">Datenschutzerklärung &middot; Stand: Juli 2026</div>
+    </div>
+  </div>
+</header>
+<main id="content" role="main" tabindex="-1">
+
+  <div class="box">
+    <h4>Kurzfassung</h4>
+    <p>Notfallmappe Digital ist eine reine Offline-App. Sie läuft als einzelne HTML-Datei ohne
+      Konto, ohne Login und ohne eigenen Server. Es werden keine Schriften, Icons oder
+      sonstige Inhalte von fremden Servern nachgeladen, sobald die Datei einmal geöffnet
+      wurde. Alles, was du eingibst &mdash; persönliche Stammdaten, Kontakte, Medikamente,
+      Hinweise zu Vollmachten, Versicherungen und weitere Angaben &mdash; bleibt
+      ausschließlich lokal in deinem Browser. Wir erheben, speichern und übertragen
+      <strong>keine</strong> personenbezogenen Daten auf einen Server von uns.</p>
+  </div>
+
+  <div class="box warn">
+    <h4>Besonders sensible Daten</h4>
+    <p>Beachte, dass du in dieser App bewusst besonders sensible Daten einträgst
+      (Gesundheitsdaten wie Medikamente und Allergien, Kontaktdaten von Angehörigen,
+      Hinweise auf Vollmachten). Diese Daten verlassen dein Gerät zu keinem Zeitpunkt durch
+      die App selbst. Sorge dennoch dafür, dass Ausdrucke oder ein ungesperrtes Gerät nicht
+      für Unbefugte frei zugänglich sind. Nutze bei Bedarf den optionalen PIN-Schutz der App
+      (siehe Punkt 1 unten).</p>
+    <p>Trägst du Daten anderer Personen ein (z. B. Kontakt- oder Gesundheitsdaten von
+      Angehörigen), bist du selbst — nicht der Anbieter — datenschutzrechtlich dafür
+      verantwortlich, dass diese Verarbeitung zulässig ist (etwa weil die betroffene Person
+      einverstanden ist oder ein berechtigtes Interesse im Rahmen der eigenen
+      Vorsorgeplanung besteht). Der Anbieter verarbeitet diese Daten nicht selbst, da die App
+      rein lokal auf deinem Gerät läuft.</p>
+  </div>
+
+  <h2>1. Lokale Speicherung im Browser (localStorage)</h2>
+  <p>Notfallmappe Digital speichert deine Daten in <code>localStorage</code> deines Browsers.
+    Gespeichert werden u. a.:</p>
+  <ul>
+    <li>deine persönlichen Stammdaten (Name, Geburtsdatum, Anschrift, Krankenkasse,
+      Hausarzt, Notfallkontakt, Allergien),</li>
+    <li>deine eingetragenen Einträge (Kontakte, Medikamente, Vollmachten/Dokumente,
+      Versicherungen, Sonstiges) inklusive Details und Aufbewahrungsort,</li>
+    <li>die gewählte Dark-/Hell-Theme- und Zoom-Einstellung.</li>
+  </ul>
+  <p>Diese Daten verlassen dein Gerät nicht. Sie werden nicht an uns oder an Dritte
+    übertragen. Du kannst sie jederzeit selbst löschen, indem du die Website-Daten in den
+    Einstellungen deines Browsers entfernst.</p>
+  <p>Optional kannst du deine Stammdaten und Einträge zusätzlich mit einer selbst gewählten
+    PIN schützen (Button „🔒 PIN-Schutz einrichten"). Ist der Schutz aktiv, werden diese Daten
+    ausschließlich verschlüsselt (AES-256, Schlüssel abgeleitet aus deiner PIN via PBKDF2) im
+    Browser gespeichert. Die PIN selbst wird nicht gespeichert und kann bei Verlust nicht
+    wiederhergestellt werden — in diesem Fall sind die geschützten Daten unwiederbringlich
+    verloren. Angehängte Dokumente (siehe Punkt 2) sind von diesem PIN-Schutz aktuell nicht
+    erfasst.</p>
+
+  <h2>2. Angehängte Dokumente (IndexedDB)</h2>
+  <p>Fotos oder Scans, die du einem Eintrag anhängst, speichert die App in <code>IndexedDB</code> deines Browsers — einem größeren lokalen Speicherbereich als <code>localStorage</code>, technisch aber genauso rein lokal auf deinem Gerät. Auch diese Dateien werden zu keinem Zeitpunkt hochgeladen oder an uns bzw. Dritte übertragen.</p>
+
+  <h2>3. Druckfunktion</h2>
+  <p>Die App bietet eine Druckansicht, die deinen Browser-eigenen Druckdialog öffnet. Dabei
+    findet keine Übertragung an einen Server von uns statt — der Druckvorgang läuft
+    vollständig über dein Betriebssystem und deinen angeschlossenen bzw. ausgewählten
+    Drucker.</p>
+
+  <h2>3a. Backup-Export</h2>
+  <p>Über „💾 Backup" kannst du eine Sicherungsdatei mit deinen Stammdaten, Einträgen und
+    angehängten Dokumenten erzeugen. Diese Datei wird lokal in deinem Browser erstellt und
+    direkt zum Download angeboten — es findet keine Übertragung an uns statt. Die Datei ist
+    <strong>nicht verschlüsselt</strong>, auch wenn du den PIN-Schutz der App aktiviert hast;
+    du bist selbst dafür verantwortlich, sie sicher aufzubewahren.</p>
+
+  <h2>4. Keine Cookies, kein Tracking</h2>
+  <p>Die App setzt keine Tracking-Cookies, nutzt keine Analyse-Werkzeuge (z. B. Google
+    Analytics) und erstellt keine Nutzerprofile.</p>
+
+  <h2>5. Schriftarten</h2>
+  <p>Die App und diese Seite verwenden ausschließlich auf deinem Gerät bereits vorhandene
+    Systemschriften. Es werden keine externen Schriftarten (z. B. Google Fonts) nachgeladen
+    und keine Daten an Dritte übertragen.</p>
+
+  <h2>6. Installation als App-Symbol (eingebettetes PWA-Manifest)</h2>
+  <p>Notfallmappe Digital bringt ein direkt eingebettetes App-Manifest samt eigenem Symbol mit,
+    sodass du die Seite über die Browser-Funktion „Zum Startbildschirm hinzufügen" bzw.
+    „Installieren" mit eigenem Icon und ohne Adressleiste öffnen kannst. Da die Datei bereits als
+    einzelne HTML-Datei komplett offline läuft, wird dafür kein zusätzlicher Server-Cache
+    benötigt; es werden auch hierbei keine Daten an uns übertragen.</p>
+
+  <h2>7. Deine Rechte</h2>
+  <p>Da wir keine personenbezogenen Daten auf unseren Systemen verarbeiten, liegen bei uns
+    in der Regel keine Daten zu deiner Person vor. Dir stehen dennoch die Rechte aus der
+    DSGVO zu (Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch,
+    Datenübertragbarkeit, Art. 15&ndash;21 DSGVO). Wende dich dazu an die unten genannte
+    Kontaktadresse.</p>
+  <p>Du hast außerdem das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren
+    (z. B. Bayerisches Landesamt für Datenschutzaufsicht, Promenade 18, 91522 Ansbach).</p>
+
+  <h2>8. Verantwortlicher im Sinne der DSGVO</h2>
+  <p>
+    Gerd Zimmermann GZ-AI.-Stacks<br>
+    Görlitzer Straße 10, 91315 Höchstadt a.d. Aisch, Deutschland<br>
+    Telefon: 0151 177 37 336<br>
+    E-Mail: <a href="mailto:gz.ai.stacks@gmail.com">gz.ai.stacks@gmail.com</a><br>
+    Kleinunternehmer im Sinne von § 19 UStG (keine Umsatzsteuer ausgewiesen).
+  </p>
+
+  <a class="back" href="index.html">&larr; Zurück zur Startseite</a>
+</main>
+<footer>© Gerd Zimmermann GZ-AI.-Stacks &middot; Notfallmappe Digital</footer>
+</body>
+</html>

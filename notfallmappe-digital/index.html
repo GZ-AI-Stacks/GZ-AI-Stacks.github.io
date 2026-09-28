@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notfallmappe Digital — Alles Wichtige an einem Ort | GZ-AI.-Stacks</title>
+<meta name="description" content="Notfallmappe Digital: die private Vorsorge-Übersicht für den Notfall. Kontakte, Medikamente, Vollmachten, Dokumente — offline, ohne Cloud, ohne Abo.">
+<meta name="theme-color" content="#3f6b52">
+<meta property="og:title" content="Notfallmappe Digital — Alles Wichtige für den Notfall an einem Ort">
+<meta property="og:description" content="Private Vorsorge-Übersicht: Kontakte, Medikamente, Vollmachten, Dokumente. Offline, ohne Cloud, ohne Abo.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<style>
+:root{
+  --bg:#ddd0b0; --bg-card:#fffaf2; --bg-soft:#f0e2c2;
+  --ink:#2e2a22; --ink-soft:#54493a; --muted:#736a56;
+  --primary:#3f6b52; --primary-dark:#2f523e; --primary-soft:#dde9e0;
+  --accent:#b5652f; --line:#c9b98f; --line-soft:#e0d2ac;
+  --shadow:0 4px 20px rgba(63,107,82,.14); --shadow-strong:0 8px 32px rgba(63,107,82,.24);
+  --zoom:1;
+}
+:root[data-theme="dark"]{
+  --bg:#332c1f; --bg-card:#26211a; --bg-soft:#3d3526;
+  --ink:#f1e8d8; --ink-soft:#c9bfab; --muted:#a89a7f;
+  --primary:#7fb494; --primary-dark:#9ccbaf; --primary-soft:#2b3d32;
+  --accent:#cc785c; --line:#4a4030; --line-soft:#3d3526;
+  --shadow:0 4px 20px rgba(0,0,0,.35); --shadow-strong:0 8px 32px rgba(0,0,0,.45);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#332c1f; --bg-card:#26211a; --bg-soft:#3d3526;
+    --ink:#f1e8d8; --ink-soft:#c9bfab; --muted:#a89a7f;
+    --primary:#7fb494; --primary-dark:#9ccbaf; --primary-soft:#2b3d32;
+    --accent:#cc785c; --line:#4a4030; --line-soft:#3d3526;
+    --shadow:0 4px 20px rgba(0,0,0,.35); --shadow-strong:0 8px 32px rgba(0,0,0,.45);
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth; font-size:calc(16px * var(--zoom))}
+body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px;min-height:100vh}
+.skip-link{position:absolute;left:-9999px}
+.skip-link:focus{left:1rem;top:1rem;background:var(--primary);color:#fff;padding:.6rem 1rem;z-index:999;border-radius:6px;font-weight:700}
+a{color:var(--primary-dark)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+.site-header{padding:1.4rem 1.5rem;max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.8rem;flex:1;min-width:200px}
+.brand-emoji{font-size:2rem;line-height:1}
+.brand-text h1{font-size:1.4rem;font-weight:800;color:var(--primary-dark);letter-spacing:-.01em}
+.brand-text .tag{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:Consolas,monospace}
+.nav-cta{background:var(--primary);color:#fff;padding:.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;transition:background .2s,transform .15s}
+.nav-cta:hover{background:var(--primary-dark)}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tool-group{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg-card)}
+.tool-btn{border:none;background:transparent;color:var(--ink);padding:7px 11px;cursor:pointer;font-size:.85rem;font-family:inherit}
+.tool-btn:hover{background:var(--primary-soft)}
+.tool-group .tool-btn + .tool-btn{border-left:1px solid var(--line)}
+#zoomLevel{padding:7px 4px;font-size:.75rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.nav-cta:active{transform:scale(.97)}
+
+.hero{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 3rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.hero-content h2{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;color:var(--ink);line-height:1.15;margin-bottom:1rem;letter-spacing:-.02em}
+.hero-content h2 .accent{color:var(--primary-dark)}
+.hero-content .lead{font-size:1.1rem;color:var(--ink-soft);margin-bottom:1.5rem;line-height:1.55}
+.hero-pills{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.8rem}
+.pill{background:var(--primary-soft);color:var(--primary-dark);padding:.35rem .8rem;border-radius:100px;font-size:.82rem;font-weight:600}
+.hero-cta{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;padding:.95rem 1.6rem;border-radius:10px;text-decoration:none;font-weight:700;font-size:1rem;box-shadow:var(--shadow-strong);transition:transform .15s,box-shadow .2s;display:inline-flex;align-items:center;gap:.4rem;border:none;cursor:pointer}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 36px rgba(47,82,62,.30)}
+.btn-primary:active{transform:translateY(0)}
+.btn-secondary{background:var(--bg-card);color:var(--primary-dark);padding:.9rem 1.4rem;border-radius:10px;text-decoration:none;font-weight:700;font-size:1rem;border:2px solid var(--primary);transition:background .2s}
+.btn-secondary:hover{background:var(--primary-soft)}
+.hero-image{position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--shadow-strong);background:var(--bg-card)}
+.hero-image img{width:100%;height:auto;display:block}
+
+.showcase{text-align:center}
+.showcase img{max-width:100%;height:auto;border-radius:16px;box-shadow:var(--shadow-strong)}
+.showcase p.section-sub{margin-bottom:1.5rem}
+
+.trust-bar{background:var(--bg-card);border-block:1px solid var(--line-soft);padding:1.4rem 1.5rem;margin-block:1rem 2rem}
+.trust-inner{max-width:1100px;margin:0 auto;display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:space-around;align-items:center}
+.trust-item{display:flex;align-items:center;gap:.6rem;color:var(--ink-soft);font-weight:600;font-size:.92rem}
+.trust-item .icon{font-size:1.4rem}
+
+section{max-width:1100px;margin:0 auto;padding:3rem 1.5rem}
+section h3.section-title{font-size:1.9rem;text-align:center;margin-bottom:.6rem;color:var(--ink);font-weight:800;letter-spacing:-.01em}
+section .section-sub{text-align:center;color:var(--muted);margin-bottom:2.5rem;font-size:1.05rem;max-width:600px;margin-inline:auto}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.feature{background:var(--bg-card);border:1px solid var(--line-soft);border-radius:14px;padding:1.5rem 1.4rem;transition:transform .2s,box-shadow .2s,border-color .2s}
+.feature:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--primary)}
+.feature .icon{font-size:2rem;margin-bottom:.8rem;display:flex;align-items:center;justify-content:center;background:var(--primary-soft);width:54px;height:54px;border-radius:12px}
+.feature h4{font-size:1.1rem;color:var(--ink);margin-bottom:.4rem;font-weight:700}
+.feature p{color:var(--ink-soft);font-size:.94rem;line-height:1.5}
+
+.compare{background:var(--bg-card);border:1px solid var(--line-soft);border-radius:18px;padding:2rem 1.5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+.compare-col{text-align:center;padding:1rem .8rem;border-radius:12px}
+.compare-col.highlight{background:var(--primary-soft)}
+.compare-col h5{font-size:1.05rem;margin-bottom:.6rem;font-weight:800;color:var(--ink)}
+.compare-col ul{list-style:none;text-align:left}
+.compare-col li{padding:.3rem 0;color:var(--ink-soft);font-size:.9rem}
+
+#kaufen{padding-block:4rem}
+.preis-grid{display:grid;grid-template-columns:1fr;gap:1.5rem;max-width:400px;margin:0 auto}
+.preis-card{background:var(--bg-card);border:2px solid var(--line-soft);border-radius:18px;padding:2rem 1.6rem;text-align:center;position:relative;transition:transform .2s,border-color .2s,box-shadow .2s}
+.preis-card h4{font-size:1.2rem;color:var(--ink);margin-bottom:.4rem;font-weight:700}
+.preis-card .preis{font-size:3rem;font-weight:900;color:var(--primary-dark);margin-block:.4rem .2rem;line-height:1}
+.preis-card .preis .euro{font-size:1.6rem;vertical-align:top;margin-right:.05em}
+.preis-card .preis-sub{color:var(--muted);font-size:.88rem;margin-bottom:1.4rem}
+.preis-card ul{list-style:none;text-align:left;margin-bottom:1.4rem;padding-inline:.4rem}
+.preis-card li{padding:.3rem 0;color:var(--ink-soft);font-size:.95rem;display:flex;gap:.5rem;align-items:flex-start}
+.preis-card li::before{content:"✓";color:var(--primary);font-weight:800;flex-shrink:0}
+.preis-card .btn-buy{display:block;width:100%;background:var(--primary);color:#fff;border:none;padding:1rem;border-radius:10px;font-weight:700;font-size:1.05rem;cursor:pointer;transition:background .2s,transform .15s;text-align:center;text-decoration:none;box-sizing:border-box;font-family:inherit}
+.preis-card a.btn-buy:hover{transform:translateY(-1px)}
+.preis-card .btn-buy:hover{background:var(--primary-dark)}
+.preis-card .btn-buy[aria-disabled="true"]{background:var(--line);color:#fff;cursor:not-allowed;opacity:.7}
+.preis-card .hinweis{font-size:.8rem;color:var(--muted);margin-top:.8rem}
+.preis-rechtshinweis{max-width:760px;margin:1.4rem auto 0;text-align:center;font-size:.8rem;line-height:1.6;color:var(--muted)}
+
+.faq{max-width:780px;margin-inline:auto}
+.faq details{background:var(--bg-card);border:1px solid var(--line-soft);border-radius:12px;padding:.4rem 1.2rem;margin-bottom:.7rem;transition:border-color .2s}
+.faq details[open]{border-color:var(--primary)}
+.faq summary{font-weight:700;color:var(--ink);cursor:pointer;padding:.9rem 0;font-size:1rem;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.faq summary::after{content:"+";color:var(--primary);font-size:1.4rem;font-weight:300;transition:transform .2s;flex-shrink:0}
+.faq details[open] summary::after{content:"−";transform:rotate(0)}
+.faq details p{color:var(--ink-soft);padding-bottom:1rem;line-height:1.6}
+
+footer{background:var(--bg-card);border-top:1px solid var(--line-soft);padding:2rem 1.5rem;margin-top:3rem}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;align-items:center}
+.footer-brand{color:var(--ink);font-weight:700}
+.footer-brand small{display:block;color:var(--muted);font-weight:400;margin-top:.2rem;font-size:.85rem}
+.footer-links{display:flex;gap:1rem;flex-wrap:wrap}
+.footer-links a{color:var(--ink-soft);text-decoration:none;font-size:.92rem;font-weight:600}
+.footer-links a:hover{color:var(--primary-dark);text-decoration:underline}
+
+@media (max-width:780px){
+  .hero{grid-template-columns:1fr;gap:1.5rem;padding-block:1rem 2rem}
+  .hero-image{order:-1}
+  .features{grid-template-columns:1fr}
+  .compare{grid-template-columns:1fr}
+  section{padding:2rem 1.2rem}
+  section h3.section-title{font-size:1.5rem}
+  .footer-inner{flex-direction:column;text-align:center}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+@media (prefers-contrast:more){body{color:#000} .feature,.preis-card{border-width:2px}}
+</style>
+</head>
+<body>
+<a href="#kaufen" class="skip-link">Zum Kauf-Bereich springen</a>
+
+<header class="site-header" role="banner">
+  <div class="brand">
+    <span class="brand-emoji" aria-hidden="true">🗂️</span>
+    <div class="brand-text">
+      <h1>Notfallmappe Digital</h1>
+      <div class="tag">GZ-AI.-STACKS · VORSORGE-ÜBERSICHT</div>
+    </div>
+  </div>
+  <div class="toolbar">
+    <div class="tool-group" role="group" aria-label="Schriftgröße">
+      <button type="button" class="tool-btn" id="zoomOut" aria-label="Schrift verkleinern">−</button>
+      <span id="zoomLevel">100%</span>
+      <button type="button" class="tool-btn" id="zoomIn" aria-label="Schrift vergrößern">+</button>
+    </div>
+    <div class="tool-group" role="group" aria-label="Darstellung">
+      <button type="button" class="tool-btn" id="themeToggle" aria-pressed="false" aria-label="Hell/Dunkel umschalten">◐ Hell/Dunkel</button>
+    </div>
+    <a href="HANDBUCH.html" class="nav-cta" aria-label="Handbuch ansehen">Handbuch ansehen</a>
+  </div>
+</header>
+
+<main id="main" role="main">
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-content">
+    <h2 id="hero-title">Alles Wichtige für den Notfall, <span class="accent">an einem Ort</span></h2>
+    <p class="lead">Die Notfallmappe Digital sammelt Kontakte, Medikamente, Vollmachten und Dokumente an einer Stelle &mdash; für den Fall, dass Angehörige im Ernstfall schnell den Überblick brauchen. Offline, ohne Cloud, ohne Abo.</p>
+    <div class="hero-pills">
+      <span class="pill">📵 Offline</span>
+      <span class="pill">🖨️ Auch ausdruckbar</span>
+      <span class="pill">🔒 Optionaler PIN-Schutz</span>
+      <span class="pill">💳 Einmalkauf</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#kaufen" class="btn-primary">Jetzt sichern — 22,90&nbsp;€</a>
+      <a href="HANDBUCH.html" class="btn-secondary">So funktioniert's</a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="img/notfallmappe-vorschau.jpg" alt="Notfallmappe Digital auf zwei Smartphones nebeneinander, links im hellen und rechts im dunklen Design">
+  </div>
+</section>
+
+<div class="trust-bar" aria-label="Vertrauen">
+  <div class="trust-inner">
+    <div class="trust-item"><span class="icon" aria-hidden="true">🇩🇪</span> Aus Deutschland</div>
+    <div class="trust-item"><span class="icon" aria-hidden="true">🔒</span> DSGVO-konform</div>
+    <div class="trust-item"><span class="icon" aria-hidden="true">📵</span> 100&nbsp;% offline</div>
+    <div class="trust-item"><span class="icon" aria-hidden="true">🖨️</span> Druckansicht</div>
+    <div class="trust-item"><span class="icon" aria-hidden="true">⭐</span> Einmal kaufen</div>
+  </div>
+</div>
+
+<section aria-labelledby="features-title">
+  <h3 id="features-title" class="section-title">Was die Notfallmappe Digital kann</h3>
+  <p class="section-sub">Übersichtlich sammeln, was im Notfall zählt &mdash; digital und als Ausdruck fürs Regal.</p>
+  <div class="features">
+    <div class="feature">
+      <div class="icon" aria-hidden="true">📇</div>
+      <h4>Alles an einem Ort</h4>
+      <p>Kontakte, Medikamente, Allergien, Vollmachten, Versicherungen &mdash; strukturiert in Kategorien statt lose Zettel.</p>
+    </div>
+    <div class="feature">
+      <div class="icon" aria-hidden="true">📎</div>
+      <h4>Dokumente anhängen</h4>
+      <p>Fotos und Scans direkt am Eintrag hinterlegen &mdash; z. B. Vollmacht oder Versicherungsschein.</p>
+    </div>
+    <div class="feature">
+      <div class="icon" aria-hidden="true">🖨️</div>
+      <h4>Ausdruckbar</h4>
+      <p>Eigene Druckansicht für den Aktenordner zu Hause &mdash; falls Angehörige keinen Zugriff auf dein Gerät haben.</p>
+    </div>
+    <div class="feature">
+      <div class="icon" aria-hidden="true">🔒</div>
+      <h4>Optionaler PIN-Schutz</h4>
+      <p>Stammdaten und Einträge lassen sich zusätzlich mit einer PIN verschlüsseln (AES-256, PBKDF2).</p>
+    </div>
+    <div class="feature">
+      <div class="icon" aria-hidden="true">🌙</div>
+      <h4>Hell &amp; Dunkelmodus</h4>
+      <p>Angenehm für die Augen, egal zu welcher Tageszeit &mdash; frei umschaltbar.</p>
+    </div>
+    <div class="feature">
+      <div class="icon" aria-hidden="true">🛡️</div>
+      <h4>Keine Cloud, kein Tracking</h4>
+      <p>Keine Konten, keine Server, keine Analyse-Tools. Deine Daten bleiben auf deinem Gerät.</p>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="vergleich-title">
+  <h3 id="vergleich-title" class="section-title">Wo die Notfallmappe Digital hinpasst</h3>
+  <p class="section-sub">Zwischen losen Papier-Zetteln und Cloud-Diensten fremder Anbieter.</p>
+  <div class="compare">
+    <div class="compare-col">
+      <h5>Papier-Ordner / PDF-Vorlagen</h5>
+      <ul>
+        <li>Kostenlos, aber schnell unübersichtlich</li>
+        <li>Keine Suche, kein Filter</li>
+        <li>Keine Dokumenten-Anhänge</li>
+      </ul>
+    </div>
+    <div class="compare-col highlight">
+      <h5>🗂️ Notfallmappe Digital</h5>
+      <ul>
+        <li>Übersichtlich, durchsuchbar, filterbar</li>
+        <li>Zusätzlich als Ausdruck fürs Regal</li>
+        <li>Daten bleiben ausschließlich bei dir</li>
+      </ul>
+    </div>
+    <div class="compare-col">
+      <h5>Cloud-Vorsorge-Apps</h5>
+      <ul>
+        <li>Komfortabel, teils mit Abo</li>
+        <li>Daten liegen bei einem externen Anbieter</li>
+        <li>Internetzugang zum Abruf nötig</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="kaufen" aria-labelledby="kaufen-title">
+  <h3 id="kaufen-title" class="section-title">Jetzt sichern</h3>
+  <p class="section-sub">Einmal kaufen &mdash; jederzeit nutzen. Auf Handy, Tablet und PC. Kein Abo, keine versteckten Kosten.</p>
+  <div class="preis-grid">
+
+    <div class="preis-card">
+      <h4>Notfallmappe Digital</h4>
+      <div class="preis"><span class="euro">€</span>22,90</div>
+      <div class="preis-sub">Einmalig, keine Folgekosten</div>
+      <ul>
+        <li>Alle Kategorien &amp; Filter</li>
+        <li>Dokumenten-Anhänge</li>
+        <li>Druckansicht</li>
+        <li>Optionaler PIN-Schutz</li>
+        <li>Backup-Export &amp; Import</li>
+        <li>Handy, Tablet und PC</li>
+        <li>Offline-fähig</li>
+        <li>Einmal kaufen, jederzeit nutzen</li>
+      </ul>
+      <a class="btn-buy" href="https://www.checkout-ds24.com/product/723647/?ds24tr=homepage" aria-label="Notfallmappe Digital jetzt kaufen über Digistore24">Jetzt sichern &mdash; 22,90&nbsp;€</a>
+      <div class="hinweis">Sicher bezahlen über Digistore24</div>
+    </div>
+
+  </div>
+
+  <p class="preis-rechtshinweis">
+    Einmalkauf ohne laufende Kosten &middot; Lieferung als Sofort-Download (digitales Gut) &middot;
+    <strong>14 Tage gesetzliches Widerrufsrecht</strong> für Verbraucher &middot;
+    Anbieter: Gerd Zimmermann &middot; GZ-AI.-Stacks &middot;
+    <a href="impressum.html">Impressum</a> &middot; <a href="widerruf.html">Widerruf</a>
+  </p>
+</section>
+
+<section aria-labelledby="faq-title">
+  <h3 id="faq-title" class="section-title">Häufige Fragen</h3>
+  <p class="section-sub">Antworten auf die typischen Fragen vor dem Kauf.</p>
+  <div class="faq">
+    <details>
+      <summary>Ersetzt die App eine echte Vorsorgevollmacht?</summary>
+      <p>Nein. Die Notfallmappe Digital ist ein Organisations- und Erinnerungswerkzeug, keine Rechtsberatung. Vorsorgevollmacht, Patientenverfügung oder Betreuungsverfügung müssen weiterhin in der gesetzlich vorgeschriebenen Form erstellt und im Original aufbewahrt werden. Die App hilft dir nur dabei, den Überblick zu behalten und festzuhalten, wo diese Originale liegen.</p>
+    </details>
+    <details>
+      <summary>Werden meine Daten irgendwohin übertragen?</summary>
+      <p>Nein. Die App läuft als einzelne HTML-Datei komplett offline in deinem Browser. Es gibt keinen Server, kein Konto, keine Cloud-Synchronisierung &mdash; deine Daten bleiben ausschließlich auf deinem Gerät.</p>
+    </details>
+    <details>
+      <summary>Kann ich die Mappe auch ausdrucken?</summary>
+      <p>Ja. Über die eingebaute Druckansicht kannst du deine Einträge zusätzlich als Papierversion für den Aktenordner zu Hause ausdrucken &mdash; praktisch, falls Angehörige im Notfall keinen Zugriff auf dein Gerät haben.</p>
+    </details>
+    <details>
+      <summary>Was passiert, wenn ich meine PIN vergesse?</summary>
+      <p>Der PIN-Schutz ist optional. Ist er aktiv und du vergisst die PIN, sind die geschützten Daten ohne aktuelle Sicherungsdatei unwiederbringlich verloren &mdash; genau das macht den Schutz echt. Lege regelmäßig Backups an.</p>
+    </details>
+    <details>
+      <summary>Auf welchen Geräten läuft die App?</summary>
+      <p>Auf jedem Gerät mit modernem Browser: Smartphone, Tablet, Laptop, Desktop &mdash; egal ob Android, iOS, Windows oder Mac. Die App lässt sich zusätzlich als eigenes App-Symbol installieren.</p>
+    </details>
+    <details>
+      <summary>Gibt es ein Abo oder versteckte Kosten?</summary>
+      <p>Nein. Du zahlst einmal und nutzt die App, so oft und so lange du möchtest. Keine monatlichen Gebühren, keine In-App-Käufe, keine Werbung.</p>
+    </details>
+    <details>
+      <summary>Wie bekomme ich die App nach dem Kauf?</summary>
+      <p>Nach dem Kauf bei Digistore24 erhältst du sofort eine Bestätigungs-E-Mail mit dem Download deiner persönlichen App-Datei. Einfach öffnen und loslegen &mdash; fertig.</p>
+    </details>
+  </div>
+</section>
+
+</main>
+
+<footer role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      🗂️ Notfallmappe Digital
+      <small>© Gerd Zimmermann GZ-AI.-Stacks</small>
+    </div>
+    <nav class="footer-links" aria-label="Rechtliche Hinweise">
+      <a href="impressum.html">Impressum</a>
+      <a href="agb.html">AGB</a>
+      <a href="widerruf.html">Widerruf</a>
+      <a href="datenschutz.html">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var ZOOM_KEY = 'notfallmappe-landing-zoom';
+  var THEME_KEY = 'notfallmappe-theme';
+  var root = document.documentElement;
+
+  var zoom = parseInt(localStorage.getItem(ZOOM_KEY), 10) || 100;
+  var zoomLabel = document.getElementById('zoomLevel');
+  function applyZoom(){
+    zoom = Math.max(80, Math.min(160, zoom));
+    root.style.setProperty('--zoom', zoom / 100);
+    zoomLabel.textContent = zoom + '%';
+    localStorage.setItem(ZOOM_KEY, zoom);
+  }
+  document.getElementById('zoomIn').addEventListener('click', function(){ zoom += 10; applyZoom(); });
+  document.getElementById('zoomOut').addEventListener('click', function(){ zoom -= 10; applyZoom(); });
+  applyZoom();
+
+  var themeBtn = document.getElementById('themeToggle');
+  var savedTheme = localStorage.getItem(THEME_KEY);
+  if(savedTheme){
+    root.setAttribute('data-theme', savedTheme);
+    themeBtn.setAttribute('aria-pressed', savedTheme === 'dark' ? 'true' : 'false');
+  }
+  themeBtn.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem(THEME_KEY, next);
+    themeBtn.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
+  });
+})();
+</script>
+<script src="/ds24-quelle.js" defer></script>
+</body>
+</html>
