@@ -867,25 +867,6 @@
   </div>
 </div>
 
-<!-- Freischaltcode-Sperre -->
-<div class="sperre" id="lizSperre" role="dialog" aria-label="App freischalten">
-  <div class="sperre-box">
-    <div class="schloss" aria-hidden="true">🔑</div>
-    <h2>Haushaltsbuch freischalten</h2>
-    <p style="font-size:.88rem;color:var(--text-leise);margin:8px 0 14px;line-height:1.5">
-      Bitte gib deinen Freischaltcode aus der Kaufbestätigung ein. Den Code findest du in der Auslieferungs-Mail nach dem Kauf bei Digistore24.
-    </p>
-    <input type="text" id="lizCode" autocomplete="off" autocapitalize="off" spellcheck="false"
-      aria-label="Freischaltcode eingeben" placeholder="Freischaltcode"
-      style="text-align:center;font-size:1.05rem;letter-spacing:1px">
-    <button class="btn-neu" id="lizOk">Freischalten</button>
-    <div class="sperre-fehler" id="lizFehler" role="alert"></div>
-    <p style="font-size:.78rem;color:var(--text-leise);margin-top:18px;line-height:1.5">
-      Noch keinen Code? <a href="https://www.gz-ai-stacks.de" target="_blank" rel="noopener" style="color:var(--gold)">www.gz-ai-stacks.de</a>
-    </p>
-  </div>
-</div>
-
 <div class="wrap">
   <header class="app-kopf">
     <div class="marke">
@@ -5718,39 +5699,6 @@ $('inEigeneIcon').addEventListener('click', () => oeffneEmojiPicker(em => {
 /* ============ Erststart & Init ============ */
 $('btnErststartOk').addEventListener('click', () => $('modalErststart').close());
 $('btnErststartZu').addEventListener('click', () => $('modalErststart').close());
-
-/* ============ Freischaltcode-System ============ */
-const LIZ_KAEUFER = 'Moneybook#33';
-const LIZ_MASTER  = 'Moneybook#85201379';
-const LIZ_KEY     = 'gz-haushaltsbuch-lizenz';
-
-function lizenzGueltig(){
-  try{
-    const v = localStorage.getItem(LIZ_KEY);
-    return v === LIZ_KAEUFER || v === LIZ_MASTER;
-  }catch(_){ return false; }
-}
-
-function zeigeLizSperre(){
-  $('lizSperre').classList.add('aktiv');
-  setTimeout(() => $('lizCode').focus(), 50);
-}
-
-function lizenzPruefen(){
-  const eingabe = ($('lizCode').value || '').trim();
-  if(eingabe === LIZ_KAEUFER || eingabe === LIZ_MASTER){
-    try{ localStorage.setItem(LIZ_KEY, eingabe); }catch(_){}
-    $('lizSperre').classList.remove('aktiv');
-    starteApp();
-  }else{
-    $('lizFehler').textContent = 'Code nicht gültig. Bitte aus der Kaufbestätigung kopieren — Groß-/Kleinschreibung beachten.';
-    $('lizCode').focus();
-    $('lizCode').select();
-  }
-}
-
-$('lizOk').addEventListener('click', lizenzPruefen);
-$('lizCode').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); lizenzPruefen(); } });
 
 function starteApp(){
   zeigeSperre();
